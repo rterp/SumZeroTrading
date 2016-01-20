@@ -1,5 +1,7 @@
 # LimitUp Trading API
-Java API for connecting to Interactive Brokers and developing automated trading applications.
+Java API for developing automated trading applications which includes support for:
+* connecting to Interactive Brokers for placing trades, subscribing to market data, and historical data.
+
 
 ### TODO
 * Add Common projects
