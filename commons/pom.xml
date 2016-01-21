@@ -1,11 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+  <modelVersion>4.0.0</modelVersion>
 
-<root>
-    
-</root>
+  <parent>
+    <groupId>com.limituptrading</groupId>
+    <artifactId>LimitUpParent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../LimitUpParent</relativePath>
+  </parent>
+
+  <artifactId>limitup-commons</artifactId>
+  <name>LimitUp API Commons</name>
+  <description>Classes that are used by all projects</description>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>limitup-commons-api</module>
+  </modules>
+  
+</project>
