@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version="1.0"?>
 <!--
 MIT License
 
@@ -18,8 +17,8 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
 
+-->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -32,12 +31,17 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <relativePath>../LimitUpParent</relativePath>
   </parent>
 
-  <artifactId>limitup-api</artifactId>
-  <name>limitup-api</name>
-  <description>LimitUp APIs</description>
+  <artifactId>limitup-implementations</artifactId>
+  <name>limitup-implementations</name>
+  <description>Implementations of the various LimitUp APIs</description>
   <packaging>pom</packaging>
 
   <modules>
+    <module>broker-api</module>
+    <module>historical-data-api</module>
+    <module>market-data-api</module>
+    <module>real-time-bar-api</module>
+    <module>strategy-api</module>
   </modules>
   
 </project>

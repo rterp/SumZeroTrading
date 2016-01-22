@@ -16,18 +16,17 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.limituptrading</groupId>
   <artifactId>limitupTrading</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>limitUpTrading</name>
+  <name>LimitUpTrading</name>
   <description>Limit Up Build POM</description>
 
   <modules>
     <module>LimitUpParent</module>
-    <module>api</module>
     <module>commons</module>
-    <module>implementations</module>
   </modules>
  </project>

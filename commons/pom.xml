@@ -32,7 +32,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   </parent>
 
   <artifactId>limitup-commons</artifactId>
-  <name>LimitUp API Commons</name>
+  <name>limitup-commons</name>
   <description>Classes that are used by all projects</description>
   <packaging>pom</packaging>
 
