@@ -38,6 +38,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <packaging>pom</packaging>
 
   <modules>
+      <module>limitup-market-data-api</module>
   </modules>
   
 </project>
