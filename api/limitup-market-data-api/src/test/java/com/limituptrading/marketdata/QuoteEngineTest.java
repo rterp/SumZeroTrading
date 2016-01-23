@@ -1,7 +1,24 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+ * MIT License
+
+Copyright (c) 2015  Rob Terpilowski
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+and associated documentation files (the "Software"), to deal in the Software without restriction, 
+including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ 
+*/
+
+
 package com.limituptrading.marketdata;
 
 import java.util.List;
@@ -19,6 +36,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -176,14 +194,17 @@ public class QuoteEngineTest {
     
     @Test
     public void testFireLevel1Quote() {
+        
+        
         QuoteEngine quoteEngine = createNewQuoteEngine();
-        final ILevel1Quote mockQuote = mockery.mock( ILevel1Quote.class );
-        final Map mockLevel1ListenerMap = mockery.mock( Map.class );
+        final ILevel1Quote mockQuote = mock( ILevel1Quote.class );
+        final Map mockLevel1ListenerMap = mock( Map.class );
         final Ticker ticker = new StockTicker( "ABC" );
-        final Level1QuoteListener mockListener = mockery.mock( Level1QuoteListener.class );
+        final Level1QuoteListener mockListener = mock( Level1QuoteListener.class );
         final List<Level1QuoteListener> mockListenerList = new ArrayList<Level1QuoteListener>();
         mockListenerList.add( mockListener );
         quoteEngine.level1ListenerMap = mockLevel1ListenerMap;
+        
         
         
         mockery.checking( new Expectations() {{
