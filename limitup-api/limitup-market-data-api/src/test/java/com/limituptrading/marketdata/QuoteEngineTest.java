@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 import org.jmock.Expectations;
+import static org.jmock.Expectations.returnValue;
+import static org.jmock.Expectations.throwException;
 import org.jmock.Mockery;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -37,6 +39,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -206,20 +210,12 @@ public class QuoteEngineTest {
         quoteEngine.level1ListenerMap = mockLevel1ListenerMap;
         
         
-        
-        mockery.checking( new Expectations() {{
-            one(mockQuote).getTicker();
-            will(returnValue(ticker));
-            
-            one(mockLevel1ListenerMap).get(ticker);
-            will(returnValue(mockListenerList));
-            
-            one(mockListener).quoteRecieved(mockQuote);
-            
-        }});
+        when(mockQuote.getTicker()).thenReturn(ticker);
+        when(mockLevel1ListenerMap.get(ticker)).thenReturn(mockListenerList);
         
         quoteEngine.fireLevel1Quote(mockQuote);
-        mockery.assertIsSatisfied();
+        
+        verify(mockListener).quoteRecieved(mockQuote);
         
     }    
     
