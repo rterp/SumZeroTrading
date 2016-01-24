@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
-MIT License
+/**
+ * MIT License
 
 Copyright (c) 2015  Rob Terpilowski
 
@@ -17,28 +16,36 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
--->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+package com.limituptrading.marketdata.ib;
 
-  <modelVersion>4.0.0</modelVersion>
+import com.limituptrading.marketdata.IQuoteEngine;
+import com.limituptrading.marketdata.QuoteError;
+import java.util.concurrent.BlockingQueue;
 
-  <parent>
-    <groupId>com.limituptrading</groupId>
-    <artifactId>limitup-implementations</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-  </parent>
+/**
+ *
+ * @author Rob Terpilowski
+ */
+public class IBQuoteErrorProcessor extends IBQuoteProcessor<QuoteError> {
 
-  <groupId>com.limituptrading</groupId>
-  <artifactId>market-data-api</artifactId>
-  <name>market-data-api</name>
-  <description>API for connecting to a market data source</description>
-  <packaging>pom</packaging>
     
-  
-  
-  <modules>
-        <module>ib-market-data-api-impl</module>
-    </modules>
-</project>
+    public IBQuoteErrorProcessor(BlockingQueue<QuoteError> queue, IQuoteEngine quoteEngine) {
+        super(queue, quoteEngine);
+    }
+    
+
+    
+    
+    @Override
+    protected void processData(QuoteError error) {
+        quoteEngine.fireErrorEvent(error);
+    }
+    
+    
+    
+    
+    
+}
