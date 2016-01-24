@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-MIT License
+/**
+ * MIT License
 
 Copyright (c) 2015  Rob Terpilowski
 
@@ -18,28 +16,42 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+ */
 
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+package com.limituptrading.broker;
 
-  <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.limituptrading</groupId>
-    <artifactId>LimitUpParent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../LimitUpParent</relativePath>
-  </parent>
+/**
+ *
+ * @author Rob Terpilowski
+ */
+public class Order implements IOrder {
+    protected String id;
 
-  <artifactId>limitup-api</artifactId>
-  <name>limitup-api</name>
-  <description>LimitUp APIs</description>
-  <packaging>pom</packaging>
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
 
-  <modules>
-      <module>limitup-market-data-api</module>
-    <module>limitup-broker-api</module>
-  </modules>
-  
-</project>
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Order other = (Order) obj;
+        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    
+    
+}
