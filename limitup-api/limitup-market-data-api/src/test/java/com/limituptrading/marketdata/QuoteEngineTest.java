@@ -38,6 +38,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -223,33 +224,23 @@ public class QuoteEngineTest {
     @Test
     public void testFireLevel1Quote_ThrowsException() {
         QuoteEngine quoteEngine = createNewQuoteEngine();
-        final ILevel1Quote mockQuote = mockery.mock( ILevel1Quote.class );
-        final Map mockLevel1ListenerMap = mockery.mock( Map.class );
+        final ILevel1Quote mockQuote = mock( ILevel1Quote.class );
+        final Map mockLevel1ListenerMap = mock( Map.class );
         final Ticker ticker = new StockTicker( "ABC" );
-        final Level1QuoteListener mockListener = mockery.mock( Level1QuoteListener.class );
+        final Level1QuoteListener mockListener = mock( Level1QuoteListener.class );
         final List<Level1QuoteListener> mockListenerList = new ArrayList<Level1QuoteListener>();
         mockListenerList.add( mockListener );
         quoteEngine.level1ListenerMap = mockLevel1ListenerMap;
         
-        
-        mockery.checking( new Expectations() {{
-            one(mockQuote).getTicker();
-            will(returnValue(ticker));
-            
-            one(mockLevel1ListenerMap).get(ticker);
-            will(returnValue(mockListenerList));
-            
-            one(mockListener).quoteRecieved(mockQuote);
-            will(throwException( new Exception("bogus") ) );
-            
-        }});
+        when(mockQuote.getTicker()).thenReturn(ticker);
+        when(mockLevel1ListenerMap.get(ticker)).thenReturn(mockListenerList);
+        doThrow(new IllegalStateException("bogus")).when(mockListener).quoteRecieved(mockQuote);
         
         try {
             quoteEngine.fireLevel1Quote(mockQuote);
         } catch( Exception ex ) {
             fail();
         }
-        mockery.assertIsSatisfied();
         
     }        
     
