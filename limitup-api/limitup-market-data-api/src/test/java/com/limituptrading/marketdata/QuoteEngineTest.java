@@ -27,6 +27,7 @@ import com.limituptrading.data.Ticker;
 import com.limituptrading.data.StockTicker;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Properties;
 import org.jmock.Expectations;
 import static org.jmock.Expectations.returnValue;
@@ -203,23 +204,22 @@ public class QuoteEngineTest {
         
         QuoteEngine quoteEngine = createNewQuoteEngine();
         final ILevel1Quote mockQuote = mock( ILevel1Quote.class );
-        final Map mockLevel1ListenerMap = mock( Map.class );
+        final Map<Ticker, List<Level1QuoteListener>> listenerMap = new HashMap<>();
         final Ticker ticker = new StockTicker( "ABC" );
         final Level1QuoteListener mockListener = mock( Level1QuoteListener.class );
-        final List<Level1QuoteListener> mockListenerList = new ArrayList<Level1QuoteListener>();
-        mockListenerList.add( mockListener );
-        quoteEngine.level1ListenerMap = mockLevel1ListenerMap;
+        final List<Level1QuoteListener> listenerList = new ArrayList<>();
+        listenerList.add( mockListener );
+        listenerMap.put(ticker, listenerList);
+        quoteEngine.level1ListenerMap = listenerMap;
         
         
         when(mockQuote.getTicker()).thenReturn(ticker);
-        when(mockLevel1ListenerMap.get(ticker)).thenReturn(mockListenerList);
-        
         quoteEngine.fireLevel1Quote(mockQuote);
         
         verify(mockListener).quoteRecieved(mockQuote);
         
     }    
-    
+       
     
     @Test
     public void testFireLevel1Quote_ThrowsException() {
