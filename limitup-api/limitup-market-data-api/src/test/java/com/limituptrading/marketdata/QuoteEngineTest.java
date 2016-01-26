@@ -218,7 +218,6 @@ public class QuoteEngineTest {
        
     
     @Test
-    @Ignore
     public void testFireLevel1Quote_ThrowsException() {
         QuoteEngine quoteEngine = createNewQuoteEngine();
         final ILevel1Quote mockQuote = mock( ILevel1Quote.class );
