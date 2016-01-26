@@ -195,7 +195,7 @@ public class QuoteEngineTest {
     
     
     @Test
-    public void testFireLevel1Quote() {
+    public void testFireLevel1Quote() throws Exception {
         
         
         QuoteEngine quoteEngine = createNewQuoteEngine();
@@ -210,7 +210,11 @@ public class QuoteEngineTest {
         
         
         when(mockQuote.getTicker()).thenReturn(ticker);
+        
         quoteEngine.fireLevel1Quote(mockQuote);
+        
+        //Quote engine fires on a new thread, so pause while it has a chance to do so.
+        Thread.sleep(1000);
         
         verify(mockListener).quoteRecieved(mockQuote);
         
