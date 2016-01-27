@@ -5,6 +5,7 @@
  */
 package com.limituptrading.interactivebrokersmarketdataexample;
 
+import com.limituptrading.data.Commodity;
 import com.limituptrading.data.Exchange;
 import com.limituptrading.data.FuturesTicker;
 import com.limituptrading.data.StockTicker;
@@ -20,20 +21,18 @@ public class MainClass {
     
     
     public void start() {
-        InteractiveBrokersClient ibClient = new InteractiveBrokersClient("localhost", 4001, 1);
+        InteractiveBrokersClient ibClient = new InteractiveBrokersClient("localhost", 6468, 1);
         ibClient.connect();
         
-//        FuturesTicker esTicker=  new FuturesTicker();
-//        esTicker.setSymbol("ES");
-//        esTicker.setExpiryMonth(3);
-//        esTicker.setExpiryYear(2016);
-//        esTicker.setExchange(Exchange.GLOBEX);
-
-        StockTicker esTicker=  new StockTicker("MSFT");
-        esTicker.setExchange(Exchange.INTERACTIVE_BROKERS_SMART);
         
-        QuoteEngine quoteEngine = ibClient.getQuoteEngine();
-        quoteEngine.subscribeLevel1(esTicker, (ILevel1Quote quote) -> {
+        FuturesTicker esTicker=  new FuturesTicker();
+        esTicker.setSymbol("ES");
+        esTicker.setExpiryMonth(3);
+        esTicker.setExpiryYear(2016);
+        esTicker.setExchange(Exchange.GLOBEX);
+
+        
+        ibClient.subscribeLevel1(esTicker, (ILevel1Quote quote) -> {
             System.out.println("Received Quote: " + quote );
         });
         

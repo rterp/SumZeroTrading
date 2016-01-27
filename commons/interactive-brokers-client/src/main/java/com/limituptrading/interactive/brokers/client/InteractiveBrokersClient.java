@@ -5,8 +5,12 @@
  */
 package com.limituptrading.interactive.brokers.client;
 
+import com.limituptrading.data.Ticker;
 import com.limituptrading.ib.IBConnectionUtil;
 import com.limituptrading.ib.IBSocket;
+import com.limituptrading.ib.MarketDepthListener;
+import com.limituptrading.marketdata.Level1QuoteListener;
+import com.limituptrading.marketdata.Level2QuoteListener;
 import com.limituptrading.marketdata.QuoteEngine;
 import com.limituptrading.marketdata.ib.IBQuoteEngine;
 
@@ -34,6 +38,24 @@ public class InteractiveBrokersClient {
 
     public void connect() {
         ibSocket.connect();
+        quoteEngine.startEngine();
+    }
+    
+    
+    public void subscribeLevel1( Ticker ticker, Level1QuoteListener listener ) {
+        quoteEngine.subscribeLevel1(ticker, listener);
+    }
+    
+    public void subscribeMarketDepth( Ticker ticker, Level2QuoteListener listener ) {
+        quoteEngine.subscribeMarketDepth(ticker, listener);
+    }
+    
+    public void unsubscribeLevel1( Ticker ticker, Level1QuoteListener listener ) {
+        quoteEngine.unsubscribeLevel1(ticker, listener);
+    }
+    
+    public void unsubscribeMarketDepth( Ticker ticker, Level2QuoteListener listener ) {
+        quoteEngine.unsubscribeMarketDepth(ticker, listener);
     }
     
     
