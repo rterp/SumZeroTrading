@@ -40,6 +40,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <module>limitup-commons-api</module>
     <module>interactive-brokers-api</module>
     <module>limitup-ib-common-api</module>
+    <module>interactive-brokers-client</module>
   </modules>
   
 </project>

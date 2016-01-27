@@ -26,15 +26,16 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   <parent>
     <groupId>com.limituptrading</groupId>
-    <artifactId>limitup-implementations</artifactId>
+    <artifactId>LimitUpParent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../LimitUpParent</relativePath>
   </parent>
 
-  <groupId>com.limituptrading</groupId>
-  <artifactId>historical-data-api</artifactId>
-  <name>historical-data-api</name>
-  <description>API for subscribing to market data</description>
+  <artifactId>examples</artifactId>
+  <name>exmples</name>
+  <description>Classes that are used by all projects</description>
   <packaging>pom</packaging>
-
-
+    <modules>
+        <module>InteractiveBrokersMarketDataExample</module>
+    </modules>
 </project>
