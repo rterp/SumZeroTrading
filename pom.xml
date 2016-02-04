@@ -19,10 +19,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.limituptrading</groupId>
-  <artifactId>limitupTrading</artifactId>
+  <artifactId>SumZeroTrading</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>LimitUpTrading</name>
+  <name>SumZeroTrading</name>
   <description>Limit Up Build POM</description>
 
   <modules>
