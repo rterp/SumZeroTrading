@@ -1,4 +1,4 @@
-# LimitUp Trading API
+# Sum Zero Trading API
 Java API for developing automated trading applications which includes support for:
 * connecting to Interactive Brokers for placing trades, subscribing to market data, and historical data.
 
