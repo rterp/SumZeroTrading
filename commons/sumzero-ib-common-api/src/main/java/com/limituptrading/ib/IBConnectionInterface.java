@@ -18,11 +18,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.limituptrading.ib;
+package com.zerosumtrading.ib;
 
 import com.ib.client.EWrapper;
-import com.limituptrading.ib.historical.ContractDetailsListener;
-import com.limituptrading.ib.historical.HistoricalDataListener;
+import com.zerosumtrading.ib.historical.ContractDetailsListener;
+import com.zerosumtrading.ib.historical.HistoricalDataListener;
 
 /**
  *

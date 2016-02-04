@@ -4,7 +4,7 @@
 
 
     <parent>
-        <groupId>com.limituptrading</groupId>
+        <groupId>com.zerosumtrading</groupId>
         <artifactId>limitup-commons</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>

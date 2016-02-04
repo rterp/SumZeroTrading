@@ -18,7 +18,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
 */
 
-package com.limituptrading.marketdata;
+package com.zerosumtrading.marketdata;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

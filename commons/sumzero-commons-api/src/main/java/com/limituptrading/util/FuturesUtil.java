@@ -19,7 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.util;
+package com.zerosumtrading.util;
 
 /**
  *

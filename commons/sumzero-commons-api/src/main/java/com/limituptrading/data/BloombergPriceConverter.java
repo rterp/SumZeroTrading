@@ -19,9 +19,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.data;
+package com.zerosumtrading.data;
 
-import static com.limituptrading.data.Commodity.*;
+import static com.zerosumtrading.data.Commodity.*;
 
 
 /**

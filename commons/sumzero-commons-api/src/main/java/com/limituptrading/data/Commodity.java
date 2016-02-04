@@ -19,7 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.data;
+package com.zerosumtrading.data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

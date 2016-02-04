@@ -19,7 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.ib.historical;
+package com.zerosumtrading.ib.historical;
 
 import java.util.GregorianCalendar;
 

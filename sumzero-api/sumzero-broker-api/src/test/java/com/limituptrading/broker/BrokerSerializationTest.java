@@ -19,10 +19,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.broker;
+package com.zerosumtrading.broker;
 
-import com.limituptrading.broker.order.TradeDirection;
-import com.limituptrading.data.StockTicker;
+import com.zerosumtrading.broker.order.TradeDirection;
+import com.zerosumtrading.data.StockTicker;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;

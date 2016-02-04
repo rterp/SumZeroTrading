@@ -18,7 +18,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.limituptrading.broker.order;
+package com.zerosumtrading.broker.order;
 
 public enum TradeDirection {
 	BUY,

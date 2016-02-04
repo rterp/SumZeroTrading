@@ -20,12 +20,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 
-package com.limituptrading.util;
+package com.zerosumtrading.util;
 
 
 
-import com.limituptrading.data.Ticker;
-import com.limituptrading.data.StockTicker;
+import com.zerosumtrading.data.Ticker;
+import com.zerosumtrading.data.StockTicker;
 import org.junit.Test;
 import java.math.BigDecimal;
 

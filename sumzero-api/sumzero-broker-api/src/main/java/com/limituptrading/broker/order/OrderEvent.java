@@ -19,7 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.broker.order;
+package com.zerosumtrading.broker.order;
 
 import java.io.Serializable;
 

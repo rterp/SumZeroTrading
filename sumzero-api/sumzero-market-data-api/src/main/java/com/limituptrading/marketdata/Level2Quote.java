@@ -18,11 +18,11 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
 */
 
-package com.limituptrading.marketdata;
+package com.zerosumtrading.marketdata;
 
 import java.util.Date;
 
-import com.limituptrading.data.Ticker;
+import com.zerosumtrading.data.Ticker;
 
 public class Level2Quote extends AbstractQuote implements ILevel2Quote {
 

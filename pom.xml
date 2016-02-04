@@ -18,7 +18,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.limituptrading</groupId>
+  <groupId>com.zerosumtrading</groupId>
   <artifactId>SumZeroTrading</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -30,6 +30,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <module>examples</module>
     <module>implementations</module>
     <module>SumZeroParent</module>
-    <module>sumzero-apit</module>
+    <module>sumzero-api</module>
   </modules>
  </project>

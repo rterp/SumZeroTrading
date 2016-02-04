@@ -17,11 +17,11 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMA
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.limituptrading.ib;
+package com.zerosumtrading.ib;
 
 import com.ib.client.ComboLeg;
 import com.ib.client.Contract;
-import com.limituptrading.data.ComboTicker;
+import com.zerosumtrading.data.ComboTicker;
 import java.util.Vector;
 
 /**

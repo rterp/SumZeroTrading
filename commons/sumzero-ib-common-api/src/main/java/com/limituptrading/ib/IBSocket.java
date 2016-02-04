@@ -19,7 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.ib;
+package com.zerosumtrading.ib;
 
 import com.ib.client.ClientSocketInterface;
 import java.util.concurrent.CyclicBarrier;

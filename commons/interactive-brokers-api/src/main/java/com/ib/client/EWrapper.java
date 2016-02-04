@@ -4,7 +4,7 @@
  */
 package com.ib.client;
 
-import com.limituptrading.ib.IBQuoteCallback;
+import com.zerosumtrading.ib.IBQuoteCallback;
 
 public interface EWrapper extends AnyWrapper, IBQuoteCallback {
 

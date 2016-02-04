@@ -18,7 +18,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.limituptrading.data;
+package com.zerosumtrading.data;
 
 import java.util.Vector;
 import java.util.Date;

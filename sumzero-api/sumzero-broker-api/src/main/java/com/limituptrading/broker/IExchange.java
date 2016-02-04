@@ -18,9 +18,9 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.limituptrading.broker;
+package com.zerosumtrading.broker;
 
-import com.limituptrading.broker.order.TradeOrder;
+import com.zerosumtrading.broker.order.TradeOrder;
 import java.util.Date;
 
 public interface IExchange {

@@ -25,12 +25,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>com.limituptrading</groupId>
+        <groupId>com.zerosumtrading</groupId>
         <artifactId>limitup-commons</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     
-    <groupId>com.limituptrading</groupId>
+    <groupId>com.zerosumtrading</groupId>
     <artifactId>sumzero-commons-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>sumzero-commons-api</name>

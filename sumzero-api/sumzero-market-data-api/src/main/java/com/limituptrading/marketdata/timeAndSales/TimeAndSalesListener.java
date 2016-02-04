@@ -18,7 +18,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
 */
 
-package com.limituptrading.marketdata.timeAndSales;
+package com.zerosumtrading.marketdata.timeAndSales;
 
 /**
  *

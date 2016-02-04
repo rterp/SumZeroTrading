@@ -26,7 +26,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.limituptrading</groupId>
+    <groupId>com.zerosumtrading</groupId>
     <artifactId>LimitUpParent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>../LimitUpParent</relativePath>
@@ -38,8 +38,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <packaging>pom</packaging>
 
   <modules>
-      <module>limitup-market-data-api</module>
-    <module>limitup-broker-api</module>
+    <module>sumzero-broker-api</module>
+    <module>sumzero-market-data-api</module>
   </modules>
   
 </project>

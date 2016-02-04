@@ -19,10 +19,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.ib;
+package com.zerosumtrading.ib;
 
-import com.limituptrading.marketdata.ILevel1Quote;
-import com.limituptrading.marketdata.ILevel2Quote;
+import com.zerosumtrading.marketdata.ILevel1Quote;
+import com.zerosumtrading.marketdata.ILevel2Quote;
 import java.util.GregorianCalendar;
 import java.util.concurrent.BlockingQueue;
 

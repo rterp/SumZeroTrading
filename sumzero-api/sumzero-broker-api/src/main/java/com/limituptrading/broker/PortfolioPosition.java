@@ -19,9 +19,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.broker;
+package com.zerosumtrading.broker;
 
-import com.limituptrading.data.Ticker;
+import com.zerosumtrading.data.Ticker;
 import java.io.Serializable;
 import java.math.BigDecimal;
 

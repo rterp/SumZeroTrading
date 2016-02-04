@@ -18,15 +18,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.limituptrading.interactive.brokers.client;
+package com.zerosumtrading.interactive.brokers.client;
 
-import com.limituptrading.data.Ticker;
-import com.limituptrading.ib.IBConnectionUtil;
-import com.limituptrading.ib.IBSocket;
-import com.limituptrading.marketdata.Level1QuoteListener;
-import com.limituptrading.marketdata.Level2QuoteListener;
-import com.limituptrading.marketdata.QuoteEngine;
-import com.limituptrading.marketdata.ib.IBQuoteEngine;
+import com.zerosumtrading.data.Ticker;
+import com.zerosumtrading.ib.IBConnectionUtil;
+import com.zerosumtrading.ib.IBSocket;
+import com.zerosumtrading.marketdata.Level1QuoteListener;
+import com.zerosumtrading.marketdata.Level2QuoteListener;
+import com.zerosumtrading.marketdata.QuoteEngine;
+import com.zerosumtrading.marketdata.ib.IBQuoteEngine;
 
 /**
  *

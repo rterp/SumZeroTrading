@@ -19,10 +19,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.ib;
+package com.zerosumtrading.ib;
 
 import com.ib.client.Contract;
-import com.limituptrading.data.StockTicker;
+import com.zerosumtrading.data.StockTicker;
 
 /**
  *

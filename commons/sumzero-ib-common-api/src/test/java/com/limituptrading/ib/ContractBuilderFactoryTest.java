@@ -18,15 +18,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.limituptrading.ib;
+package com.zerosumtrading.ib;
 
-import com.limituptrading.data.ComboTicker;
-import com.limituptrading.data.CurrencyTicker;
-import com.limituptrading.data.FuturesTicker;
-import com.limituptrading.data.IndexTicker;
-import com.limituptrading.data.OptionTicker;
-import com.limituptrading.data.StockTicker;
-import com.limituptrading.data.Ticker;
+import com.zerosumtrading.data.ComboTicker;
+import com.zerosumtrading.data.CurrencyTicker;
+import com.zerosumtrading.data.FuturesTicker;
+import com.zerosumtrading.data.IndexTicker;
+import com.zerosumtrading.data.OptionTicker;
+import com.zerosumtrading.data.StockTicker;
+import com.zerosumtrading.data.Ticker;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -19,11 +19,11 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.marketdata.ib;
+package com.zerosumtrading.marketdata.ib;
 
-import com.limituptrading.data.Ticker;
-import com.limituptrading.marketdata.*;
-import com.limituptrading.util.QuoteUtil;
+import com.zerosumtrading.data.Ticker;
+import com.zerosumtrading.marketdata.*;
+import com.zerosumtrading.util.QuoteUtil;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;

@@ -19,14 +19,14 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.ib;
+package com.zerosumtrading.ib;
 
-import com.limituptrading.broker.order.OrderStatus;
-import com.limituptrading.broker.order.TradeDirection;
-import com.limituptrading.broker.order.TradeOrder;
-import com.limituptrading.data.FuturesTicker;
-import com.limituptrading.data.InstrumentType;
-import com.limituptrading.marketdata.QuoteType;
+import com.zerosumtrading.broker.order.OrderStatus;
+import com.zerosumtrading.broker.order.TradeDirection;
+import com.zerosumtrading.broker.order.TradeOrder;
+import com.zerosumtrading.data.FuturesTicker;
+import com.zerosumtrading.data.InstrumentType;
+import com.zerosumtrading.marketdata.QuoteType;
 import java.math.BigDecimal;
 import org.junit.After;
 import org.junit.AfterClass;

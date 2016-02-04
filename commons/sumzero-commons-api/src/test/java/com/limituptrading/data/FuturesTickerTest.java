@@ -19,7 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.data;
+package com.zerosumtrading.data;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -29,7 +29,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static com.limituptrading.data.Commodity.*;
+import static com.zerosumtrading.data.Commodity.*;
 import static org.junit.Assert.*;
 
 

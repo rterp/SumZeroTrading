@@ -19,15 +19,15 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.marketdata.ib;
+package com.zerosumtrading.marketdata.ib;
 
-import com.limituptrading.data.CurrencyTicker;
-import com.limituptrading.data.StockTicker;
-import com.limituptrading.data.Ticker;
-import com.limituptrading.marketdata.ILevel1Quote;
-import com.limituptrading.marketdata.IQuoteEngine;
-import com.limituptrading.marketdata.QuoteType;
-import com.limituptrading.util.QuoteUtil;
+import com.zerosumtrading.data.CurrencyTicker;
+import com.zerosumtrading.data.StockTicker;
+import com.zerosumtrading.data.Ticker;
+import com.zerosumtrading.marketdata.ILevel1Quote;
+import com.zerosumtrading.marketdata.IQuoteEngine;
+import com.zerosumtrading.marketdata.QuoteType;
+import com.zerosumtrading.util.QuoteUtil;
 import java.math.BigDecimal;
 import java.util.concurrent.BlockingQueue;
 import org.jmock.Expectations;

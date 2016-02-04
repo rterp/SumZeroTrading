@@ -18,9 +18,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
 */
 
-package com.limituptrading.marketdata.timeAndSales;
+package com.zerosumtrading.marketdata.timeAndSales;
 
-import com.limituptrading.data.Ticker;
+import com.zerosumtrading.data.Ticker;
 import java.util.Date;
 import java.util.List;
 

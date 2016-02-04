@@ -18,12 +18,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
 */
 
-package com.limituptrading.marketdata;
+package com.zerosumtrading.marketdata;
 
 import java.util.Date;
 import java.util.Properties;
 
-import com.limituptrading.data.Ticker;
+import com.zerosumtrading.data.Ticker;
 
 public interface IQuoteEngine {
 

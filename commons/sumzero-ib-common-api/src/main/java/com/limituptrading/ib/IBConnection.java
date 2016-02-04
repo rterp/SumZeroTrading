@@ -19,7 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.ib;
+package com.zerosumtrading.ib;
 
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
@@ -28,8 +28,8 @@ import com.ib.client.Execution;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.ib.client.TickType;
-import com.limituptrading.ib.historical.ContractDetailsListener;
-import com.limituptrading.ib.historical.HistoricalDataListener;
+import com.zerosumtrading.ib.historical.ContractDetailsListener;
+import com.zerosumtrading.ib.historical.HistoricalDataListener;
 import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;

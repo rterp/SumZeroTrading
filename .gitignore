@@ -17,3 +17,4 @@ nb-configuration.xml
 *.war
 *.ear
 /commons/limitup-ib-common-api/nbproject/
+/commons/sumzero-ib-common-api/nbproject/

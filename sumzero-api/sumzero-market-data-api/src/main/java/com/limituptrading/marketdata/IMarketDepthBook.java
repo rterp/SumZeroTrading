@@ -18,9 +18,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
 */
 
-package com.limituptrading.marketdata;
+package com.zerosumtrading.marketdata;
 
-import com.limituptrading.marketdata.MarketDepthBook.Side;
+import com.zerosumtrading.marketdata.MarketDepthBook.Side;
 import java.math.BigDecimal;
 
 /**

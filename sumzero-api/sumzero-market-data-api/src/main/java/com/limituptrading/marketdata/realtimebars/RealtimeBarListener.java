@@ -18,10 +18,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  
 */
 
-package com.limituptrading.marketdata.realtimebars;
+package com.zerosumtrading.marketdata.realtimebars;
 
-import com.limituptrading.data.BarData;
-import com.limituptrading.data.Ticker;
+import com.zerosumtrading.data.BarData;
+import com.zerosumtrading.data.Ticker;
 
 public interface RealtimeBarListener {
 

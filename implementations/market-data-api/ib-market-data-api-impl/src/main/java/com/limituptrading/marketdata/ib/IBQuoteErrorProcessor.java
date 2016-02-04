@@ -19,10 +19,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.limituptrading.marketdata.ib;
+package com.zerosumtrading.marketdata.ib;
 
-import com.limituptrading.marketdata.IQuoteEngine;
-import com.limituptrading.marketdata.QuoteError;
+import com.zerosumtrading.marketdata.IQuoteEngine;
+import com.zerosumtrading.marketdata.QuoteError;
 import java.util.concurrent.BlockingQueue;
 
 /**
