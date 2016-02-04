@@ -26,10 +26,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <description>Limit Up Build POM</description>
 
   <modules>
-    <module>LimitUpParent</module>
     <module>commons</module>
-    <module>limitup-api</module>
     <module>examples</module>
     <module>implementations</module>
+    <module>SumZeroParent</module>
+    <module>sumzero-apit</module>
   </modules>
  </project>
