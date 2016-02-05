@@ -26,12 +26,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
     <parent>
-        <groupId>com.zerosumtrading</groupId>
+        <groupId>com.sumzerotrading</groupId>
         <artifactId>market-data-api</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.zerosumtrading</groupId>
+    <groupId>com.sumzerotrading</groupId>
     <artifactId>ib-market-data-api-impl</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -68,13 +68,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     </build>
     <dependencies>
         <dependency>
-            <groupId>com.zerosumtrading</groupId>
-            <artifactId>limitup-commons-api</artifactId>
+            <groupId>com.sumzerotrading</groupId>
+            <artifactId>sumzero-commons-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.zerosumtrading</groupId>
-            <artifactId>limitup-ib-common-api</artifactId>
+            <groupId>com.sumzerotrading</groupId>
+            <artifactId>sumzero-ib-common-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
@@ -82,18 +82,18 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     <artifactId>interactive-brokers-client</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.zerosumtrading</groupId>
-                    <artifactId>limitup-broker-api</artifactId>
+                    <groupId>com.sumzerotrading</groupId>
+                    <artifactId>sumzero-broker-api</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>com.zerosumtrading</groupId>
-                    <artifactId>limitup-commons-ui</artifactId>
+                    <groupId>com.sumzerotrading</groupId>
+                    <artifactId>sumzero-commons-ui</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.zerosumtrading</groupId>
-            <artifactId>limitup-market-data-api</artifactId>
+            <groupId>com.sumzerotrading</groupId>
+            <artifactId>sumzero-market-data-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>

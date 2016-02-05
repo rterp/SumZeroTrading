@@ -19,10 +19,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.zerosumtrading.marketdata.ib;
+package com.sumzerotrading.marketdata.ib;
 
-import com.zerosumtrading.marketdata.IQuoteEngine;
-import com.zerosumtrading.marketdata.QuoteError;
+import com.sumzerotrading.marketdata.IQuoteEngine;
+import com.sumzerotrading.marketdata.QuoteError;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.AfterClass;

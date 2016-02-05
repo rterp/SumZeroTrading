@@ -25,12 +25,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.zerosumtrading</groupId>
-    <artifactId>limitup-implementations</artifactId>
+    <groupId>com.sumzerotrading</groupId>
+    <artifactId>sumzero-implementations</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.zerosumtrading</groupId>
+  <groupId>com.sumzerotrading</groupId>
   <artifactId>historical-data-api</artifactId>
   <name>historical-data-api</name>
   <description>API for subscribing to market data</description>

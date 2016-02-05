@@ -25,12 +25,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.zerosumtrading</groupId>
-    <artifactId>limitup-implementations</artifactId>
+    <groupId>com.sumzerotrading</groupId>
+    <artifactId>sumzero-implementations</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.zerosumtrading</groupId>
+  <groupId>com.sumzerotrading</groupId>
   <artifactId>broker-api</artifactId>
   <name>broker-api</name>
   <description>API for connecting to a broker</description>

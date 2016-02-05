@@ -25,21 +25,22 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.zerosumtrading</groupId>
-    <artifactId>LimitUpParent</artifactId>
+    <groupId>com.sumzerotrading</groupId>
+    <artifactId>SumZeroParent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../LimitUpParent</relativePath>
+    <relativePath>../SumZeroParent</relativePath>
   </parent>
 
-  <artifactId>limitup-commons</artifactId>
-  <name>limitup-commons</name>
+  <groupId>com.sumzerotrading</groupId>
+  <artifactId>sumzero-commons</artifactId>
+  <name>sumzero-commons</name>
   <description>Classes that are used by all projects</description>
   <packaging>pom</packaging>
 
   <modules>
-    <module>limitup-commons-api</module>
+    <module>sumzero-commons-api</module>
     <module>interactive-brokers-api</module>
-    <module>limitup-ib-common-api</module>
+    <module>sumzero-ib-common-api</module>
     <module>interactive-brokers-client</module>
   </modules>
   

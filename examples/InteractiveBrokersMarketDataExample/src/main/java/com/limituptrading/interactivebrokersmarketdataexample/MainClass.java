@@ -19,12 +19,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.zerosumtrading.interactivebrokersmarketdataexample;
+package com.sumzerotrading.interactivebrokersmarketdataexample;
 
-import com.zerosumtrading.data.Exchange;
-import com.zerosumtrading.data.FuturesTicker;
-import com.zerosumtrading.interactive.brokers.client.InteractiveBrokersClient;
-import com.zerosumtrading.marketdata.ILevel1Quote;
+import com.sumzerotrading.data.Exchange;
+import com.sumzerotrading.data.FuturesTicker;
+import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
+import com.sumzerotrading.marketdata.ILevel1Quote;
 
 /**
  *

@@ -23,13 +23,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <modelVersion>4.0.0</modelVersion>
   
       <parent>
-        <groupId>com.zerosumtrading</groupId>
-        <artifactId>limitup-commons</artifactId>
+        <groupId>com.sumzerotrading</groupId>
+        <artifactId>sumzero-commons</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
   
     
-  <groupId>com.zerosumtrading</groupId>
+  <groupId>com.sumzerotrading</groupId>
   <artifactId>sumzero-ib-common-api</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -45,8 +45,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   <dependencies>
     <dependency>
-      <groupId>com.zerosumtrading</groupId>
-      <artifactId>limitup-broker-api</artifactId>
+      <groupId>com.sumzerotrading</groupId>
+      <artifactId>sumzero-broker-api</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -73,13 +73,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>com.zerosumtrading</groupId>
-      <artifactId>limitup-market-data-api</artifactId>
+      <groupId>com.sumzerotrading</groupId>
+      <artifactId>sumzero-market-data-api</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <artifactId>limitup-commons-api</artifactId>
-      <groupId>com.zerosumtrading</groupId>
+      <artifactId>sumzero-commons-api</artifactId>
+      <groupId>com.sumzerotrading</groupId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>

@@ -19,9 +19,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.zerosumtrading.marketdata.ib;
+package com.sumzerotrading.marketdata.ib;
 
-import com.zerosumtrading.data.Ticker;
+import com.sumzerotrading.data.Ticker;
 
 /**
  *

@@ -4,12 +4,12 @@
 
 
     <parent>
-        <groupId>com.zerosumtrading</groupId>
-        <artifactId>limitup-commons</artifactId>
+        <groupId>com.sumzerotrading</groupId>
+        <artifactId>sumzero-commons</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-  <groupId>com.ib</groupId>
+  <groupId>com.ib</groupId> 
   <artifactId>interactive-brokers-client</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>

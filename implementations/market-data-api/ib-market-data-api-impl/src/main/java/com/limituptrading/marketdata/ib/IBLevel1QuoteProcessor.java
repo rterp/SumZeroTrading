@@ -19,15 +19,15 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.zerosumtrading.marketdata.ib;
+package com.sumzerotrading.marketdata.ib;
 
-import com.zerosumtrading.data.StockTicker;
-import com.zerosumtrading.data.Ticker;
-import com.zerosumtrading.ib.IbUtils;
-import com.zerosumtrading.marketdata.IQuoteEngine;
-import com.zerosumtrading.marketdata.Level1Quote;
-import com.zerosumtrading.marketdata.QuoteType;
-import com.zerosumtrading.util.QuoteUtil;
+import com.sumzerotrading.data.StockTicker;
+import com.sumzerotrading.data.Ticker;
+import com.sumzerotrading.ib.IbUtils;
+import com.sumzerotrading.marketdata.IQuoteEngine;
+import com.sumzerotrading.marketdata.Level1Quote;
+import com.sumzerotrading.marketdata.QuoteType;
+import com.sumzerotrading.util.QuoteUtil;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;

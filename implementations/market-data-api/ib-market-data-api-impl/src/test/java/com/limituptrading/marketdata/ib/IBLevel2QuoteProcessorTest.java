@@ -19,12 +19,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.zerosumtrading.marketdata.ib;
+package com.sumzerotrading.marketdata.ib;
 
-import com.zerosumtrading.data.CurrencyTicker;
-import com.zerosumtrading.data.Ticker;
-import com.zerosumtrading.marketdata.*;
-import com.zerosumtrading.util.QuoteUtil;
+import com.sumzerotrading.data.CurrencyTicker;
+import com.sumzerotrading.data.Ticker;
+import com.sumzerotrading.marketdata.*;
+import com.sumzerotrading.util.QuoteUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;

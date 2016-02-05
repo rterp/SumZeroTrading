@@ -19,19 +19,19 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.zerosumtrading.marketdata.ib;
+package com.sumzerotrading.marketdata.ib;
 
 import com.ib.client.Contract;
-import com.zerosumtrading.ib.ContractBuilderFactory;
-import com.zerosumtrading.data.StockTicker;
+import com.sumzerotrading.ib.ContractBuilderFactory;
+import com.sumzerotrading.data.StockTicker;
 import com.ib.client.ClientSocketInterface;
-import com.zerosumtrading.data.Ticker;
-import com.zerosumtrading.ib.IBConnectionInterface;
-import com.zerosumtrading.ib.IBSocket;
-import com.zerosumtrading.marketdata.ILevel1Quote;
-import com.zerosumtrading.marketdata.Level1QuoteListener;
-import com.zerosumtrading.marketdata.QuoteError;
-import com.zerosumtrading.marketdata.QuoteType;
+import com.sumzerotrading.data.Ticker;
+import com.sumzerotrading.ib.IBConnectionInterface;
+import com.sumzerotrading.ib.IBSocket;
+import com.sumzerotrading.marketdata.ILevel1Quote;
+import com.sumzerotrading.marketdata.Level1QuoteListener;
+import com.sumzerotrading.marketdata.QuoteError;
+import com.sumzerotrading.marketdata.QuoteType;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.After;

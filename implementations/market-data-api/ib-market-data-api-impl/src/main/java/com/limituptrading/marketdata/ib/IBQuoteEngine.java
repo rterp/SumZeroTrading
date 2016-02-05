@@ -19,18 +19,18 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.zerosumtrading.marketdata.ib;
+package com.sumzerotrading.marketdata.ib;
 
 import com.ib.client.ClientSocketInterface;
 import com.ib.client.Contract;
-import com.zerosumtrading.data.Ticker;
-import com.zerosumtrading.ib.ContractBuilderFactory;
-import com.zerosumtrading.ib.IBConnectionInterface;
-import com.zerosumtrading.ib.IBDataQueue;
-import com.zerosumtrading.ib.IBSocket;
-import com.zerosumtrading.ib.MarketDepthListener;
-import com.zerosumtrading.ib.TickListener;
-import com.zerosumtrading.marketdata.*;
+import com.sumzerotrading.data.Ticker;
+import com.sumzerotrading.ib.ContractBuilderFactory;
+import com.sumzerotrading.ib.IBConnectionInterface;
+import com.sumzerotrading.ib.IBDataQueue;
+import com.sumzerotrading.ib.IBSocket;
+import com.sumzerotrading.ib.MarketDepthListener;
+import com.sumzerotrading.ib.TickListener;
+import com.sumzerotrading.marketdata.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

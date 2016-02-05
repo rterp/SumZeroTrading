@@ -1,4 +1,4 @@
-/LimitUpParent/limitup-commons-api/target/
+/sumzeroParent/sumzero-commons-api/target/
 # NetBeans specific #
 nbproject/private/
 build/
@@ -16,5 +16,5 @@ nb-configuration.xml
 *.jar
 *.war
 *.ear
-/commons/limitup-ib-common-api/nbproject/
+/commons/sumzero-ib-common-api/nbproject/
 /commons/sumzero-ib-common-api/nbproject/
