@@ -27,7 +27,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   <parent>
     <groupId>com.sumzerotrading</groupId>
-    <artifactId>sumzeroParent</artifactId>
+    <artifactId>SumZeroParent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <relativePath>../SumZeroParent</relativePath>
   </parent>
