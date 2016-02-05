@@ -37,7 +37,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <packaging>jar</packaging>
 
     <name>ib-market-data-api-impl</name>
-    <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,27 +44,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.12</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12</version>
-                <configuration>
-                    <forkMode>always</forkMode>
-                </configuration>
-            </plugin>
-        </plugins>        
-    </build>
     <dependencies>
         <dependency>
             <groupId>com.sumzerotrading</groupId>
