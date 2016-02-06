@@ -484,8 +484,7 @@ header h2 {
 }
 
 .inner2 {
-  background-color: rgba(255,255,255,0.5);
-  position: relative;
+  background-color: rgba(0,0,0,0.5);
   width: 300px;
   margin: 0 auto;
 }
