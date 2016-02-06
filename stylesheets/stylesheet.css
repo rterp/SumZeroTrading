@@ -487,8 +487,9 @@ header h2 {
   background-color: rgba(0,0,0,0.5);
   position: relative;
   left: 0px;
+  padding: 5px;
   width: 400px;
-  margin: 0 auto;
+  margin: 0px;
 }
 
 #content-wrapper {
