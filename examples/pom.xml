@@ -36,6 +36,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <description>Classes that are used by all projects</description>
   <packaging>pom</packaging>
     <modules>
-        <module>InteractiveBrokersMarketDataExample</module>
+        <module>InteractiveBrokersExamples</module>
     </modules>
 </project>

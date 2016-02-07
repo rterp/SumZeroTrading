@@ -18,8 +18,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.sumzerotrading.interactive.brokers.client;
+package com.zerosumtrading.interactive.brokers.client;
 
+import com.sumzerotrading.broker.IBroker;
+import com.sumzerotrading.broker.ib.InteractiveBrokersBroker;
+import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.ib.IBConnectionUtil;
 import com.sumzerotrading.ib.IBSocket;
@@ -38,7 +41,9 @@ public class InteractiveBrokersClient {
     protected int port;
     protected int clientId;
     protected IBSocket ibSocket;
-    protected IBQuoteEngine quoteEngine;
+    protected QuoteEngine quoteEngine;
+    protected IBroker broker;
+    
 
     public InteractiveBrokersClient(String host, int port, int clientId) {
         this.host = host;
@@ -47,11 +52,13 @@ public class InteractiveBrokersClient {
         IBConnectionUtil util = new IBConnectionUtil(host, port, clientId);
         ibSocket = util.getIBSocket();
         quoteEngine = new IBQuoteEngine(ibSocket);
+        broker = new InteractiveBrokersBroker(ibSocket);
     }
 
 
     public void connect() {
         ibSocket.connect();
+        broker.connect();
         quoteEngine.startEngine();
     }
     
@@ -89,6 +96,13 @@ public class InteractiveBrokersClient {
         return clientId;
     }
     
+    public void placeOrder(TradeOrder order) {
+        broker.placeOrder(order);
+    }
+    
+    public String getNextOrderId() {
+        return broker.getNextOrderId();
+    }
     
     
     

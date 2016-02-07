@@ -19,17 +19,15 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-package com.sumzerotrading.interactivebrokersmarketdataexample;
+package com.sumzerotrading.ib.example.trading;
 
+import com.sumzerotrading.broker.order.TradeDirection;
+import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.Exchange;
 import com.sumzerotrading.data.FuturesTicker;
-import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
-import com.sumzerotrading.marketdata.ILevel1Quote;
+import com.zerosumtrading.interactive.brokers.client.InteractiveBrokersClient;
 
-/**
- *
- * @author RobTerpilowski
- */
+
 public class MainClass {
     
     
@@ -43,11 +41,13 @@ public class MainClass {
         esTicker.setExpiryMonth(3);
         esTicker.setExpiryYear(2016);
         esTicker.setExchange(Exchange.GLOBEX);
-
         
-        ibClient.subscribeLevel1(esTicker, (ILevel1Quote quote) -> {
-            System.out.println("Received Quote: " + quote );
-        });
+        
+        String orderId = ibClient.getNextOrderId();
+        int contracts = 5;
+        
+        TradeOrder order = new TradeOrder(orderId, esTicker, contracts, TradeDirection.BUY);
+        ibClient.placeOrder(order);
         
     }
     
