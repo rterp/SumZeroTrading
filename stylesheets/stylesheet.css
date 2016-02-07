@@ -473,7 +473,7 @@ header h2 {
   font-size: 26px;
   font-weight: normal;
   line-height: 1.3;
-  color: #9ddcff;
+  color: #d0dc47;
   letter-spacing: 0;
 }
 
@@ -545,6 +545,7 @@ header a.button {
   top: 0;
   right: 0;
   background: transparent url(../images/github-button.png) 0 0 no-repeat;
+  background-color: rgba(0,0,0,0.5);
 }
 aside a.button {
   display: block;
@@ -644,7 +645,7 @@ form {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 22px;
   font-weight: bold;
-  color: #474747;
+  color: #659e35;
   text-indent: 4px;
 }
 #main-content h2:before {
@@ -668,7 +669,7 @@ form {
   padding-right: 0.3em;
   margin-left: -2em;
   content: "///";
-  color: #9ddcff;
+  color: #aaaaaa;
 }
 
 #main-content h4 {
