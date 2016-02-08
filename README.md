@@ -20,6 +20,7 @@ Java API for developing automated trading applications which includes support fo
 * Configure release builds to deploy to maven central
 
 * Update to use latest version of TWS API.
+* JavaDocs
 
 
 
