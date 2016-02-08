@@ -21,35 +21,31 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib.example.market.data;
 
-import com.sumzerotrading.data.Exchange;
-import com.sumzerotrading.data.FuturesTicker;
+import com.sumzerotrading.data.StockTicker;
 import com.zerosumtrading.interactive.brokers.client.InteractiveBrokersClient;
 import com.sumzerotrading.marketdata.ILevel1Quote;
+import com.sumzerotrading.marketdata.QuoteType;
 
 
 
-public class MainClass {
+public class MarketDataStocksExample {
     
     
     public void start() {
         InteractiveBrokersClient ibClient = new InteractiveBrokersClient("localhost", 6468, 1);
         ibClient.connect();
         
+        StockTicker stockTicker=  new StockTicker("AMZN");
         
-        FuturesTicker esTicker=  new FuturesTicker();
-        esTicker.setSymbol("ES");
-        esTicker.setExpiryMonth(3);
-        esTicker.setExpiryYear(2016);
-        esTicker.setExchange(Exchange.GLOBEX);
-
-        
-        ibClient.subscribeLevel1(esTicker, (ILevel1Quote quote) -> {
-            System.out.println("Received Quote: " + quote );
+        ibClient.subscribeLevel1(stockTicker, (ILevel1Quote quote) -> {
+            if( quote.getType().equals(QuoteType.LAST) ){
+                System.out.println("Received Quote: " + quote.getValue() );
+            }
         });
         
     }
     
     public static void main(String[] args) {
-        new MainClass().start();
+        new MarketDataStocksExample().start();
     }
 }
