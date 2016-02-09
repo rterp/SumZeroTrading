@@ -35,6 +35,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <name>historical-data-api</name>
   <description>API for subscribing to market data</description>
   <packaging>pom</packaging>
-
-
+    <modules>
+        <module>ib-historical-data-api-impl</module>
+    </modules>
 </project>
