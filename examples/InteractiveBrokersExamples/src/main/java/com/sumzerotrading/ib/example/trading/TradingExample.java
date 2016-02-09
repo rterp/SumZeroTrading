@@ -28,7 +28,7 @@ import com.sumzerotrading.data.FuturesTicker;
 import com.zerosumtrading.interactive.brokers.client.InteractiveBrokersClient;
 
 
-public class MainClass {
+public class TradingExample {
     
     
     public void start() {
@@ -52,6 +52,6 @@ public class MainClass {
     }
     
     public static void main(String[] args) {
-        new MainClass().start();
+        new TradingExample().start();
     }
 }

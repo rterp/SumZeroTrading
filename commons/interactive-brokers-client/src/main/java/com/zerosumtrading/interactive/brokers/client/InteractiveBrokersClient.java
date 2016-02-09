@@ -23,13 +23,17 @@ package com.zerosumtrading.interactive.brokers.client;
 import com.sumzerotrading.broker.IBroker;
 import com.sumzerotrading.broker.ib.InteractiveBrokersBroker;
 import com.sumzerotrading.broker.order.TradeOrder;
+import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.data.Ticker;
+import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
 import com.sumzerotrading.ib.IBConnectionUtil;
 import com.sumzerotrading.ib.IBSocket;
+import com.sumzerotrading.ib.historical.IBHistoricalDataProvider;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.Level2QuoteListener;
 import com.sumzerotrading.marketdata.QuoteEngine;
 import com.sumzerotrading.marketdata.ib.IBQuoteEngine;
+import java.util.List;
 
 /**
  *
@@ -43,6 +47,7 @@ public class InteractiveBrokersClient {
     protected IBSocket ibSocket;
     protected QuoteEngine quoteEngine;
     protected IBroker broker;
+    protected IHistoricalDataProvider historicalDataProvider;
     
 
     public InteractiveBrokersClient(String host, int port, int clientId) {
@@ -53,13 +58,20 @@ public class InteractiveBrokersClient {
         ibSocket = util.getIBSocket();
         quoteEngine = new IBQuoteEngine(ibSocket);
         broker = new InteractiveBrokersBroker(ibSocket);
+        historicalDataProvider = new IBHistoricalDataProvider(ibSocket);
     }
 
 
     public void connect() {
         ibSocket.connect();
         broker.connect();
+        historicalDataProvider.connect();
         quoteEngine.startEngine();
+    }
+    
+    public void disconnect() {
+        broker.disconnect();
+        quoteEngine.stopEngine();
     }
     
     
@@ -80,9 +92,6 @@ public class InteractiveBrokersClient {
     }
     
     
-    public QuoteEngine getQuoteEngine() {
-        return quoteEngine;
-    }
     
     public String getHost() {
         return host;
@@ -105,6 +114,9 @@ public class InteractiveBrokersClient {
     }
     
     
+    public List<BarData> requestHistoricalData(Ticker ticker, int duration, BarData.LengthUnit lengthUnit, int barSize, BarData.LengthUnit barSizeUnit, IHistoricalDataProvider.ShowProperty showProperty ) {
+        return historicalDataProvider.requestHistoricalData(ticker, duration, lengthUnit,  barSize, barSizeUnit, showProperty, true);
+    }
     
     
 }
