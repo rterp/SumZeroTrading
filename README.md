@@ -5,22 +5,23 @@ Java API for developing automated trading applications which includes support fo
 
 
 ### TODO
-* Add Common projects
-* api-common
-* ib-api-common
-
-* Add API projects
-* market-data-api
-* real-time-bar-api
 * historical-data-api
+* real-time-bar-api
 * strategy-api
-* broker-api
 
 * Add Implementation Projects
-* market-data-api
-* real-time-bar-api
 * historical-data-api
+* real-time-bar-api
 * strategy-api
-* broker-api
 
-* Create POM files for each level
+* Fix integration tests
+
+* harmonize version number across all projects.
+* Configure release builds to deploy to maven central
+
+* Update to use latest version of TWS API.
+* JavaDocs
+
+
+
+
