@@ -23,7 +23,7 @@ package com.sumzerotrading.ib.example.market.data;
 
 import com.sumzerotrading.data.Exchange;
 import com.sumzerotrading.data.FuturesTicker;
-import com.zerosumtrading.interactive.brokers.client.InteractiveBrokersClient;
+import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 import com.sumzerotrading.marketdata.ILevel1Quote;
 
 

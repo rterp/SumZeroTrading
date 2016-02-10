@@ -25,7 +25,7 @@ import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.Exchange;
 import com.sumzerotrading.data.FuturesTicker;
-import com.zerosumtrading.interactive.brokers.client.InteractiveBrokersClient;
+import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 
 
 public class TradingExample {

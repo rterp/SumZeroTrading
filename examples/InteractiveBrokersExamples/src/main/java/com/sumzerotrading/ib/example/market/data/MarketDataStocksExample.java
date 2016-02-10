@@ -22,7 +22,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.sumzerotrading.ib.example.market.data;
 
 import com.sumzerotrading.data.StockTicker;
-import com.zerosumtrading.interactive.brokers.client.InteractiveBrokersClient;
+import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 import com.sumzerotrading.marketdata.ILevel1Quote;
 import com.sumzerotrading.marketdata.QuoteType;
 

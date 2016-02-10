@@ -18,7 +18,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.zerosumtrading.interactive.brokers.client;
+package com.sumzerotrading.interactive.brokers.client;
 
 import com.sumzerotrading.broker.IBroker;
 import com.sumzerotrading.broker.ib.InteractiveBrokersBroker;

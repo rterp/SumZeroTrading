@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sumzero.trading.ib.example.historical.data;
+package com.sumzerotrading.ib.example.historical.data;
 
 import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.data.BarData.LengthUnit;
 import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider.ShowProperty;
-import com.zerosumtrading.interactive.brokers.client.InteractiveBrokersClient;
+import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 import java.util.List;
 
 /**
