@@ -36,7 +36,7 @@ import org.junit.Test;
 
 /**
  *
- * @author robbob
+ * @author Rob Terpilowski
  */
 public class SerializationTest {
     

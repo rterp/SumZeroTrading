@@ -35,6 +35,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <name>real-time-bar-api</name>
   <description>API for connecting to a broker</description>
   <packaging>pom</packaging>
-
-  
+    <modules>
+        <module>ib-real-time-bar-api-impl</module>
+    </modules>
 </project>

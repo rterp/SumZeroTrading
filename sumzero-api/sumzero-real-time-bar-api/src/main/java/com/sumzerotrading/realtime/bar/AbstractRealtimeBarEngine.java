@@ -1,0 +1,85 @@
+/**
+ MIT License
+
+Copyright (c) 2015  Rob Terpilowski
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+and associated documentation files (the "Software"), to deal in the Software without restriction, 
+including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
+BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+package com.sumzerotrading.realtime.bar;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ * @author Rob Terpilowski
+ */
+public abstract class AbstractRealtimeBarEngine implements IRealtimeBarEngine {
+
+    protected Map< RealtimeBarRequest, List<RealtimeBarListener>> listenerMap = new HashMap<RealtimeBarRequest, List<RealtimeBarListener>>();
+
+    
+    
+//    public void subscribeRealtimeBars(RealtimeBarRequest request, RealtimeBarListener listener) {
+//        synchronized (listenerMap) {
+//            List<RealtimeBarListener> listeners = listenerMap.get(request);
+//            if (listeners == null) {
+//                listeners = new ArrayList<RealtimeBarListener>();
+//                listenerMap.put(request, listeners);
+//            }
+//            listeners.add(listener);
+//        }
+//    }
+//
+//    
+//    public void unsubscribeRealtimeBars(RealtimeBarRequest request, RealtimeBarListener listener) {
+//        synchronized (listenerMap) {
+//            List<RealtimeBarListener> listeners = listenerMap.get(request);
+//            if (listeners != null) {
+//                listeners.remove(listener);
+//                if (listeners.isEmpty()) {
+//                    unsubscribeRealtimeBarInternal(request, listener, true);
+//                } else {
+//                    unsubscribeRealtimeBarInternal(request, listener, false);
+//                }
+//            } else {
+//                unsubscribeRealtimeBarInternal(request, listener, true);
+//
+//            }
+//        }
+//    }
+
+    
+    
+    /**
+     * Called after listeners have been added to the listener lists.
+     * @param request The request for real time bars.
+     * @param listener The listener which will listen for bar events.
+     */
+    public abstract void subscribeRealtimeBarInternal(RealtimeBarRequest request, RealtimeBarListener listener);
+
+    
+    /**
+     * Called after listeners have been removed from listener lists.
+     * @param request The request to unsubscribe.
+     * @param noMoreListeners true if there are no further listeners for this market data.
+     */
+    public abstract void unsubscribeRealtimeBarInternal(RealtimeBarRequest request, RealtimeBarListener listener, boolean noMoreListeners);
+    
+    
+}

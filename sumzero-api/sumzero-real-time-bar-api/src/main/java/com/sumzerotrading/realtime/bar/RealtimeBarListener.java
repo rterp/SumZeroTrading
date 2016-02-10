@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-MIT License
+/**
+ MIT License
 
 Copyright (c) 2015  Rob Terpilowski
 
@@ -18,30 +16,18 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+*/
+package com.sumzerotrading.realtime.bar;
 
+import com.sumzerotrading.data.BarData;
+import com.sumzerotrading.data.Ticker;
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>com.sumzerotrading</groupId>
-    <artifactId>SumZeroParent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../SumZeroParent</relativePath>
-  </parent>
-
-  <artifactId>sumzero-api</artifactId>
-  <name>sumzero-api</name>
-  <description>sumzero APIs</description>
-  <packaging>pom</packaging>
-
-  <modules>
-    <module>sumzero-broker-api</module>
-    <module>sumzero-market-data-api</module>
-    <module>sumzero-historical-data-api</module>
-    <module>sumzero-real-time-bar-api</module>
-  </modules>
-  
-</project>
+/**
+ *
+ * @author Rob Terpilowski
+ */
+public interface RealtimeBarListener {
+    
+    
+    public void realtimeBarReceived( int requestId, Ticker ticker, BarData bar );
+}

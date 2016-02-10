@@ -6,7 +6,7 @@ package com.sumzerotrading.ib;
 
 /**
  *
- * @author robbob
+ * @author Rob Terpilowski
  */
 public interface IBQuoteCallback {
 

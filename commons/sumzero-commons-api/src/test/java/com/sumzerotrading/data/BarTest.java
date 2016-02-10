@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author robbob
+ * @author Rob Terpilowski
  */
 public class BarTest {
 

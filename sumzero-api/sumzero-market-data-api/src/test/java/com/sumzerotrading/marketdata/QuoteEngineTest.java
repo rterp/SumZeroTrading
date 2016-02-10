@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
 
 /**
  *
- * @author robbob
+ * @author Rob Terpilowski
  */
 public class QuoteEngineTest {
     

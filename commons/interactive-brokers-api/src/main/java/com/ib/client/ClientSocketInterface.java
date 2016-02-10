@@ -10,7 +10,7 @@ import java.net.Socket;
 
 /**
  *
- * @author robbob
+ * @author Rob Terpilowski
  */
 public interface ClientSocketInterface {
 

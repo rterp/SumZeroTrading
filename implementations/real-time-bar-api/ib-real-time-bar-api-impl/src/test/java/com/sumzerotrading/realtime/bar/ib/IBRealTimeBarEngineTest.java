@@ -1,0 +1,339 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sumzerotrading.realtime.bar.ib;
+
+import com.sumzerotrading.data.BarData;
+import com.sumzerotrading.data.BarData.LengthUnit;
+import com.sumzerotrading.data.StockTicker;
+import com.sumzerotrading.data.Ticker;
+import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
+import com.sumzerotrading.marketdata.IQuoteEngine;
+import com.sumzerotrading.realtime.bar.RealtimeBarListener;
+import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
+import junit.framework.TestCase;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.junit.Test;
+import org.quartz.impl.StdSchedulerFactory;
+
+/**
+ *
+ * @author Rob Terpilowski
+ */
+public class IBRealTimeBarEngineTest extends TestCase {
+
+    protected Mockery mockery;
+
+    public IBRealTimeBarEngineTest(String testName) {
+        super(testName);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        mockery = new Mockery();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
+    @Test
+    public void testConstructor() {
+        IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+
+        assertEquals(mockQuoteEngine, engine.quoteEngine);
+        assertEquals(mockHistoricalData, engine.historicalDataProvider);
+        assertTrue(engine.schedulerFactory instanceof StdSchedulerFactory);
+    }
+
+    @Test
+    public void testSubscribeRealtimeBars() {
+        final StockTicker ticker = new StockTicker("qqq");
+        int timeInterval = 1;
+        final IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        final IBarBuilder mockBarBuilder = mockery.mock( IBarBuilder.class );
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+        RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, timeInterval, LengthUnit.MINUTE);
+
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+
+        
+        final RealtimeBarListener listener = new RealtimeBarListener() {
+
+            public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
+            }
+        };
+        
+        mockery.checking( new Expectations(){{
+            one(mockBarBuilder).addBarListener( listener );
+        }}
+        );
+        
+
+        
+        engine.barMap.put(request, mockBarBuilder);
+        engine.subscribeRealtimeBars(request, listener);
+
+        mockery.assertIsSatisfied();
+
+    }
+    
+    
+   @Test
+    public void testSubscribeRealtimeBars_OneHourRequest() {
+        final StockTicker ticker = new StockTicker("qqq");
+        int timeInterval = 1;
+        final IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        final IBarBuilder mockBarBuilder = mockery.mock( IBarBuilder.class );
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+        RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, timeInterval, LengthUnit.HOUR);
+
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+
+        
+        final RealtimeBarListener listener = new RealtimeBarListener() {
+
+            public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
+            }
+        };
+        
+        mockery.checking( new Expectations(){{
+            one(mockBarBuilder).addBarListener( listener );
+        }}
+        );
+        
+
+        
+        engine.barMap.put(request, mockBarBuilder);
+        engine.subscribeRealtimeBars(request, listener);
+
+        mockery.assertIsSatisfied();
+
+    }    
+
+        @Test
+    public void testSubscribeRealtimeBars_NoBuilderExists() {
+        final StockTicker ticker = new StockTicker("qqq");
+        int timeInterval = 1;
+        final IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        final IBarBuilder mockBarBuilder = mockery.mock( IBarBuilder.class );
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+        RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, timeInterval, LengthUnit.MINUTE);
+
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+        engine.testBarBuilder = mockBarBuilder;
+        
+        
+        final RealtimeBarListener listener = new RealtimeBarListener() {
+
+            public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
+            }
+        };
+        
+        mockery.checking( new Expectations(){{
+            one(mockQuoteEngine).subscribeLevel1(ticker, mockBarBuilder);
+            one(mockBarBuilder).addBarListener( listener );
+        }}
+        );
+        
+
+        
+        engine.subscribeRealtimeBars(request, listener);
+        assertEquals( mockBarBuilder, engine.barMap.get(request));
+        
+        mockery.assertIsSatisfied();
+
+    }
+        
+        @Test
+    public void testSubscribeRealtimeBars_NonMinuteRequest() {
+        final StockTicker ticker = new StockTicker("qqq");
+        int timeInterval = 2;
+        final IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        final IBarBuilder mockBarBuilder = mockery.mock( IBarBuilder.class );
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+        RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, timeInterval, LengthUnit.HOUR);
+
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+        engine.testBarBuilder = mockBarBuilder;
+        
+        
+        final RealtimeBarListener listener = new RealtimeBarListener() {
+
+            public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
+            }
+        };
+        
+
+        try {
+            engine.subscribeRealtimeBars(request, listener);
+            fail();
+        } catch( IllegalStateException ex ) {
+            //this should happen
+        }
+        
+        mockery.assertIsSatisfied();
+
+    }        
+        
+        @Test
+    public void testSubscribeRealtimeBars_ZeroMinuteRequest() {
+        final StockTicker ticker = new StockTicker("qqq");
+        int timeInterval = 0;
+        final IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        final IBarBuilder mockBarBuilder = mockery.mock( IBarBuilder.class );
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+        RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, timeInterval, LengthUnit.MINUTE);
+
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+        engine.testBarBuilder = mockBarBuilder;
+        
+        
+        final RealtimeBarListener listener = new RealtimeBarListener() {
+
+            public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
+            }
+        };
+        
+
+        try {
+            engine.subscribeRealtimeBars(request, listener);
+            fail();
+        } catch( IllegalStateException ex ) {
+            //this should happen
+        }
+        
+        mockery.assertIsSatisfied();
+
+    }        
+    
+        
+        @Test
+    public void testSubscribeRealtimeBars_61MinuteRequest() {
+        final StockTicker ticker = new StockTicker("qqq");
+        int timeInterval = 61;
+        final IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        final IBarBuilder mockBarBuilder = mockery.mock( IBarBuilder.class );
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+        RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, timeInterval, LengthUnit.MINUTE);
+
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+        engine.testBarBuilder = mockBarBuilder;
+        
+        
+        final RealtimeBarListener listener = new RealtimeBarListener() {
+
+            public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
+            }
+        };
+        
+
+        try {
+            engine.subscribeRealtimeBars(request, listener);
+            fail();
+        } catch( IllegalStateException ex ) {
+            //this should happen
+        }
+        
+        mockery.assertIsSatisfied();
+
+    }              
+    
+    @Test
+    public void testUnsubscribeRealtimeBars() {
+        StockTicker ticker = new StockTicker("qqq");
+        int timeInterval = 1;
+        IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+        RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, timeInterval, LengthUnit.MINUTE);
+        final RealtimeBarListener listener = mockery.mock(RealtimeBarListener.class);
+        final IBarBuilder mockBuilder = mockery.mock( IBarBuilder.class );
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+        engine.barMap.put(request, mockBuilder );
+        
+        
+        mockery.checking( new Expectations() {{
+            one(mockBuilder).removeBarListener(listener);
+            
+            one(mockBuilder).getListenerCount();
+            will(returnValue(1));
+            
+        }});
+        
+        engine.unsubscribeRealtimeBars(request, listener);
+        mockery.assertIsSatisfied();
+        
+    }
+    
+    @Test
+    public void testUnsubscribeRealtimeBars_NoMoreListeners() {
+        final StockTicker ticker = new StockTicker("qqq");
+        int timeInterval = 1;
+        final IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+        RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, timeInterval, LengthUnit.MINUTE);
+        final RealtimeBarListener listener = mockery.mock(RealtimeBarListener.class);
+        final IBarBuilder mockBuilder = mockery.mock( IBarBuilder.class );
+
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+        engine.barMap.put(request, mockBuilder );
+        
+        
+        mockery.checking( new Expectations() {{
+            one(mockBuilder).removeBarListener(listener);
+            
+            one(mockBuilder).getListenerCount();
+            will(returnValue(0));
+            
+            one(mockQuoteEngine).unsubscribeLevel1(ticker, mockBuilder);
+            
+        }});
+        
+        engine.unsubscribeRealtimeBars(request, listener);
+        assertNull( engine.barMap.get(request));
+        mockery.assertIsSatisfied();
+        
+    }    
+    
+    @Test
+    public void testIsConnected() {
+              final  IQuoteEngine mockQuoteEngine = mockery.mock(IQuoteEngine.class);
+        final IHistoricalDataProvider mockHistoricalData = mockery.mock(IHistoricalDataProvider.class);
+
+        mockery.checking( new Expectations() {{
+           one(mockQuoteEngine).isConnected(); 
+           will(returnValue(false));
+           
+           one(mockQuoteEngine).isConnected();
+           will(returnValue(true));
+           one(mockHistoricalData).isConnected();
+           will(returnValue(false));
+           
+           one(mockQuoteEngine).isConnected();
+           will(returnValue(true));
+           one(mockHistoricalData).isConnected();
+           will(returnValue(true));
+        }
+        });
+        
+        IBRealTimeBarEngine engine = new IBRealTimeBarEngine(mockQuoteEngine, mockHistoricalData);
+        assertFalse( engine.isConnected() );
+        
+        assertFalse( engine.isConnected() );
+        assertTrue( engine.isConnected() );
+    }
+}

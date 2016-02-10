@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author robbob
+ * @author Rob Terpilowski
  */
 public interface IMarketDepthBook {
 
