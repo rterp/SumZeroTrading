@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-MIT License
+/**
+ * MIT License
 
 Copyright (c) 2015  Rob Terpilowski
 
@@ -18,31 +16,46 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
 
+*/
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+package com.sumzerotrading.strategy;
 
-  <modelVersion>4.0.0</modelVersion>
+import com.sumzerotrading.broker.IBroker;
+import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
+import com.sumzerotrading.marketdata.IQuoteEngine;
+import com.sumzerotrading.realtime.bar.IRealtimeBarEngine;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-  <parent>
-    <groupId>com.sumzerotrading</groupId>
-    <artifactId>SumZeroParent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../SumZeroParent</relativePath>
-  </parent>
+/**
+ *
+ * @author Rob Terpilowski
+ */
+public interface ITradingStrategy {
+    
+    
+    public void setBroker( IBroker broker );
 
-  <artifactId>sumzero-api</artifactId>
-  <name>sumzero-api</name>
-  <description>sumzero APIs</description>
-  <packaging>pom</packaging>
-
-  <modules>
-    <module>sumzero-broker-api</module>
-    <module>sumzero-market-data-api</module>
-    <module>sumzero-historical-data-api</module>
-    <module>sumzero-real-time-bar-api</module>
-    <module>sumzero-strategy-api</module>
-  </modules>
-  
-</project>
+    public void setMarketDataProvider( IQuoteEngine quoteEngine );
+    
+    public void setHistoricalDataProvider( IHistoricalDataProvider historicalDataProvider );
+    
+    public void setRealTimeBarProvider( IRealtimeBarEngine realtimeBarProvider );
+    
+    public String getStrategyName();
+    
+    public boolean isInitialized();
+    
+    public void start();
+    
+    public void stop();
+    
+    public LocalTime getAutoStopTime();
+    
+    public boolean isRunning();
+    
+    public LocalDateTime getCurrentTime();
+    
+    public void init();
+}
