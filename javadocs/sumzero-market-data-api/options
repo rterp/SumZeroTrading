@@ -1,0 +1,23 @@
+-classpath
+'/Users/RobTerpilowski/.m2/repository/com/sumzerotrading/sumzero-commons-api/1.0.0-SNAPSHOT/sumzero-commons-api-1.0.0-SNAPSHOT.jar:/Users/RobTerpilowski/.m2/repository/com/tictactec/ta-lib/0.4.0/ta-lib-0.4.0.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/Users/RobTerpilowski/ZoiCapital/JavaSource/OpenSource/SumZeroTrading/sumzero-api/sumzero-market-data-api/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2016. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/RobTerpilowski/ZoiCapital/JavaSource/OpenSource/SumZeroTrading/sumzero-api/sumzero-market-data-api/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'sumzero-market-data-api 1.0.0-SNAPSHOT API'
+-linkoffline
+'http://docs.oracle.com/javase/8/docs/api' '/Users/RobTerpilowski/ZoiCapital/JavaSource/OpenSource/SumZeroTrading/sumzero-api/sumzero-market-data-api/target/javadoc-bundle-options'
+-version
+-windowtitle
+'sumzero-market-data-api 1.0.0-SNAPSHOT API'
