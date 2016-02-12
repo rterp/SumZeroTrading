@@ -23,6 +23,11 @@ package com.sumzerotrading.marketdata;
 import java.util.Date;
 import com.sumzerotrading.data.Ticker;
 
+/**
+ * Defines common functionality of all Quote objects.
+ * 
+ * @author RobTerpilowski
+ */
 public abstract class AbstractQuote implements IQuote {
 
 	protected Ticker ticker;
@@ -30,6 +35,13 @@ public abstract class AbstractQuote implements IQuote {
 	protected Date timeStamp;
         
 	
+        /**
+         * Constructs a new Quote object. 
+         *
+         * @param ticker The ticker this quote is for.
+         * @param type The type of quote.
+         * @param timeStamp The time of the quote.
+         */
 	public AbstractQuote( Ticker ticker, QuoteType type, Date timeStamp ) {
 		this.ticker = ticker;
 		this.type = type;
@@ -37,14 +49,29 @@ public abstract class AbstractQuote implements IQuote {
 	}
         
 
+        /**
+         * Gets the ticker for this quote
+         * @return The ticker for this quote.
+         */
+        @Override
 	public Ticker getTicker() {
 		return ticker;
 	}
 
+        /**
+         * Gets the type of quote (bid,ask,etc)
+         * @return The type of quote.
+         */
+        @Override
 	public QuoteType getType() {
 		return type;
 	}
 	
+        /**
+         * Gets the time of this quote
+         * @return The time of the quote
+         */
+        @Override
 	public Date getTimeStamp() {
 		return timeStamp;
 	}
@@ -91,11 +118,4 @@ public abstract class AbstractQuote implements IQuote {
 		return "AbstractQuote [ticker=" + ticker + ", timeStamp=" + timeStamp
 				+ ", type=" + type + "]";
 	}
-	
-	
-	
-	
-	
-	
-	
 }

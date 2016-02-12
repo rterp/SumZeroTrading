@@ -23,11 +23,16 @@ package com.sumzerotrading.marketdata;
 import java.math.BigDecimal;
 
 /**
- *
+ *  Level1 Quotes will implement this interface which provides a means to get the value of the quote.
+ * 
  * @author Rob Terpilowski
  */
 public interface ILevel1Quote extends IQuote {
     
-    
+    /**
+     * The value of this quote.
+     * 
+     * @return The quote value.
+     */
     public BigDecimal getValue();
 }

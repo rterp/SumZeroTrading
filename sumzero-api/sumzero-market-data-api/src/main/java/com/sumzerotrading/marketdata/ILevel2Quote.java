@@ -21,10 +21,16 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.sumzerotrading.marketdata;
 
 /**
- *
+ * Level 2 quotes will implement this interface.
+ * 
  * @author Rob Terpilowski
  */
 public interface ILevel2Quote extends IQuote {
     
+    /**
+     * Gets the entire order book.
+     * 
+     * @return The entire order book.
+     */
     public IMarketDepthBook getMarketDepthBook();
 }

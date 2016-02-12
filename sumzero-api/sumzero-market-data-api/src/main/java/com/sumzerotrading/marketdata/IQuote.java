@@ -24,11 +24,35 @@ package com.sumzerotrading.marketdata;
 import java.util.Date;
 import com.sumzerotrading.data.Ticker;
 
+
+/**
+ * Describes what consists of a quote.  Level 1 and Level 2 quotes will implement this interface.
+ * 
+ * 
+ * @author RobTerpilowski
+ */
 public interface IQuote {
 	
+        /**
+         * The ticker the quote is for.
+         * 
+         * @return The ticker this quote is for.
+         */
 	public Ticker getTicker();
 	
+        
+        /**
+         * The type of quote.  ie Bid, Ask, Last, etc.
+         * 
+         * @return The type of quote
+         */
 	public QuoteType getType();
 	
+        
+        /**
+         * The time of the quote
+         * 
+         * @return The time of the quote.
+         */
 	public Date getTimeStamp();
 }

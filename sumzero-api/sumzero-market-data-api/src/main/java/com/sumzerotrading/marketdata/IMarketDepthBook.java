@@ -24,43 +24,110 @@ import com.sumzerotrading.marketdata.MarketDepthBook.Side;
 import java.math.BigDecimal;
 
 /**
- *
+ * Defines functionality for a Level 2 order book.
+ * 
  * @author Rob Terpilowski
  */
 public interface IMarketDepthBook {
 
-    void addLevel(MarketDepthLevel level);
-
-    void clearLevels();
-
-    void deleteLevel(int index);
-
-    BigDecimal getCumulativeSize(int level);
-
-    MarketDepthLevel getLevelAt(int index);
-
-    int getLevelCount();
-
-    MarketDepthLevel[] getLevels();
-
     /**
-     * @return the side
+     * Adds a level to the order book.
+     * 
+     * @param level The level to add to the book.
      */
-    Side getSide();
-
-    BigDecimal getTotalSize();
-
-    void insertLevel(int index, MarketDepthLevel level);
-
-    void setLevels(MarketDepthLevel[] levelArray);
+    public void addLevel(MarketDepthLevel level);
 
     /**
+     * Clears all levels from the book
+     * 
+     */
+    public void clearLevels();
+
+    /**
+     * Deletes a level at the specified index from the book.
+     * 
+     * @param index The index of the level to delete.
+     */
+    public void deleteLevel(int index);
+    
+
+    /**
+     * Gets the cumulative size of the book
+     * 
+     * @param level The level to obtain the cumulative size up to.
+     * @return The cumulative size of the book up to the specified level
+     */
+    public BigDecimal getCumulativeSize(int level);
+
+    /**
+     * Gets the level at the specified index
+     * 
+     * @param index The index to obtain the level for
+     * @return The level for the specified index
+     */
+    public MarketDepthLevel getLevelAt(int index);
+
+    /**
+     * Gets the total number of levels in the book.
+     * 
+     * @return The total number of levels in the order book
+     */
+    public int getLevelCount();
+
+    
+    /**
+     * Gets all the levels of the book as an array.
+     * 
+     * @return All levels of this book.
+     */
+    public MarketDepthLevel[] getLevels();
+
+    /**
+     * Returns the side of this book Bid or Ask
+     * 
+     * @return the side of this order book.
+     */
+    public Side getSide();
+
+    /**
+     * Get the total size of this order book.
+     * 
+     * @return The total size of the order book
+     */
+    public BigDecimal getTotalSize();
+
+    
+    /**
+     * Inserts the specified level at the specified index
+     * 
+     * @param index The index to insert the level at
+     * @param level The level to insert
+     */
+    public void insertLevel(int index, MarketDepthLevel level);
+
+    /**
+     * Set all levels of this order book
+     * @param levelArray The array of levels to set
+     */
+    public void setLevels(MarketDepthLevel[] levelArray);
+
+    /**
+     * Set the side of this order book, Bid or Ask
+     
      * @param side the side to set
      */
-    void setSide(Side side);
+    public void setSide(Side side);
 
-    void sort();
+    /**
+     * Sort the book
+     */
+    public void sort();
 
-    void updateLevel(int index, MarketDepthLevel level);
+    /**
+     * Updates the specified level at the specified index
+     * @param index The index to update
+     * @param level The level to place at the specified index.
+     */
+    public void updateLevel(int index, MarketDepthLevel level);
     
 }

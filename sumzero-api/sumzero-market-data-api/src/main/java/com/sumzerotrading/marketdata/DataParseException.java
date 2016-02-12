@@ -21,11 +21,16 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.sumzerotrading.marketdata;
 
 /**
- *
+ * DataParseException is thrown if there was a problem parsing the incoming data from the quote provider
+ * 
  * @author Rob Terpilowski
  */
 public class DataParseException extends Exception {
     
+    /**
+     * 
+     * @param message The exception message
+     */
     public DataParseException( String message ) {
         super(message);
     }

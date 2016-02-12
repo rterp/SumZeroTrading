@@ -24,10 +24,24 @@ import java.util.Date;
 import com.sumzerotrading.data.Ticker;
 import java.math.BigDecimal;
 
+
+/**
+ * Implementation of an ILevel1 quote
+ * 
+ * @author RobTerpilowski
+ */
 public class Level1Quote extends AbstractQuote implements ILevel1Quote {
 
 	protected BigDecimal value;
 	
+        /**
+         * Builds a new Level1Quote
+         * 
+         * @param ticker The ticker this quote is for
+         * @param type The type of quote (bid/ask/last/etc)
+         * @param timeStamp The time of the quote
+         * @param value The price (or volume) of this quote
+         */
 	public Level1Quote( Ticker ticker, QuoteType type, Date timeStamp, BigDecimal value ){
 		 super( ticker, type, timeStamp );
 		 this.value = value;
@@ -35,6 +49,11 @@ public class Level1Quote extends AbstractQuote implements ILevel1Quote {
 	
 	
 
+        /**
+         * The price or volume of this quote
+         * @return The price or volume of this quote.
+         */
+        @Override
 	public BigDecimal getValue() {
 		return value;
 	}
