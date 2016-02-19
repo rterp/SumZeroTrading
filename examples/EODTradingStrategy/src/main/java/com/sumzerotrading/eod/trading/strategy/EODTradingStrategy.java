@@ -34,6 +34,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected StockTicker longTicker;
     protected StockTicker shortTicker;
     protected Date lastReportedTime;
+    protected boolean ordersPlaced = false;
     
     
     
@@ -50,7 +51,12 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         
     }
     
-    public void placeMOCOrders() {
+    public synchronized void placeMOCOrders() {
+        if( ordersPlaced ) {
+            return;
+        } else {
+            ordersPlaced = true;
+        }
         
         TradeOrder longOrder = new TradeOrder(ibClient.getNextOrderId(), longTicker, 123, TradeDirection.BUY);
         longOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
