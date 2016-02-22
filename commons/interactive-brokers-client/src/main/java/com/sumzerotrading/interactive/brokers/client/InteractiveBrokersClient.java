@@ -22,6 +22,7 @@ package com.sumzerotrading.interactive.brokers.client;
 
 import com.sumzerotrading.broker.IBroker;
 import com.sumzerotrading.broker.ib.InteractiveBrokersBroker;
+import com.sumzerotrading.broker.order.OrderEventListener;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.data.Ticker;
@@ -33,13 +34,15 @@ import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.Level2QuoteListener;
 import com.sumzerotrading.marketdata.QuoteEngine;
 import com.sumzerotrading.marketdata.ib.IBQuoteEngine;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author RobTerpilowski
  */
-public class InteractiveBrokersClient {
+public class InteractiveBrokersClient implements InteractiveBrokersClientInterface {
     
     protected String host;
     protected int port;
@@ -48,9 +51,25 @@ public class InteractiveBrokersClient {
     protected QuoteEngine quoteEngine;
     protected IBroker broker;
     protected IHistoricalDataProvider historicalDataProvider;
+    protected InteractiveBrokersClientInterface mockIbClient;
+    protected static Map<String,InteractiveBrokersClientInterface> ibClientMap = new HashMap<>();
     
 
-    public InteractiveBrokersClient(String host, int port, int clientId) {
+    
+    public static InteractiveBrokersClientInterface getInstance(String host, int port, int clientId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("host").append("-").append(port).append("-").append(clientId);
+        
+        InteractiveBrokersClientInterface client = ibClientMap.get(sb.toString());
+        if(client == null ) {
+            client = new InteractiveBrokersClient(host, port, clientId);
+        }
+        
+        return client;
+                
+    }
+    
+    protected InteractiveBrokersClient(String host, int port, int clientId) {
         this.host = host;
         this.port = port;
         this.clientId = clientId;
@@ -62,6 +81,7 @@ public class InteractiveBrokersClient {
     }
 
 
+    @Override
     public void connect() {
         ibSocket.connect();
         broker.connect();
@@ -69,53 +89,76 @@ public class InteractiveBrokersClient {
         quoteEngine.startEngine();
     }
     
+    @Override
     public void disconnect() {
         broker.disconnect();
         quoteEngine.stopEngine();
     }
     
     
+    @Override
     public void subscribeLevel1( Ticker ticker, Level1QuoteListener listener ) {
         quoteEngine.subscribeLevel1(ticker, listener);
     }
     
+    @Override
     public void subscribeMarketDepth( Ticker ticker, Level2QuoteListener listener ) {
         quoteEngine.subscribeMarketDepth(ticker, listener);
     }
     
+    @Override
     public void unsubscribeLevel1( Ticker ticker, Level1QuoteListener listener ) {
         quoteEngine.unsubscribeLevel1(ticker, listener);
     }
     
+    @Override
     public void unsubscribeMarketDepth( Ticker ticker, Level2QuoteListener listener ) {
         quoteEngine.unsubscribeMarketDepth(ticker, listener);
     }
     
     
     
+    @Override
     public String getHost() {
         return host;
     }
 
+    @Override
     public int getPort() {
         return port;
     }
 
+    @Override
     public int getClientId() {
         return clientId;
     }
     
+    @Override
     public void placeOrder(TradeOrder order) {
         broker.placeOrder(order);
     }
     
+    @Override
+    public void addOrderStatusListener(OrderEventListener listener) {
+        broker.addOrderEventListener(listener);
+    }
+    
+    @Override
     public String getNextOrderId() {
         return broker.getNextOrderId();
     }
     
     
+    @Override
     public List<BarData> requestHistoricalData(Ticker ticker, int duration, BarData.LengthUnit lengthUnit, int barSize, BarData.LengthUnit barSizeUnit, IHistoricalDataProvider.ShowProperty showProperty ) {
         return historicalDataProvider.requestHistoricalData(ticker, duration, lengthUnit,  barSize, barSizeUnit, showProperty, true);
+    }
+    
+    
+    public static void setMockInteractiveBrokersClient(InteractiveBrokersClientInterface mockClient, String host, int port, int clientId) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(host).append("-").append(port).append("-").append(clientId);
+        ibClientMap.put(sb.toString(), mockClient);
     }
     
     

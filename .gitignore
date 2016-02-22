@@ -18,3 +18,4 @@ nb-configuration.xml
 *.ear
 /commons/sumzero-ib-common-api/nbproject/
 /commons/sumzero-ib-common-api/nbproject/
+/examples/EODTradingStrategy/nbproject/

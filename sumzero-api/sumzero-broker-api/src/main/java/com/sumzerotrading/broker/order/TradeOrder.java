@@ -34,7 +34,7 @@ public class TradeOrder implements Serializable {
 
     public enum Type {
 
-        MARKET, STOP, LIMIT
+        MARKET, STOP, LIMIT, MARKET_ON_OPEN, MARKET_ON_CLOSE;
     };
 
     public enum Duration {
