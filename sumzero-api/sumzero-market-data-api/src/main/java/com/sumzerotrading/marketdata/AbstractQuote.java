@@ -22,6 +22,7 @@ package com.sumzerotrading.marketdata;
 
 import java.util.Date;
 import com.sumzerotrading.data.Ticker;
+import java.time.ZonedDateTime;
 
 /**
  * Defines common functionality of all Quote objects.
@@ -32,7 +33,7 @@ public abstract class AbstractQuote implements IQuote {
 
 	protected Ticker ticker;
 	protected QuoteType type;
-	protected Date timeStamp;
+	protected ZonedDateTime timeStamp;
         
 	
         /**
@@ -42,7 +43,7 @@ public abstract class AbstractQuote implements IQuote {
          * @param type The type of quote.
          * @param timeStamp The time of the quote.
          */
-	public AbstractQuote( Ticker ticker, QuoteType type, Date timeStamp ) {
+	public AbstractQuote( Ticker ticker, QuoteType type, ZonedDateTime timeStamp ) {
 		this.ticker = ticker;
 		this.type = type;
 		this.timeStamp = timeStamp;
@@ -72,7 +73,7 @@ public abstract class AbstractQuote implements IQuote {
          * @return The time of the quote
          */
         @Override
-	public Date getTimeStamp() {
+	public ZonedDateTime getTimeStamp() {
 		return timeStamp;
 	}
 

@@ -20,9 +20,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.marketdata;
 
-import java.util.Date;
 import com.sumzerotrading.data.Ticker;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 
 /**
@@ -42,7 +42,7 @@ public class Level1Quote extends AbstractQuote implements ILevel1Quote {
          * @param timeStamp The time of the quote
          * @param value The price (or volume) of this quote
          */
-	public Level1Quote( Ticker ticker, QuoteType type, Date timeStamp, BigDecimal value ){
+	public Level1Quote( Ticker ticker, QuoteType type, ZonedDateTime timeStamp, BigDecimal value ){
 		 super( ticker, type, timeStamp );
 		 this.value = value;
 	}

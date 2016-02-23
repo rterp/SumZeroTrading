@@ -29,6 +29,7 @@ import com.sumzerotrading.marketdata.Level1Quote;
 import com.sumzerotrading.marketdata.QuoteType;
 import com.sumzerotrading.util.QuoteUtil;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,11 +91,13 @@ public class IBLevel1QuoteProcessor extends IBQuoteProcessor<Level1QuoteData> {
 
 
     protected void processQuote(Ticker ticker, QuoteType quoteType, BigDecimal formattedValue) {
-        Level1Quote quote = new Level1Quote(ticker, quoteType, new Date(), formattedValue);
+        Level1Quote quote = new Level1Quote(ticker, quoteType, getTime(), formattedValue);
 
         quoteEngine.fireLevel1Quote(quote);
     }
     
-    
+    protected ZonedDateTime getTime() {
+        return ZonedDateTime.now();
+    }
 
 }

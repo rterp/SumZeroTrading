@@ -27,6 +27,7 @@ import com.sumzerotrading.marketdata.*;
 import com.sumzerotrading.util.QuoteUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import org.jmock.Expectations;
@@ -363,7 +364,7 @@ public class IBLevel2QuoteProcessorTest {
 
         Ticker buildAndFireEventTicker;
         IMarketDepthBook buildAndFireEventBook;
-        Date date = new Date();
+        ZonedDateTime date = ZonedDateTime.now();
         boolean overrideBuildAndFireEvent = true;
 
         public MockIBLevel2QuoteProcessor(BlockingQueue<Level2QuoteData> queue, IQuoteEngine quoteEngine) {
@@ -386,7 +387,7 @@ public class IBLevel2QuoteProcessorTest {
         }
 
         @Override
-        protected Date getDate() {
+        protected ZonedDateTime getTime() {
             return date;
         }
     }

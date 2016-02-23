@@ -20,15 +20,15 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.marketdata;
 
-import java.util.Date;
 
 import com.sumzerotrading.data.Ticker;
+import java.time.ZonedDateTime;
 
 public class Level2Quote extends AbstractQuote implements ILevel2Quote {
 
 	protected IMarketDepthBook book;
 	
-	public Level2Quote( Ticker ticker, QuoteType type, Date timeStamp, IMarketDepthBook book ) {
+	public Level2Quote( Ticker ticker, QuoteType type, ZonedDateTime timeStamp, IMarketDepthBook book ) {
 		super( ticker, type, timeStamp );
 		this.book = book;
 	}

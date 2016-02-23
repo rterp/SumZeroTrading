@@ -25,7 +25,7 @@ import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.marketdata.*;
 import com.sumzerotrading.util.QuoteUtil;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 
@@ -110,7 +110,7 @@ public class IBLevel2QuoteProcessor extends IBQuoteProcessor<Level2QuoteData> {
         } else {
             type = QuoteType.MARKET_DEPTH_BID;
         }
-        quoteEngine.fireMarketDepthQuote(new Level2Quote(ticker, type, getDate(), book));
+        quoteEngine.fireMarketDepthQuote(new Level2Quote(ticker, type, getTime(), book));
     }    
     
     
@@ -118,104 +118,10 @@ public class IBLevel2QuoteProcessor extends IBQuoteProcessor<Level2QuoteData> {
      * Overridden by unit tests.
      * @return 
      */
-    protected Date getDate() {
-        return new Date();
+    protected ZonedDateTime getTime() {
+        return ZonedDateTime.now();
     }
-//
-//    protected void processDataOld(Level2QuoteData data) {
-//        double price = data.getPrice();
-//        Ticker ticker = data.getTicker();
-//        int operation = data.getOperation();
-//        int side = data.getSide();
-//        int position = data.getPosition();
-//        int size = data.getSize();
-//
-//
-//        BigDecimal bdPrice = new BigDecimal(price).setScale(5, RoundingMode.HALF_UP);
-//        BigDecimal bdSize = new BigDecimal(size).setScale(0, RoundingMode.HALF_UP);
-//
-//        //logger.info( "Market Depth: position: " +  position + " operation: " + operation + " side: " + side + " price: " + price + " size:" + size );
-//        MarketDepthBook.Side depthSide;
-//        if (side == 0) {
-//            depthSide = MarketDepthBook.Side.ASK;
-//        } else {
-//            depthSide = MarketDepthBook.Side.BID;
-//        }
-//        MarketDepthLevel level = new MarketDepthLevel(depthSide, bdPrice, size);
-//        Integer lastSide = lastSideMap.get(ticker);
-//        Integer lastOperation = lastOperationMap.get(ticker);
-//        MarketDepthLevel lastLevel = lastLevelMap.get(ticker);
-//
-//
-//        if (lastSide != null && lastOperation != null && lastLevel != null) {
-//            if (side == lastSide.intValue() && (level.equals(lastLevel)) && operation == lastOperation.intValue()) {
-//                lastLevelMap.put(ticker, level);
-//                lastSideMap.put(ticker, side);
-//                lastOperationMap.put(ticker, operation);
-//                return;
-//            }
-//        }
-//
-//        ArrayList<MarketDepthLevel> askList = askListMap.get(ticker);
-//        if (askList == null) {
-//            askList = new ArrayList<MarketDepthLevel>();
-//            askListMap.put(ticker, askList);
-//        }
-//
-//        ArrayList<MarketDepthLevel> bidList = bidListMap.get(ticker);
-//        if (bidList == null) {
-//            bidList = new ArrayList<MarketDepthLevel>();
-//            bidListMap.put(ticker, bidList);
-//        }
-//
-//        //logger.info( "Market Depth: position: " +  position + " operation: " + operation + " side: " + side + " price: " + price + " size:" + size );
-//        if (side == 0) {
-//            if (operation == 0) {
-//                while (askList.size() < position) {
-//                    askList.add(new MarketDepthLevel(MarketDepthBook.Side.ASK, BigDecimal.ZERO, 0));
-//                }
-//                askList.add(position, new MarketDepthLevel(MarketDepthBook.Side.ASK, bdPrice, size));
-//            } else if (operation == 1) {
-//                if (askList.size() > position) {
-//                    askList.get(position).setPrice(bdPrice);
-//                    askList.get(position).setSize(bdSize);
-//                }
-//            } else if (operation == 2) {
-//                if (askList.size() > position) {
-//                    askList.remove(position);
-//                }
-//            }
-//            MarketDepthBook book = new MarketDepthBook();
-//            book.setLevels(askList.toArray(new MarketDepthLevel[0]));
-//            book.setSide(MarketDepthBook.Side.ASK);
-//            buildAndFireEvent(ticker, book, QuoteType.MARKET_DEPTH_ASK);
-//            //writeAskDepth( askList, tickerId );
-//        } else {
-//
-//            if (operation == 0) {
-//                while (bidList.size() < position) {
-//                    bidList.add(new MarketDepthLevel(MarketDepthBook.Side.BID, BigDecimal.ZERO, 0));
-//                }
-//                bidList.add(position, new MarketDepthLevel(MarketDepthBook.Side.BID, bdPrice, size));
-//            } else if (operation == 1 && bidList.size() > position) {
-//                bidList.get(position).setPrice(bdPrice);
-//                bidList.get(position).setSize(bdSize);
-//            } else if (operation == 2 && bidList.size() > position) {
-//                bidList.remove(position);
-//            }
-//            MarketDepthBook book = new MarketDepthBook();
-//            book.setLevels(bidList.toArray(new MarketDepthLevel[0]));
-//            book.setSide(MarketDepthBook.Side.BID);
-//
-//            buildAndFireEvent(ticker, book, QuoteType.MARKET_DEPTH_BID);
-//
-//        }
-//        lastLevelMap.put(ticker, level);
-//        lastSideMap.put(ticker, side);
-//        lastOperationMap.put(ticker, operation);
-//
-//
-//    }
+
 
 
 }

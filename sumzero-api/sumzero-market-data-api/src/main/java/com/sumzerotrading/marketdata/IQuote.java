@@ -23,6 +23,7 @@ package com.sumzerotrading.marketdata;
 
 import java.util.Date;
 import com.sumzerotrading.data.Ticker;
+import java.time.ZonedDateTime;
 
 
 /**
@@ -54,5 +55,5 @@ public interface IQuote {
          * 
          * @return The time of the quote.
          */
-	public Date getTimeStamp();
+	public ZonedDateTime getTimeStamp();
 }

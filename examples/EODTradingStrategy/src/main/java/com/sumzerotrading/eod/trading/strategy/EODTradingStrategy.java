@@ -129,7 +129,6 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             }
         }
 
-        quote.getTimeStamp().toInstant();
         LocalTime currentTime = LocalTime.from(quote.getTimeStamp().toInstant());
 
         if (currentTime.isAfter(timeToPlaceOrders) && !ordersPlaced) {
