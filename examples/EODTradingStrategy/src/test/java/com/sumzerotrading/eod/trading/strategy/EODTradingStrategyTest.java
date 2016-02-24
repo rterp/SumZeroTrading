@@ -103,32 +103,26 @@ public class EODTradingStrategyTest {
     
     @Test
     public void testGetNextBusinessDay_Thursday() {
-        LocalDateTime ldt = LocalDateTime.of(2016, 2, 25, 6, 45, 55);
-        Date from = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        LocalDateTime expectedDatetime = LocalDateTime.of(2016,2,26,5,30,0);
-        Date expectedDate = Date.from(expectedDatetime.atZone(ZoneId.systemDefault()).toInstant());
+        ZonedDateTime ldt = ZonedDateTime.of(2016, 2, 25, 6, 45, 55, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016,2,26,5,30,0,0, ZoneId.systemDefault());
         
-        assertEquals( expectedDate, strategy.getNextBusinessDay(from));
+        assertEquals( expectedDatetime, strategy.getNextBusinessDay(ldt));
     }
     
     @Test
     public void testGetNextBusinessDay_Friday() {
-        LocalDateTime ldt = LocalDateTime.of(2016, 2, 26, 6, 45, 55);
-        Date from = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        LocalDateTime expectedDatetime = LocalDateTime.of(2016,2,29,5,30,0);
-        Date expectedDate = Date.from(expectedDatetime.atZone(ZoneId.systemDefault()).toInstant());
+        ZonedDateTime ldt = ZonedDateTime.of(2016, 2, 26, 6, 45, 55, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016,2,29,5,30,0, 0, ZoneId.systemDefault());
         
-        assertEquals( expectedDate, strategy.getNextBusinessDay(from));
+        assertEquals( expectedDatetime, strategy.getNextBusinessDay(ldt));
     }    
     
     @Test
     public void testGetNextBusinessDay_Satruday() {
-        LocalDateTime ldt = LocalDateTime.of(2016, 2, 27, 6, 45, 55);
-        Date from = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        LocalDateTime expectedDatetime = LocalDateTime.of(2016,2,29,5,30,0);
-        Date expectedDate = Date.from(expectedDatetime.atZone(ZoneId.systemDefault()).toInstant());
+        ZonedDateTime ldt = ZonedDateTime.of(2016, 2, 27, 6, 45, 55, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016,2,29,5,30,0, 0, ZoneId.systemDefault());
         
-        assertEquals( expectedDate, strategy.getNextBusinessDay(from));
+        assertEquals( expectedDatetime, strategy.getNextBusinessDay(ldt));
     }        
     
     @Test

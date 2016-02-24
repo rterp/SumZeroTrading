@@ -21,7 +21,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
-import java.util.GregorianCalendar;
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -30,6 +30,6 @@ import java.util.GregorianCalendar;
 public interface TimeListener {
 
     
-    public void timeReceived( GregorianCalendar time );
+    public void timeReceived( ZonedDateTime time );
     
 }

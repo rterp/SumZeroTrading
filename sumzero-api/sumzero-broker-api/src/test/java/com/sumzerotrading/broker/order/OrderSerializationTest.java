@@ -21,14 +21,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.broker.order;
 
-import com.sumzerotrading.broker.*;
 import com.sumzerotrading.data.StockTicker;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -65,7 +64,7 @@ public class OrderSerializationTest {
     
     @Test
     public void testOrderStatus() throws Exception {
-        OrderStatus status = new OrderStatus(OrderStatus.Status.NEW, "123", 10, 10, BigDecimal.ZERO, new StockTicker("ABC"), new Date() );
+        OrderStatus status = new OrderStatus(OrderStatus.Status.NEW, "123", 10, 10, BigDecimal.ZERO, new StockTicker("ABC"), ZonedDateTime.now() );
         test( status );
     }
     
@@ -78,7 +77,7 @@ public class OrderSerializationTest {
     @Test
     public void testOrderEvent() throws Exception {
         TradeOrder order = new TradeOrder("123", new StockTicker("123"), 100, TradeDirection.BUY);
-        OrderStatus status = new OrderStatus(OrderStatus.Status.NEW, "123", 10, 10, BigDecimal.ZERO, new StockTicker("ABC"), new Date() );
+        OrderStatus status = new OrderStatus(OrderStatus.Status.NEW, "123", 10, 10, BigDecimal.ZERO, new StockTicker("ABC"), ZonedDateTime.now() );
         OrderEvent event = new OrderEvent(order, status);
         test( event );
     }

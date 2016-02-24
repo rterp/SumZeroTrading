@@ -10,6 +10,7 @@ import com.sumzerotrading.data.BarData.LengthUnit;
 import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider.ShowProperty;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
+import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInterface;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class HistoricalDataExample {
     
     
     public void requestHistoricalData() {
-        InteractiveBrokersClient client = new InteractiveBrokersClient("localhost", 6468, 1);
+        InteractiveBrokersClientInterface client = InteractiveBrokersClient.getInstance("localhost", 6468, 1);
         client.connect();
         
         StockTicker ticker = new StockTicker("AMZN");

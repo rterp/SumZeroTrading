@@ -21,9 +21,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.sumzerotrading.broker;
 
 import com.sumzerotrading.broker.order.TradeOrder;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public interface IExchange {
 
-	public Transaction executeOrder( TradeOrder order, Double price, Date currentTime );
+	public Transaction executeOrder( TradeOrder order, Double price, ZonedDateTime currentTime );
 }

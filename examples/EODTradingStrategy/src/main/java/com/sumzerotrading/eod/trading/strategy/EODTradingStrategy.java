@@ -17,7 +17,10 @@ import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInt
 import com.sumzerotrading.marketdata.ILevel1Quote;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.QuoteType;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -43,7 +46,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected int ibClientId = 3;
 
     protected double orderSizeInDollars = 1000;
-    protected Date lastReportedTime;
+    protected ZonedDateTime lastReportedTime;
     protected boolean ordersPlaced = false;
     protected boolean allPricesInitialized = false;
     protected LocalTime timeToPlaceOrders;
@@ -129,7 +132,8 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             }
         }
 
-        LocalTime currentTime = LocalTime.from(quote.getTimeStamp().toInstant());
+        
+        LocalTime currentTime = quote.getTimeStamp().toLocalTime();
 
         if (currentTime.isAfter(timeToPlaceOrders) && !ordersPlaced) {
             if (allPricesInitialized) {
@@ -140,22 +144,15 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         }
     }
 
-    public Date getNextBusinessDay(Date date) {
-        GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(date);
-        cal.add(Calendar.DATE, 1);
-
-        while (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
-                || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-            cal.add(Calendar.DATE, 1);
+    public ZonedDateTime getNextBusinessDay(ZonedDateTime date) {
+        date = date.plusDays(1);
+        
+        while (date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            date = date.plusDays(1);
         }
-
-        cal.set(Calendar.HOUR_OF_DAY, 5);
-        cal.set(Calendar.MINUTE, 30);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        return cal.getTime();
+        date = date.of(date.getYear(),date.getMonthValue(),date.getDayOfMonth(), 5, 30, 0, 0, ZoneId.systemDefault());
+        return date;
     }
 
     protected int getOrderSize(Ticker ticker) {

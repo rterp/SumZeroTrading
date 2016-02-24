@@ -23,7 +23,7 @@ package com.sumzerotrading.broker;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.data.Ticker;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 
 
@@ -33,7 +33,7 @@ public class Transaction implements Serializable {
 	protected Ticker ticker;
 	protected Double transactionPrice = 0d;
 	protected Double commission = 0d;
-	protected Date transactionDate = new Date();
+	protected ZonedDateTime transactionDate = ZonedDateTime.now();
 	protected TradeDirection tradeDirection = TradeDirection.BUY;
 	protected int transactionSize = 0;
 	protected String positionId = "";
@@ -57,10 +57,10 @@ public class Transaction implements Serializable {
 	public void setCommission(Double commission) {
 		this.commission = commission;
 	}
-	public Date getTransactionDate() {
+	public ZonedDateTime getTransactionDate() {
 		return transactionDate;
 	}
-	public void setTransactionDate(Date transactionDate) {
+	public void setTransactionDate(ZonedDateTime transactionDate) {
 		this.transactionDate = transactionDate;
 	}
 	public TradeDirection getTradeDirection() {

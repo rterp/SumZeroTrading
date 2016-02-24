@@ -23,10 +23,8 @@ package com.sumzerotrading.broker.order;
 import com.sumzerotrading.data.Ticker;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.time.*;
-import java.util.Objects;
 
 public class TradeOrder implements Serializable {
 
@@ -50,8 +48,8 @@ public class TradeOrder implements Serializable {
     protected Ticker ticker;
     protected TradeDirection direction;
     protected Type type;
-    protected Date goodAfterTime = null;
-    protected Date goodUntilTime = null;
+    protected ZonedDateTime goodAfterTime = null;
+    protected ZonedDateTime goodUntilTime = null;
     protected Double limitPrice = null;
     protected Double stopPrice = null;
     protected Duration duration;
@@ -66,7 +64,7 @@ public class TradeOrder implements Serializable {
     protected String reference;
     protected boolean submitted = false;
     protected boolean submitChildOrdersFirst = false;
-    protected LocalDateTime orderEntryTime;
+    protected ZonedDateTime orderEntryTime;
     protected double orderTimeInForceMinutes = 0;
 
     public TradeOrder(String orderId, Ticker ticker, int size, TradeDirection tradeDirection) {
@@ -123,19 +121,19 @@ public class TradeOrder implements Serializable {
         this.type = type;
     }
 
-    public Date getGoodAfterTime() {
+    public ZonedDateTime getGoodAfterTime() {
         return goodAfterTime;
     }
 
-    public void setGoodAfterTime(Date goodAfterTime) {
+    public void setGoodAfterTime(ZonedDateTime goodAfterTime) {
         this.goodAfterTime = goodAfterTime;
     }
 
-    public Date getGoodUntilTime() {
+    public ZonedDateTime getGoodUntilTime() {
         return goodUntilTime;
     }
 
-    public void setGoodUntilTime(Date goodUntilTime) {
+    public void setGoodUntilTime(ZonedDateTime goodUntilTime) {
         this.goodUntilTime = goodUntilTime;
     }
 
@@ -256,11 +254,11 @@ public class TradeOrder implements Serializable {
         this.referenceString = referenceString;
     }
 
-    public LocalDateTime getOrderEntryTime() {
+    public ZonedDateTime getOrderEntryTime() {
         return orderEntryTime;
     }
 
-    public void setOrderEntryTime(LocalDateTime orderEntryTime) {
+    public void setOrderEntryTime(ZonedDateTime orderEntryTime) {
         this.orderEntryTime = orderEntryTime;
     }
 

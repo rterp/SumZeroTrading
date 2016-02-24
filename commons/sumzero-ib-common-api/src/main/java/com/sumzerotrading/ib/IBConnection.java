@@ -31,6 +31,9 @@ import com.ib.client.TickType;
 import com.sumzerotrading.ib.historical.ContractDetailsListener;
 import com.sumzerotrading.ib.historical.HistoricalDataListener;
 import static java.lang.System.out;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -78,9 +81,7 @@ public class IBConnection implements IBConnectionInterface {
     }
     
     public void currentTime(long time) {
-        GregorianCalendar date = new GregorianCalendar();
-        date.setTimeInMillis(time * 1000);
-        fireTimeEvent(date);
+        fireTimeEvent(ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()));
     }
     
     public void execDetails(int orderId, Contract contract, Execution execution) {
@@ -280,7 +281,7 @@ public class IBConnection implements IBConnectionInterface {
         }
     }
     
-    protected void fireTimeEvent(GregorianCalendar time) {
+    protected void fireTimeEvent(ZonedDateTime time) {
         synchronized (timeListeners) {
             for (TimeListener listener : timeListeners) {
                 listener.timeReceived(time);

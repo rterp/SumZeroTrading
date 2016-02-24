@@ -28,7 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -114,7 +114,7 @@ public class BrokerSerializationTest {
         t.setPositionId("123");
         t.setTicker(new StockTicker("123"));
         t.setTradeDirection(TradeDirection.BUY);
-        t.setTransactionDate(new Date());
+        t.setTransactionDate(ZonedDateTime.now());
         t.setTransactionPrice(100.0);
         t.setTransactionSize(100);
         
@@ -146,9 +146,5 @@ public class BrokerSerializationTest {
         return (T) objectIn.readObject();
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+
 }

@@ -24,6 +24,7 @@ package com.sumzerotrading.ib.example.market.data;
 import com.sumzerotrading.data.Exchange;
 import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
+import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInterface;
 import com.sumzerotrading.marketdata.ILevel1Quote;
 
 
@@ -32,7 +33,7 @@ public class MarketDataFuturesExample {
     
     
     public void start() {
-        InteractiveBrokersClient ibClient = new InteractiveBrokersClient("localhost", 6468, 1);
+         InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 6468, 1);
         ibClient.connect();
         
         

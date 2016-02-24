@@ -47,6 +47,7 @@ import com.sumzerotrading.time.TimeUpdatedListener;
 import com.sumzerotrading.util.QuoteUtil;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -69,7 +70,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected IBConnectionInterface callbackInterface;
     protected Set<TradeOrder> currencyOrderList = new HashSet<TradeOrder>();
     protected BlockingQueue<Integer> nextIdQueue = new LinkedBlockingQueue<Integer>();
-    protected BlockingQueue<GregorianCalendar> brokerTimeQueue = new LinkedBlockingQueue<GregorianCalendar>();
+    protected BlockingQueue<ZonedDateTime> brokerTimeQueue = new LinkedBlockingQueue<>();
     protected BlockingQueue<BrokerError> brokerErrorQueue = new LinkedBlockingQueue<BrokerError>();
     protected BlockingQueue<OrderEvent> orderEventQueue = new LinkedBlockingQueue<OrderEvent>();
     protected BlockingQueue<ContractDetails> contractDetailsQueue = new LinkedBlockingDeque<ContractDetails>();
@@ -100,14 +101,17 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         currencyOrderTimer.schedule(getCurrencyOrderMonitor(), 0, 1000 * 60);
     }
 
-    public LocalDateTime getCurrentDateTime() {
+    @Override
+    public ZonedDateTime getCurrentDateTime() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
     public void addTimeUpdateListener(TimeUpdatedListener listener) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
     public void removeTimeUpdateListener(TimeUpdatedListener listener) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -151,7 +155,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         //not currently implemented;
     }
 
-    public void timeReceived(GregorianCalendar time) {
+    public void timeReceived(ZonedDateTime time) {
         try {
             brokerTimeQueue.put(time);
         } catch (Exception ex) {
@@ -227,22 +231,23 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         ibConnection.cancelOrder(id);
     }
 
-    public GregorianCalendar getCurrentTime() {
+    public ZonedDateTime getCurrentTime() {
         ibConnection.reqCurrentTime();
         try {
             return brokerTimeQueue.poll(2, TimeUnit.SECONDS);
         } catch (InterruptedException ex) {
             System.out.println("Time Out waiting to get current time from broker, returning local current time");
             //logger.error("Time Out waiting to get current time from broker, returning local current time");
-            return new GregorianCalendar();
+            return ZonedDateTime.now();
         }
     }
+
 
     public String getFormattedDate(int hour, int minute, int second) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public String getFormattedDate(Date date) {
+    public String getFormattedDate(ZonedDateTime date) {
         return dateFormatter.format(date);
     }
 

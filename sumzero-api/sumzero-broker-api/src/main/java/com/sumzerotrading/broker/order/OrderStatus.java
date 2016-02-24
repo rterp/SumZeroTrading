@@ -24,8 +24,7 @@ package com.sumzerotrading.broker.order;
 import com.sumzerotrading.data.Ticker;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Objects;
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -45,11 +44,11 @@ public class OrderStatus implements Serializable  {
     protected int remaining;
     protected BigDecimal fillPrice;
     protected Ticker ticker;
-    protected Date timestamp;
+    protected ZonedDateTime timestamp;
 
     
     
-    public OrderStatus( Status status, String oldOrderId, String orderId, Ticker ticker, Date timestamp) {
+    public OrderStatus( Status status, String oldOrderId, String orderId, Ticker ticker, ZonedDateTime timestamp) {
         this.status = status;
         this.oldOrderid = oldOrderId;
         this.orderId = orderId;
@@ -58,7 +57,7 @@ public class OrderStatus implements Serializable  {
     }
     
     
-    public OrderStatus(Status status, String orderId, int filled, int remaining, BigDecimal fillPrice, Ticker ticker, Date timestamp) {
+    public OrderStatus(Status status, String orderId, int filled, int remaining, BigDecimal fillPrice, Ticker ticker, ZonedDateTime timestamp) {
         this.status = status;
         this.orderId = orderId;
         this.filled = filled;
@@ -68,7 +67,7 @@ public class OrderStatus implements Serializable  {
         this.timestamp = timestamp;
     }
     
-    public OrderStatus(Status status, String originalOrderId, String orderId, int filled, int remaining, BigDecimal fillPrice, Ticker ticker, Date timestamp) {
+    public OrderStatus(Status status, String originalOrderId, String orderId, int filled, int remaining, BigDecimal fillPrice, Ticker ticker, ZonedDateTime timestamp) {
         this.status = status;
         this.orderId = orderId;
         this.oldOrderid = originalOrderId;
@@ -104,7 +103,7 @@ public class OrderStatus implements Serializable  {
         return status;
     }
 
-    public Date getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 

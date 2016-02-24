@@ -26,6 +26,7 @@ import com.sumzerotrading.broker.order.OrderStatus;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.ib.IbUtils;
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -52,7 +53,7 @@ public class OrderManagmentUtil {
     public static OrderEvent createOrderEvent(TradeOrder order, String statusString, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
         OrderStatus.Status status = IbUtils.getOrderStatus(statusString);
         
-        OrderStatus orderStatus = new OrderStatus(status, order.getOrderId(), filled, remaining, new BigDecimal(avgFillPrice), order.getTicker(), new Date() );
+        OrderStatus orderStatus = new OrderStatus(status, order.getOrderId(), filled, remaining, new BigDecimal(avgFillPrice), order.getTicker(), ZonedDateTime.now() );
         OrderEvent orderEvent = new OrderEvent( order, orderStatus );
         
         return orderEvent;

@@ -23,6 +23,7 @@ package com.sumzerotrading.ib.example.market.data;
 
 import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
+import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInterface;
 import com.sumzerotrading.marketdata.ILevel1Quote;
 import com.sumzerotrading.marketdata.QuoteType;
 
@@ -32,7 +33,7 @@ public class MarketDataStocksExample {
     
     
     public void start() {
-        InteractiveBrokersClient ibClient = new InteractiveBrokersClient("localhost", 6468, 1);
+         InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 6468, 1);
         ibClient.connect();
         
         StockTicker stockTicker=  new StockTicker("AMZN");

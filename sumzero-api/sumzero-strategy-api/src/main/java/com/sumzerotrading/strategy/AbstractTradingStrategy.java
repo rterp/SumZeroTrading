@@ -27,6 +27,7 @@ import com.sumzerotrading.marketdata.IQuoteEngine;
 import com.sumzerotrading.realtime.bar.IRealtimeBarEngine;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.GregorianCalendar;
 
 /**
@@ -50,7 +51,7 @@ public abstract class AbstractTradingStrategy implements ITradingStrategy {
     }
 
     @Override
-    public LocalDateTime getCurrentTime() {
+    public ZonedDateTime getCurrentTime() {
         if( ! isInitialized() ) {
             throw new IllegalStateException( "Strategy has not yet been initialized" );
         }
@@ -90,7 +91,7 @@ public abstract class AbstractTradingStrategy implements ITradingStrategy {
     }
     
     
-    protected GregorianCalendar getBrokerTime() {
+    protected ZonedDateTime getBrokerTime() {
         if( ! isInitialized() ) {
             throw new IllegalStateException( "The Strategy has not yet been initialized" );
         }

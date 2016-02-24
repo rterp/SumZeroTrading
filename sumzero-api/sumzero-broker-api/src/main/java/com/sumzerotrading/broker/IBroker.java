@@ -26,9 +26,7 @@ import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.ComboTicker;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.time.TimeUpdatedListener;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -114,21 +112,21 @@ public interface IBroker {
      * @param date The date to format
      * @return A String in the brokers format for the specified date.
      */
-    public abstract String getFormattedDate(Date date);
+    public abstract String getFormattedDate(ZonedDateTime date);
 
     /**
      * Gets the current date/time from the broker
      *
      * @return the current date/time from the broker.
      */
-    public abstract GregorianCalendar getCurrentTime();
+    public abstract ZonedDateTime getCurrentTime();
     
     
     /**
      * Gets the current Time and Date as a LocalDateTime
      * @return The current date/Time
      */
-    public abstract LocalDateTime getCurrentDateTime();
+    public abstract ZonedDateTime getCurrentDateTime();
     
 
     /**

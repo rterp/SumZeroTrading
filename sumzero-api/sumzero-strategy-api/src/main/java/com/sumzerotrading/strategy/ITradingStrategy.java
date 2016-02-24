@@ -27,6 +27,7 @@ import com.sumzerotrading.marketdata.IQuoteEngine;
 import com.sumzerotrading.realtime.bar.IRealtimeBarEngine;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -55,7 +56,7 @@ public interface ITradingStrategy {
     
     public boolean isRunning();
     
-    public LocalDateTime getCurrentTime();
+    public ZonedDateTime getCurrentTime();
     
     public void init();
 }
