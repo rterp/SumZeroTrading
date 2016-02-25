@@ -24,6 +24,7 @@ import com.ib.client.ClientSocketInterface;
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.Execution;
+import com.ib.client.ExecutionFilter;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.sumzerotrading.broker.BrokerError;
@@ -46,7 +47,6 @@ import com.sumzerotrading.ib.historical.ContractDetailsListener;
 import com.sumzerotrading.time.TimeUpdatedListener;
 import com.sumzerotrading.util.QuoteUtil;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -68,19 +68,18 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected ClientSocketInterface ibConnection;
     protected IBSocket ibSocket;
     protected IBConnectionInterface callbackInterface;
-    protected Set<TradeOrder> currencyOrderList = new HashSet<TradeOrder>();
-    protected BlockingQueue<Integer> nextIdQueue = new LinkedBlockingQueue<Integer>();
+    protected Set<TradeOrder> currencyOrderList = new HashSet<>();
+    protected BlockingQueue<Integer> nextIdQueue = new LinkedBlockingQueue<>();
     protected BlockingQueue<ZonedDateTime> brokerTimeQueue = new LinkedBlockingQueue<>();
-    protected BlockingQueue<BrokerError> brokerErrorQueue = new LinkedBlockingQueue<BrokerError>();
-    protected BlockingQueue<OrderEvent> orderEventQueue = new LinkedBlockingQueue<OrderEvent>();
-    protected BlockingQueue<ContractDetails> contractDetailsQueue = new LinkedBlockingDeque<ContractDetails>();
-    // protected Logger logger;
+    protected BlockingQueue<BrokerError> brokerErrorQueue = new LinkedBlockingQueue<>();
+    protected BlockingQueue<OrderEvent> orderEventQueue = new LinkedBlockingQueue<>();
+    protected BlockingQueue<ContractDetails> contractDetailsQueue = new LinkedBlockingDeque<>();
     protected int nextOrderId = -1;
     protected SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
-    protected Map<String, TradeOrder> openOrderMap = new HashMap<String, TradeOrder>();
-    protected List<OrderEventListener> orderEventListeners = new ArrayList<OrderEventListener>();
+    protected Map<String, TradeOrder> orderMap = new HashMap<>();
+    protected List<OrderEventListener> orderEventListeners = new ArrayList<>();
     protected IBOrderEventProcessor orderProcessor;
-    protected Set<String> filledOrderSet = new HashSet<String>();
+    protected Set<String> filledOrderSet = new HashSet<>();
     protected Timer currencyOrderTimer;
     protected Object lock = new Object();
     protected Semaphore semaphore = new Semaphore(1);
@@ -101,10 +100,6 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         currencyOrderTimer.schedule(getCurrencyOrderMonitor(), 0, 1000 * 60);
     }
 
-    @Override
-    public ZonedDateTime getCurrentDateTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void addTimeUpdateListener(TimeUpdatedListener listener) {
@@ -165,7 +160,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
 
-        TradeOrder order = openOrderMap.get(Integer.toString(orderId));
+        TradeOrder order = orderMap.get(Integer.toString(orderId));
         if (order == null) {
             System.out.println("Open Order with ID: " + orderId + " not found");
             //logger.error();
@@ -341,18 +336,12 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 
     
     @Override
-    public void requestOrderStatus(TradeOrder tradeOrder) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized TradeOrder requestOrderStatus(String orderId) {
+        ExecutionFilter filter = new ExecutionFilter();
+        ibConnection.reqExecutions(filter);
+        throw new IllegalStateException("Not yet implemented");
     }
 
-    @Override
-    public void requestOrderStatus(List<TradeOrder> tradeOrders) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    
-    
-    
 
     protected void queueOrder(TradeOrder order) {
         currencyOrderList.add(order);
@@ -408,8 +397,8 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 //        }
 //              
 //        
-//        openOrderMap.put( order.getOrderId(), order );
-//        openOrderMap.put( comboOrder.getOrderId(), comboOrder);
+//        orderMap.put( order.getOrderId(), order );
+//        orderMap.put( comboOrder.getOrderId(), comboOrder);
 //        
 //        Contract leg1Contract = ContractBuilderFactory.getContractBuilder(order.getTicker()).buildContract(order.getTicker());
 //        Contract leg2Contract = ContractBuilderFactory.getContractBuilder(comboOrder.getTicker()).buildContract(comboOrder.getTicker());
@@ -424,7 +413,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 //    }
     protected List<IbOrderAndContract> buildOrderAndContract(TradeOrder order) {
         List<IbOrderAndContract> orderList = new ArrayList<IbOrderAndContract>();
-        openOrderMap.put(order.getOrderId(), order);
+        orderMap.put(order.getOrderId(), order);
 
         Contract contract = ContractBuilderFactory.getContractBuilder(order.getTicker()).buildContract(order.getTicker());
 

@@ -66,6 +66,11 @@ public class TradeOrder implements Serializable {
     protected boolean submitChildOrdersFirst = false;
     protected ZonedDateTime orderEntryTime;
     protected double orderTimeInForceMinutes = 0;
+    
+    protected double filledSize = 0;
+    protected double filledPrice = 0;
+    protected double commission = 0;
+    protected Status currentStatus = Status.OPEN;
 
     public TradeOrder(String orderId, Ticker ticker, int size, TradeDirection tradeDirection) {
         type = Type.MARKET;
@@ -270,35 +275,65 @@ public class TradeOrder implements Serializable {
         this.orderTimeInForceMinutes = orderTimeInForceMinutes;
     }
 
+    public double getFilledSize() {
+        return filledSize;
+    }
+
+    public void setFilledSize(double filledSize) {
+        this.filledSize = filledSize;
+    }
+
+    public double getFilledPrice() {
+        return filledPrice;
+    }
+
+    public void setFilledPrice(double filledPrice) {
+        this.filledPrice = filledPrice;
+    }
+
+    public Status getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(Status currentStatus) {
+        this.currentStatus = currentStatus;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 41 * hash + (this.ticker != null ? this.ticker.hashCode() : 0);
-        hash = 41 * hash + (this.direction != null ? this.direction.hashCode() : 0);
-        hash = 41 * hash + (this.type != null ? this.type.hashCode() : 0);
-        hash = 41 * hash + (this.goodAfterTime != null ? this.goodAfterTime.hashCode() : 0);
-        hash = 41 * hash + (this.goodUntilTime != null ? this.goodUntilTime.hashCode() : 0);
-        hash = 41 * hash + (this.limitPrice != null ? this.limitPrice.hashCode() : 0);
-        hash = 41 * hash + (this.stopPrice != null ? this.stopPrice.hashCode() : 0);
-        hash = 41 * hash + (this.duration != null ? this.duration.hashCode() : 0);
-        hash = 41 * hash + this.size;
-        hash = 41 * hash + (this.orderId != null ? this.orderId.hashCode() : 0);
-        hash = 41 * hash + (this.parentOrderId != null ? this.parentOrderId.hashCode() : 0);
-        hash = 41 * hash + (this.ocaGroup != null ? this.ocaGroup.hashCode() : 0);
-        hash = 41 * hash + (this.referenceString != null ? this.referenceString.hashCode() : 0);
-        hash = 41 * hash + (this.positionId != null ? this.positionId.hashCode() : 0);
-        hash = 41 * hash + (this.childOrders != null ? this.childOrders.hashCode() : 0);
-        hash = 41 * hash + (this.comboOrder != null ? this.comboOrder.hashCode() : 0);
-        hash = 41 * hash + (this.reference != null ? this.reference.hashCode() : 0);
-        hash = 41 * hash + (this.submitted ? 1 : 0);
-        hash = 41 * hash + (this.submitChildOrdersFirst ? 1 : 0);
-        hash = 41 * hash + (this.orderEntryTime != null ? this.orderEntryTime.hashCode() : 0);
-        hash = 41 * hash + (int) (Double.doubleToLongBits(this.orderTimeInForceMinutes) ^ (Double.doubleToLongBits(this.orderTimeInForceMinutes) >>> 32));
+        hash = 97 * hash + (this.ticker != null ? this.ticker.hashCode() : 0);
+        hash = 97 * hash + (this.direction != null ? this.direction.hashCode() : 0);
+        hash = 97 * hash + (this.type != null ? this.type.hashCode() : 0);
+        hash = 97 * hash + (this.goodAfterTime != null ? this.goodAfterTime.hashCode() : 0);
+        hash = 97 * hash + (this.goodUntilTime != null ? this.goodUntilTime.hashCode() : 0);
+        hash = 97 * hash + (this.limitPrice != null ? this.limitPrice.hashCode() : 0);
+        hash = 97 * hash + (this.stopPrice != null ? this.stopPrice.hashCode() : 0);
+        hash = 97 * hash + (this.duration != null ? this.duration.hashCode() : 0);
+        hash = 97 * hash + this.size;
+        hash = 97 * hash + (this.orderId != null ? this.orderId.hashCode() : 0);
+        hash = 97 * hash + (this.parentOrderId != null ? this.parentOrderId.hashCode() : 0);
+        hash = 97 * hash + (this.ocaGroup != null ? this.ocaGroup.hashCode() : 0);
+        hash = 97 * hash + (this.referenceString != null ? this.referenceString.hashCode() : 0);
+        hash = 97 * hash + (this.positionId != null ? this.positionId.hashCode() : 0);
+        hash = 97 * hash + (this.childOrders != null ? this.childOrders.hashCode() : 0);
+        hash = 97 * hash + (this.comboOrder != null ? this.comboOrder.hashCode() : 0);
+        hash = 97 * hash + (this.reference != null ? this.reference.hashCode() : 0);
+        hash = 97 * hash + (this.submitted ? 1 : 0);
+        hash = 97 * hash + (this.submitChildOrdersFirst ? 1 : 0);
+        hash = 97 * hash + (this.orderEntryTime != null ? this.orderEntryTime.hashCode() : 0);
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.orderTimeInForceMinutes) ^ (Double.doubleToLongBits(this.orderTimeInForceMinutes) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.filledSize) ^ (Double.doubleToLongBits(this.filledSize) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.filledPrice) ^ (Double.doubleToLongBits(this.filledPrice) >>> 32));
+        hash = 97 * hash + (this.currentStatus != null ? this.currentStatus.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
@@ -306,6 +341,42 @@ public class TradeOrder implements Serializable {
             return false;
         }
         final TradeOrder other = (TradeOrder) obj;
+        if (this.size != other.size) {
+            return false;
+        }
+        if (this.submitted != other.submitted) {
+            return false;
+        }
+        if (this.submitChildOrdersFirst != other.submitChildOrdersFirst) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.orderTimeInForceMinutes) != Double.doubleToLongBits(other.orderTimeInForceMinutes)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.filledSize) != Double.doubleToLongBits(other.filledSize)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.filledPrice) != Double.doubleToLongBits(other.filledPrice)) {
+            return false;
+        }
+        if ((this.orderId == null) ? (other.orderId != null) : !this.orderId.equals(other.orderId)) {
+            return false;
+        }
+        if ((this.parentOrderId == null) ? (other.parentOrderId != null) : !this.parentOrderId.equals(other.parentOrderId)) {
+            return false;
+        }
+        if ((this.ocaGroup == null) ? (other.ocaGroup != null) : !this.ocaGroup.equals(other.ocaGroup)) {
+            return false;
+        }
+        if ((this.referenceString == null) ? (other.referenceString != null) : !this.referenceString.equals(other.referenceString)) {
+            return false;
+        }
+        if ((this.positionId == null) ? (other.positionId != null) : !this.positionId.equals(other.positionId)) {
+            return false;
+        }
+        if ((this.reference == null) ? (other.reference != null) : !this.reference.equals(other.reference)) {
+            return false;
+        }
         if (this.ticker != other.ticker && (this.ticker == null || !this.ticker.equals(other.ticker))) {
             return false;
         }
@@ -330,43 +401,16 @@ public class TradeOrder implements Serializable {
         if (this.duration != other.duration) {
             return false;
         }
-        if (this.size != other.size) {
-            return false;
-        }
-        if ((this.orderId == null) ? (other.orderId != null) : !this.orderId.equals(other.orderId)) {
-            return false;
-        }
-        if ((this.parentOrderId == null) ? (other.parentOrderId != null) : !this.parentOrderId.equals(other.parentOrderId)) {
-            return false;
-        }
-        if ((this.ocaGroup == null) ? (other.ocaGroup != null) : !this.ocaGroup.equals(other.ocaGroup)) {
-            return false;
-        }
-        if ((this.referenceString == null) ? (other.referenceString != null) : !this.referenceString.equals(other.referenceString)) {
-            return false;
-        }
-        if ((this.positionId == null) ? (other.positionId != null) : !this.positionId.equals(other.positionId)) {
-            return false;
-        }
         if (this.childOrders != other.childOrders && (this.childOrders == null || !this.childOrders.equals(other.childOrders))) {
             return false;
         }
         if (this.comboOrder != other.comboOrder && (this.comboOrder == null || !this.comboOrder.equals(other.comboOrder))) {
             return false;
         }
-        if ((this.reference == null) ? (other.reference != null) : !this.reference.equals(other.reference)) {
-            return false;
-        }
-        if (this.submitted != other.submitted) {
-            return false;
-        }
-        if (this.submitChildOrdersFirst != other.submitChildOrdersFirst) {
-            return false;
-        }
         if (this.orderEntryTime != other.orderEntryTime && (this.orderEntryTime == null || !this.orderEntryTime.equals(other.orderEntryTime))) {
             return false;
         }
-        if (Double.doubleToLongBits(this.orderTimeInForceMinutes) != Double.doubleToLongBits(other.orderTimeInForceMinutes)) {
+        if (this.currentStatus != other.currentStatus) {
             return false;
         }
         return true;
@@ -374,7 +418,10 @@ public class TradeOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "TradeOrder{" + "ticker=" + ticker + ", direction=" + direction + ", type=" + type + ", goodAfterTime=" + goodAfterTime + ", goodUntilTime=" + goodUntilTime + ", limitPrice=" + limitPrice + ", stopPrice=" + stopPrice + ", duration=" + duration + ", size=" + size + ", orderId=" + orderId + ", parentOrderId=" + parentOrderId + ", ocaGroup=" + ocaGroup + ", referenceString=" + referenceString + ", positionId=" + positionId + ", childOrders=" + childOrders + ", comboOrder=" + comboOrder + ", reference=" + reference + ", submitted=" + submitted + ", submitChildOrdersFirst=" + submitChildOrdersFirst + ", orderEntryTime=" + orderEntryTime + ", orderTimeInForceMinutes=" + orderTimeInForceMinutes + '}';
+        return "TradeOrder{" + "ticker=" + ticker + ", direction=" + direction + ", type=" + type + ", goodAfterTime=" + goodAfterTime + ", goodUntilTime=" + goodUntilTime + ", limitPrice=" + limitPrice + ", stopPrice=" + stopPrice + ", duration=" + duration + ", size=" + size + ", orderId=" + orderId + ", parentOrderId=" + parentOrderId + ", ocaGroup=" + ocaGroup + ", referenceString=" + referenceString + ", positionId=" + positionId + ", childOrders=" + childOrders + ", comboOrder=" + comboOrder + ", reference=" + reference + ", submitted=" + submitted + ", submitChildOrdersFirst=" + submitChildOrdersFirst + ", orderEntryTime=" + orderEntryTime + ", orderTimeInForceMinutes=" + orderTimeInForceMinutes + ", filledSize=" + filledSize + ", filledPrice=" + filledPrice + ", currentStatus=" + currentStatus + '}';
     }
 
+    
+    
+    
 }

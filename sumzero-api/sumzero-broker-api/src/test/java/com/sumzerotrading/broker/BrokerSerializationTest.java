@@ -63,28 +63,6 @@ public class BrokerSerializationTest {
     }
     
     
-    @Test
-    public void testBatchOrder() throws Exception {
-        Order order = new Order();
-        
-        BatchOrder batchOrder = new BatchOrder();
-        batchOrder.addOrder(123, "ABC", order);
-        
-        test( batchOrder );
-        
-    }
-    
-    @Test
-    public void testOrder() throws Exception {
-        Order order = new Order();
-        test( order );
-    }
-    
-    @Test
-    public void testPortfolioPosition() throws Exception {
-        PortfolioPosition position = new PortfolioPosition(new StockTicker("ABC"), BigDecimal.ZERO);
-        test( position );
-    }
     
     @Test
     public void testBrokerError() throws Exception {

@@ -93,8 +93,6 @@ public interface IBroker {
      */
     public abstract void removeBrokerErrorListener( BrokerErrorListener listener );
 
-    //public abstract void addBrokerListener( BrokerListener listener );
-    //public abstract void removeBrokerListener( BrokerListener listener );
     /**
      * Returns a properly formatted string for today's date with the specified
      * hour and minute
@@ -122,13 +120,6 @@ public interface IBroker {
     public abstract ZonedDateTime getCurrentTime();
     
     
-    /**
-     * Gets the current Time and Date as a LocalDateTime
-     * @return The current date/Time
-     */
-    public abstract ZonedDateTime getCurrentDateTime();
-    
-
     /**
      * Establishes the initial connection to the broker.
      */
@@ -168,19 +159,11 @@ public interface IBroker {
      * Request the status of a specific order. The request will cause an
      * ExecutionReport message to be fired.
      *
-     * @param tradeOrder The order to get the status of
+     * @param orderId The orderId of the Order to retreive.
+     * @return The TradeOrder for the specified ID, or null if no trade was found.
      */
-    public void requestOrderStatus(TradeOrder tradeOrder);
+    public TradeOrder requestOrderStatus(String orderId);
 
-    
-    /**
-     * Request the status of the specified orders. The request will cause an
-     * ExecutionReport message to be fired for each order
-     *
-     * @param tradeOrders The orders to get the status of
-     */
-    public void requestOrderStatus(List<TradeOrder> tradeOrders);
-    
     
     /**
      * Cancels the order with the specified ID, and replaced it with the specified order
