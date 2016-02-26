@@ -30,7 +30,7 @@ public class TradingExample {
 
     public void start() {
         //Connect to the Interactive Brokers TWS Client
-        InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 6468, 1);
+        InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 7999, 1);
         ibClient.connect();
 
         //Create an S&P 500 Futures ticker
@@ -46,6 +46,8 @@ public class TradingExample {
 
         //Create the order and send to Interactive Brokers
         TradeOrder order = new TradeOrder(orderId, esTicker, contracts, TradeDirection.BUY);
+        order.setType(TradeOrder.Type.LIMIT);
+        order.setLimitPrice(1955.50);
         ibClient.placeOrder(order);
 
     }

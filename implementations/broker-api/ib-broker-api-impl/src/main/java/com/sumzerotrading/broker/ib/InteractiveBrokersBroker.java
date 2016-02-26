@@ -54,7 +54,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-//import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Supported Order types are: Market, Stop and Limit Supported order parameters 
@@ -65,6 +66,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, TimeListener, ContractDetailsListener {
 
+    protected static Logger logger = LoggerFactory.getLogger(InteractiveBrokersBroker.class);
     protected ClientSocketInterface ibConnection;
     protected IBSocket ibSocket;
     protected IBConnectionInterface callbackInterface;
@@ -77,6 +79,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected int nextOrderId = -1;
     protected SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
     protected Map<String, TradeOrder> orderMap = new HashMap<>();
+    protected Map<String, TradeOrder> completedOrderMap = new HashMap<>();
     protected List<OrderEventListener> orderEventListeners = new ArrayList<>();
     protected IBOrderEventProcessor orderProcessor;
     protected Set<String> filledOrderSet = new HashSet<>();
@@ -161,25 +164,26 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
 
         TradeOrder order = orderMap.get(Integer.toString(orderId));
+
+        
         if (order == null) {
-            System.out.println("Open Order with ID: " + orderId + " not found");
-            //logger.error();
+            logger.error("Open Order with ID: " + orderId + " not found");
             return;
         }
+        
+        order.setFilledSize(filled);
+        order.setFilledPrice(avgFillPrice);
+        
         try {
             OrderEvent event = OrderManagmentUtil.createOrderEvent(order, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
-            if (event.getOrderStatus().getStatus() == OrderStatus.Status.FILLED) {
-                if (filledOrderSet.contains(event.getOrder().getOrderId())) {
-                    filledOrderSet.remove(event.getOrder().getOrderId());
-                    return;
-                } else {
-                    filledOrderSet.add(event.getOrder().getOrderId());
+            if (event.getOrderStatus().getStatus() == OrderStatus.Status.FILLED ||
+                event.getOrderStatus().getStatus() == OrderStatus.Status.CANCELED
+                    ) {
+                completedOrderMap.put(order.getOrderId(), order);
                 }
-            }
             orderEventQueue.put(event);
         } catch (Exception ex) {
-            ex.printStackTrace();
-            //logger.error(ex, ex);
+            logger.error(ex.getMessage(), ex);
         }
     }
 
