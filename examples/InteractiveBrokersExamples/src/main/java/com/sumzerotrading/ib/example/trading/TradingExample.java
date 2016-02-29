@@ -21,24 +21,30 @@ package com.sumzerotrading.ib.example.trading;
 
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
+import com.sumzerotrading.data.CurrencyTicker;
 import com.sumzerotrading.data.Exchange;
 import com.sumzerotrading.data.FuturesTicker;
+import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInterface;
 
 public class TradingExample {
 
+    InteractiveBrokersClientInterface ibClient;
+    
     public void start() {
         //Connect to the Interactive Brokers TWS Client
-        InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 7999, 1);
+        ibClient = InteractiveBrokersClient.getInstance("localhost", 7999, 1);
         ibClient.connect();
-
+    }
+    
+    public void placeFuturesOrder() {
         //Create an S&P 500 Futures ticker
         FuturesTicker esTicker = new FuturesTicker();
-        esTicker.setSymbol("ES");
-        esTicker.setExpiryMonth(3);
+        esTicker.setSymbol("CL");
+        esTicker.setExpiryMonth(4);
         esTicker.setExpiryYear(2016);
-        esTicker.setExchange(Exchange.GLOBEX);
+        esTicker.setExchange(Exchange.NYMEX);
         
 
         String orderId = ibClient.getNextOrderId();
@@ -47,12 +53,42 @@ public class TradingExample {
         //Create the order and send to Interactive Brokers
         TradeOrder order = new TradeOrder(orderId, esTicker, contracts, TradeDirection.BUY);
         order.setType(TradeOrder.Type.LIMIT);
-        order.setLimitPrice(1955.50);
+        order.setLimitPrice(32.50);
         ibClient.placeOrder(order);
-
     }
+    
+    
+    public void placeEquityOrder() {
+        StockTicker amazonTicker = new StockTicker("AMZN");
+        String orderId = ibClient.getNextOrderId();
+        int shares = 500;
+        
+        TradeOrder order = new TradeOrder(orderId, amazonTicker, shares, TradeDirection.SELL);
+        
+        ibClient.placeOrder(order);
+    }
+    
+    public void placeCurrencyOrder() {
+        CurrencyTicker eurTicker = new CurrencyTicker();
+        eurTicker.setSymbol("EUR");
+        eurTicker.setCurrency("USD");
+        eurTicker.setExchange(Exchange.IDEALPRO);
+        
+        String orderId = ibClient.getNextOrderId();
+        int amount = 50000;
+        
+        TradeOrder order = new TradeOrder(orderId, eurTicker, amount, TradeDirection.BUY);
+        
+        ibClient.placeOrder(order);
+        
+    }
+    
+    
+    
 
-    public static void main(String[] args) {
-        new TradingExample().start();
+    public static void main(String[] args) throws Exception{
+        TradingExample example =  new TradingExample();
+        example.start();
+        example.placeFuturesOrder();
     }
 }
