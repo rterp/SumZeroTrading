@@ -77,12 +77,4 @@ public class OrderEvent implements Serializable {
         return "OrderEvent{" + "order=" + order + ", orderStatus=" + orderStatus + '}';
     }
 
- 
-    
-    
-    
-    
-    
-    
-    
 }

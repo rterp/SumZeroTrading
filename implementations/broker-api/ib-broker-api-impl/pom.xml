@@ -86,5 +86,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <artifactId>slf4j-log4j12</artifactId>
       <version>1.7.12</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.1</version>
+    </dependency>
   </dependencies>
 </project>

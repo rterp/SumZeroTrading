@@ -46,6 +46,13 @@ import com.sumzerotrading.ib.TimeListener;
 import com.sumzerotrading.ib.historical.ContractDetailsListener;
 import com.sumzerotrading.time.TimeUpdatedListener;
 import com.sumzerotrading.util.QuoteUtil;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -54,6 +61,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,18 +95,24 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected Timer currencyOrderTimer;
     protected Object lock = new Object();
     protected Semaphore semaphore = new Semaphore(1);
+    protected Semaphore tradeFileSemaphore = new Semaphore(1);
     protected boolean started = false;
+    protected String directory;
+    protected PassiveExpiringMap<String, OrderEvent> orderEventMap;
 
     public InteractiveBrokersBroker(IBSocket ibSocket) {
+        try {
+            loadOrderMaps();
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
         this.ibSocket = ibSocket;
-
+        orderEventMap = new PassiveExpiringMap<>(1, TimeUnit.MINUTES);
         callbackInterface = ibSocket.getConnection();
         ibConnection = ibSocket.getClientSocket();
-
         callbackInterface.addOrderStatusListener(this);
         callbackInterface.addTimeListener(this);
         callbackInterface.addContractDetailsListener(this);
-        //    logger = Logger.getLogger(getClass());
         orderProcessor = new IBOrderEventProcessor(orderEventQueue, this);
         currencyOrderTimer = new Timer(true);
         currencyOrderTimer.schedule(getCurrencyOrderMonitor(), 0, 1000 * 60);
@@ -176,12 +191,27 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         
         try {
             OrderEvent event = OrderManagmentUtil.createOrderEvent(order, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
+            
+            //Check if this order status has been seen in the last minute
+            OrderEvent cachedEvent = orderEventMap.get(order.getOrderId());
+            if( cachedEvent != null && event.equals(cachedEvent) ) {
+                orderEventMap.put(order.getOrderId(), event);
+                logger.info("Duplicate order status received....skipping");
+                return;
+            }
             if (event.getOrderStatus().getStatus() == OrderStatus.Status.FILLED ||
                 event.getOrderStatus().getStatus() == OrderStatus.Status.CANCELED
                     ) {
                 completedOrderMap.put(order.getOrderId(), order);
+                orderMap.remove(order.getOrderId());
                 }
             orderEventQueue.put(event);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+        
+        try {
+            saveOrderMaps();
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }
@@ -315,25 +345,16 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         try {
             contractDetailsQueue.put(details);
         } catch (Exception ex) {
-//logger.error(ex, ex);
             ex.printStackTrace();
         }
     }
 
     public ContractDetails getContractDetails(Ticker ticker) {
         final Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
-//        Thread thread = new Thread( new Runnable() {
-//            public void run() {
-//                ibConnection.reqContractDetails(contract);
-//            }
-//        });
-//        thread.start();
         ibConnection.reqContractDetails(contract);
         try {
             return contractDetailsQueue.poll(2, TimeUnit.SECONDS);
         } catch (InterruptedException ex) {
-//logger.error(ex, ex);
-            ex.printStackTrace();
             throw new IllegalStateException(ex);
         }
     }
@@ -346,6 +367,42 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         throw new IllegalStateException("Not yet implemented");
     }
 
+    
+    
+    protected void saveOrderMaps() throws Exception {
+        tradeFileSemaphore.acquire();
+        createDir();
+        ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(getDirName() + "orders.ser"));
+        output.writeObject(completedOrderMap);
+        output.writeObject(orderMap);
+        output.flush();
+        output.close();
+        tradeFileSemaphore.release();
+    }
+    
+    
+    protected void loadOrderMaps() throws Exception {
+        tradeFileSemaphore.acquire();
+        createDir();
+        ObjectInputStream input = new ObjectInputStream(new FileInputStream(getDirName() + "orders.ser"));
+        completedOrderMap = (HashMap) input.readObject();
+        orderMap = (HashMap) input.readObject();
+        input.close();
+        tradeFileSemaphore.release();
+    }
+    
+    
+    protected void createDir() {
+        try {
+            Files.createDirectories(Paths.get(getDirName()));
+        } catch (IOException ex) {
+            logger.error(ex.getMessage(), ex);
+        }
+    }
+    
+    protected String getDirName() {
+        return System.getProperty("user.dir") + "/" + "ib-order-management/";
+    }
 
     protected void queueOrder(TradeOrder order) {
         currencyOrderList.add(order);
@@ -367,9 +424,6 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     }
 
     protected boolean isIdealProClosed() {
-//        GregorianCalendar currentTime = getCurrentTime();
-//        return (currentTime.get( Calendar.HOUR_OF_DAY ) == 14 &&
-//            currentTime.get( Calendar.MINUTE ) < 5 );
         return false;
     }
 
@@ -392,29 +446,6 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         }
     }
 
-//    
-//    protected IbOrderAndContract buildComboOrderAndContract(TradeOrder order) {
-//        TradeOrder comboOrder = order.getComboOrder();
-//        
-//        if( comboOrder == null ) {
-//            throw new IllegalStateException( "Order ID: " + order.getOrderId() + " is not a combo order" );
-//        }
-//              
-//        
-//        orderMap.put( order.getOrderId(), order );
-//        orderMap.put( comboOrder.getOrderId(), comboOrder);
-//        
-//        Contract leg1Contract = ContractBuilderFactory.getContractBuilder(order.getTicker()).buildContract(order.getTicker());
-//        Contract leg2Contract = ContractBuilderFactory.getContractBuilder(comboOrder.getTicker()).buildContract(comboOrder.getTicker());
-//        
-//        ibConnection.reqContractDetails(leg1Contract);
-//        
-//        
-//        
-//        return null;
-//        
-//        
-//    }
     protected List<IbOrderAndContract> buildOrderAndContract(TradeOrder order) {
         List<IbOrderAndContract> orderList = new ArrayList<IbOrderAndContract>();
         orderMap.put(order.getOrderId(), order);
