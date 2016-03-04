@@ -52,10 +52,8 @@ public abstract class AbstractTradingStrategy implements ITradingStrategy {
 
     @Override
     public ZonedDateTime getCurrentTime() {
-        if( ! isInitialized() ) {
-            throw new IllegalStateException( "Strategy has not yet been initialized" );
-        }
-        return broker.getCurrentDateTime();
+            throw new IllegalStateException( "Not Implemented" );
+        
     }
 
     @Override

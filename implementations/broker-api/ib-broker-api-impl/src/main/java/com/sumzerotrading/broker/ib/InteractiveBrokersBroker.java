@@ -367,6 +367,12 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         throw new IllegalStateException("Not yet implemented");
     }
 
+    @Override
+    public List<TradeOrder> getOpenOrders() {
+       return new ArrayList<>(orderMap.values());
+    }
+
+    
     
     
     protected void saveOrderMaps() throws Exception {

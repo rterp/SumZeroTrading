@@ -46,4 +46,6 @@ public interface InteractiveBrokersClientInterface {
 
     void unsubscribeMarketDepth(Ticker ticker, Level2QuoteListener listener);
     
+    List<TradeOrder> getOpenOrders();
+    
 }

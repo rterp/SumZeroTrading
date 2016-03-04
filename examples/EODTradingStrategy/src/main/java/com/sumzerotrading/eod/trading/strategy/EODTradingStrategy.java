@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -21,10 +21,8 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -49,20 +47,24 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected ZonedDateTime lastReportedTime;
     protected boolean ordersPlaced = false;
     protected boolean allPricesInitialized = false;
-    protected LocalTime timeToPlaceOrders;
+    protected LocalTime timeToPlaceOrders  = LocalTime.of(12, 40, 0);
 
     public void start() {
         ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
         logger.info( "Connecting to IB client at:" + ibHost + ":" + ibPort + " with clientID: " + ibClientId);
         ibClient.connect();
-        
+        List<TradeOrder> openOrders = ibClient.getOpenOrders();
+        logger.debug("Found " + openOrders.size() + " open orders");
         longShortPairMap.put(new StockTicker("QQQ"), new StockTicker("SPY"));
         longShortPairMap.put(new StockTicker("SPY"), new StockTicker("IWM"));
         longShortPairMap.put(new StockTicker("DIA"), new StockTicker("IWM"));
-        timeToPlaceOrders = LocalTime.of(12, 40, 0);
+        ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
+        logger.debug("Checking if orders have already been placed today: " + ordersPlaced );
+        
+        
         logger.info( "Strategy will place orders after: " + timeToPlaceOrders.toString());
         
-
+        
         longShortPairMap.keySet().stream().map((ticker) -> {
             ibClient.subscribeLevel1(ticker, this);
             return ticker;
@@ -73,11 +75,6 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     }
 
     public synchronized void placeMOCOrders(Ticker longTicker, Ticker shortTicker) { 
-        if (ordersPlaced) {
-            return;
-        } else {
-            ordersPlaced = true;
-        }
         
         UUID correlationId = UUID.randomUUID();
         int longSize = getOrderSize(longTicker);
@@ -128,19 +125,24 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         if (quote.getType() == QuoteType.LAST) {
             lastPriceMap.put(quote.getTicker(), quote.getValue().doubleValue());
             if (!allPricesInitialized) {
-                setAllPricesInitialized();
+                allPricesInitialized = setAllPricesInitialized();
             }
+        } else {
+            return;
         }
 
         
-        LocalTime currentTime = quote.getTimeStamp().toLocalTime();
+        LocalTime currentTime = quote.getTimeStamp().withZoneSameInstant(ZoneId.systemDefault()).toLocalTime();
 
         if (currentTime.isAfter(timeToPlaceOrders) && !ordersPlaced) {
             if (allPricesInitialized) {
+                ordersPlaced = true;
                 longShortPairMap.keySet().stream().forEach((longTicker) -> {
                     placeMOCOrders(longTicker, longShortPairMap.get(longTicker));
                 });
             }
+        } else if(! currentTime.isAfter(timeToPlaceOrders) ) {
+            ordersPlaced = false;
         }
     }
 
@@ -151,7 +153,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
                 date.getDayOfWeek() == DayOfWeek.SUNDAY) {
             date = date.plusDays(1);
         }
-        date = date.of(date.getYear(),date.getMonthValue(),date.getDayOfMonth(), 5, 30, 0, 0, ZoneId.systemDefault());
+        date = ZonedDateTime.of(date.getYear(),date.getMonthValue(),date.getDayOfMonth(), 5, 30, 0, 0, ZoneId.systemDefault());
         return date;
     }
 
@@ -160,6 +162,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         return (int) Math.round(orderSizeInDollars / lastPrice);
     }
 
+    
     protected boolean setAllPricesInitialized() {
         if (allPricesInitialized) {
             return true;
@@ -174,6 +177,23 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             }
         }
         return true;
+    }
+    
+    
+    protected boolean checkOpenOrders(List<TradeOrder> orders, Map<Ticker,Ticker> tickers) {
+        if( orders.isEmpty() ) {
+            return false;
+        }
+        for( TradeOrder order : orders ) {
+            if(order.getType() == TradeOrder.Type.MARKET_ON_CLOSE) {
+                for( Ticker ticker : tickers.keySet()) {
+                    if(order.getTicker().equals(ticker)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

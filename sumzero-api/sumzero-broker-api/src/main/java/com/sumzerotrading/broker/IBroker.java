@@ -163,7 +163,13 @@ public interface IBroker {
      * @return The TradeOrder for the specified ID, or null if no trade was found.
      */
     public TradeOrder requestOrderStatus(String orderId);
-
+    
+    /**
+     * Requests all open orders
+     * 
+     * @return A list of all open orders.
+     */
+    public List<TradeOrder> getOpenOrders();
     
     /**
      * Cancels the order with the specified ID, and replaced it with the specified order

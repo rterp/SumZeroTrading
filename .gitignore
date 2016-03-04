@@ -20,3 +20,4 @@ nb-configuration.xml
 /commons/sumzero-ib-common-api/nbproject/
 /examples/EODTradingStrategy/nbproject/
 /implementations/broker-api/ib-broker-api-impl/nbproject/
+/commons/interactive-brokers-client/nbproject/

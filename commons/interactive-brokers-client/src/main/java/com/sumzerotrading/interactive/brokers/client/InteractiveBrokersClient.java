@@ -51,7 +51,6 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     protected QuoteEngine quoteEngine;
     protected IBroker broker;
     protected IHistoricalDataProvider historicalDataProvider;
-    protected InteractiveBrokersClientInterface mockIbClient;
     protected static Map<String,InteractiveBrokersClientInterface> ibClientMap = new HashMap<>();
     
 
@@ -147,7 +146,11 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     public String getNextOrderId() {
         return broker.getNextOrderId();
     }
-    
+
+    @Override
+    public List<TradeOrder> getOpenOrders() {
+        return broker.getOpenOrders();
+    }
     
     @Override
     public List<BarData> requestHistoricalData(Ticker ticker, int duration, BarData.LengthUnit lengthUnit, int barSize, BarData.LengthUnit barSizeUnit, IHistoricalDataProvider.ShowProperty showProperty ) {
