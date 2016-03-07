@@ -23,6 +23,7 @@ package com.sumzerotrading.data;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  *
@@ -31,6 +32,7 @@ import java.math.BigInteger;
 public class StockTicker extends Ticker {
 
 
+    protected InstrumentType instrumentType = InstrumentType.STOCK;
 
     public StockTicker( String symbol ) {
         super(symbol);
@@ -43,8 +45,34 @@ public class StockTicker extends Ticker {
     
     @Override
     public InstrumentType getInstrumentType() {
-        return InstrumentType.STOCK;
+        return instrumentType;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 11 * hash + Objects.hashCode(this.instrumentType);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final StockTicker other = (StockTicker) obj;
+        if (this.instrumentType != other.instrumentType) {
+            return false;
+        }
+        return true;
+    }
+    
     
     
     

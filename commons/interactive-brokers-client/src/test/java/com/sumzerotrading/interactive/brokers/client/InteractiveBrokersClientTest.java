@@ -25,6 +25,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -78,6 +79,32 @@ public class InteractiveBrokersClientTest {
     public void tearDown() {
     }
 
+    
+    @Test
+    public void testConnect_WithMock() {
+        InteractiveBrokersClientInterface mockClient = mock(InteractiveBrokersClientInterface.class);
+        String host = "myHost";
+        int port = 9999;
+        int clientId = 123;
+        InteractiveBrokersClient.setMockInteractiveBrokersClient(mockClient, host, port, clientId);
+        
+        assertEquals(mockClient, InteractiveBrokersClient.getInstance(host, port, clientId));
+    }
+    
+    @Test
+    public void testConnect_NoMock() {
+        InteractiveBrokersClientInterface mockClient = mock(InteractiveBrokersClientInterface.class);
+        String host = "myHost";
+        int port = 9999;
+        int clientId = 123;
+        InteractiveBrokersClient.setMockInteractiveBrokersClient(mockClient, host, port, clientId);
+        
+        InteractiveBrokersClientInterface actual = InteractiveBrokersClient.getInstance(host, 9998, clientId);
+        
+        assertNotEquals(mockClient, actual);
+        assertEquals(actual, InteractiveBrokersClient.getInstance(host, 9998, clientId));
+        
+    }
     
     @Test
     public void testConnect() {

@@ -67,8 +67,10 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         
         longShortPairMap.keySet().stream().map((ticker) -> {
             ibClient.subscribeLevel1(ticker, this);
+            System.out.println("Subscribing to: " + ticker);
             return ticker;
         }).forEach((ticker) -> {
+            System.out.println("Subscribing to12: " + ticker);
             ibClient.subscribeLevel1(longShortPairMap.get(ticker), this);
         });
 
@@ -76,7 +78,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
 
     public synchronized void placeMOCOrders(Ticker longTicker, Ticker shortTicker) { 
         
-        UUID correlationId = UUID.randomUUID();
+        String correlationId = getUUID();
         int longSize = getOrderSize(longTicker);
         int shortSize = getOrderSize(shortTicker);
         
@@ -102,11 +104,14 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
 
         TradeOrder shortExitOrder = new TradeOrder(ibClient.getNextOrderId(), shortTicker, shortSize, TradeDirection.BUY_TO_COVER);
         shortExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
-        shortExitOrder.setGoodAfterTime(lastReportedTime);
+        shortExitOrder.setGoodAfterTime(getNextBusinessDay(lastReportedTime));
         shortExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:ShortSide*");
 
         logger.info( "Placing short orders: " + shortOrder);
         shortOrder.addChildOrder(shortExitOrder);
+        
+        ibClient.placeOrder(longOrder);
+        ibClient.placeOrder(shortOrder);
 
     }
 
@@ -155,6 +160,10 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         }
         date = ZonedDateTime.of(date.getYear(),date.getMonthValue(),date.getDayOfMonth(), 5, 30, 0, 0, ZoneId.systemDefault());
         return date;
+    }
+    
+    protected String getUUID() {
+        return UUID.randomUUID().toString();
     }
 
     protected int getOrderSize(Ticker ticker) {

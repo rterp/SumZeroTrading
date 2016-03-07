@@ -14,6 +14,8 @@ import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import static org.jmock.Expectations.any;
 import org.junit.After;
@@ -22,8 +24,11 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.slf4j.Logger;
@@ -102,6 +107,11 @@ public class InteractiveBrokersBrokerTest {
     
     @Test
     public void testOrderStatus_NonCompletedOrder() throws Exception  {
+        InteractiveBrokersBroker b = spy(InteractiveBrokersBroker.class);
+        b.orderEventMap =  new HashMap<>();
+        b.orderEventQueue = mockOrderEventQueue;
+        ZonedDateTime now = ZonedDateTime.now();
+        
         int orderId = 50;
         String orderIdString = "50";
         int size = 40;
@@ -117,10 +127,14 @@ public class InteractiveBrokersBrokerTest {
                 
         Ticker ticker = new StockTicker("ABC");
         TradeOrder order = new TradeOrder(orderIdString, ticker, size, TradeDirection.BUY);
+        b.orderMap.put(orderIdString, order);
+        doNothing().when(b).saveOrderMaps();
+        doReturn(now).when(b).getZoneDateTime();
         
-        OrderEvent expectedEvent = OrderManagmentUtil.createOrderEvent(order, status, filled, remaining, averageFilPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
         
-        broker.orderStatus(orderId, status, filled, remaining, averageFilPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
+        OrderEvent expectedEvent = OrderManagmentUtil.createOrderEvent(order, status, filled, remaining, averageFilPrice, permId, parentId, lastFillPrice, clientId, whyHeld, now);
+        
+        b.orderStatus(orderId, status, filled, remaining, averageFilPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
         
         verify(mockOrderEventQueue).put(expectedEvent);
         

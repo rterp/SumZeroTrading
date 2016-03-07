@@ -12,6 +12,7 @@ import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInterface;
 import com.sumzerotrading.marketdata.ILevel1Quote;
+import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.QuoteType;
 import java.math.BigDecimal;
 import java.time.ZoneId;
@@ -22,19 +23,21 @@ import java.util.List;
 import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  *
@@ -45,7 +48,7 @@ public class EODTradingStrategyTest {
     protected InteractiveBrokersClientInterface mockIbClient;
     protected String ibHost = "myHost";
     protected int ibPort = 9999;
-    protected int ibClientClientId = 1111;
+    protected int ibClientId = 1111;
     protected Ticker longTicker = new StockTicker("LONG");
     protected Ticker shortTicker = new StockTicker("SHORT");
     protected EODTradingStrategy strategy;
@@ -64,8 +67,11 @@ public class EODTradingStrategyTest {
     @Before
     public void setUp() {
         mockIbClient = mock(InteractiveBrokersClientInterface.class);
-        InteractiveBrokersClient.setMockInteractiveBrokersClient(mockIbClient, ibHost, ibPort, ibPort);
+        InteractiveBrokersClient.setMockInteractiveBrokersClient(mockIbClient, ibHost, ibPort, ibClientId);
         strategy = spy(EODTradingStrategy.class);
+        strategy.ibHost = ibHost;
+        strategy.ibPort = ibPort;
+        strategy.ibClientId = ibClientId;
     }
 
     @After
@@ -73,6 +79,98 @@ public class EODTradingStrategyTest {
     }
 
 
+    @Test
+    public void testStart() {
+        
+        TradeOrder order = new TradeOrder("123", longTicker, 100, TradeDirection.SELL);
+        List<TradeOrder> openOrders = new ArrayList<>();
+        openOrders.add(order);
+        when(mockIbClient.getOpenOrders()).thenReturn(openOrders);
+        doReturn(true).when(strategy).checkOpenOrders(openOrders, strategy.longShortPairMap);
+        
+        strategy.start();
+        
+        verify(mockIbClient).subscribeLevel1(eq(new StockTicker("QQQ")), any(Level1QuoteListener.class));
+        //verify(mockIbClient).subscribeLevel1(eq(new StockTicker("SPY")), any(EODTradingStrategy.class));
+        //verify(mockIbClient).subscribeLevel1(new StockTicker("SPY"), strategy);
+        //verify(mockIbClient).subscribeLevel1(new StockTicker("IWM"), strategy);
+        //verify(mockIbClient).subscribeLevel1(new StockTicker("DIA"), strategy);
+        //verify(mockIbClient).subscribeLevel1(new StockTicker("IWM"), strategy);
+        
+        
+    }
+    
+    /**
+     *     public void start() {
+        ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
+        logger.info( "Connecting to IB client at:" + ibHost + ":" + ibPort + " with clientID: " + ibClientId);
+        ibClient.connect();
+        List<TradeOrder> openOrders = ibClient.getOpenOrders();
+        logger.debug("Found " + openOrders.size() + " open orders");
+        longShortPairMap.put(new StockTicker("QQQ"), new StockTicker("SPY"));
+        longShortPairMap.put(new StockTicker("SPY"), new StockTicker("IWM"));
+        longShortPairMap.put(new StockTicker("DIA"), new StockTicker("IWM"));
+        ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
+        logger.debug("Checking if orders have already been placed today: " + ordersPlaced );
+        
+        
+        logger.info( "Strategy will place orders after: " + timeToPlaceOrders.toString());
+        
+        
+        longShortPairMap.keySet().stream().map((ticker) -> {
+            ibClient.subscribeLevel1(ticker, this);
+            return ticker;
+        }).forEach((ticker) -> {
+            ibClient.subscribeLevel1(longShortPairMap.get(ticker), this);
+        });
+
+    }
+     */
+    
+    
+    @Test
+    public void testPlaceMOCOrders() {
+        String corrId = "123";
+        int longSize = 100;
+        int shortSize = 200;
+        ZonedDateTime orderTime = ZonedDateTime.now();
+        strategy.ibClient = mockIbClient;
+        
+        doReturn(corrId).when(strategy).getUUID();
+        doReturn(longSize).when(strategy).getOrderSize(longTicker);
+        doReturn(shortSize).when(strategy).getOrderSize(shortTicker);
+        doReturn(orderTime).when(strategy).getNextBusinessDay(any(ZonedDateTime.class));
+        when(mockIbClient.getNextOrderId()).thenReturn("100", "101", "102", "103", "104", "105");
+        
+        TradeOrder expectedLongOrder = new TradeOrder("100", longTicker, longSize, TradeDirection.BUY);
+        expectedLongOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
+        expectedLongOrder.setReferenceString("EOD-Pair-Strategy:123:Entry:LongSide*");
+        
+        TradeOrder expectedLongExitOrder = new TradeOrder("101", longTicker, longSize, TradeDirection.SELL);
+        expectedLongExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);  
+        expectedLongExitOrder.setGoodAfterTime(orderTime);
+        expectedLongExitOrder.setReferenceString("EOD-Pair-Strategy:123:Exit:LongSide*");
+        
+        expectedLongOrder.addChildOrder(expectedLongExitOrder);
+        
+        TradeOrder expectedShortOrder = new TradeOrder("102", shortTicker, shortSize, TradeDirection.SELL_SHORT);
+        expectedShortOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
+        expectedShortOrder.setReferenceString("EOD-Pair-Strategy:123:Entry:ShortSide*");
+        
+        TradeOrder expectedShortExitOrder = new TradeOrder("103", shortTicker, shortSize,TradeDirection.BUY_TO_COVER);
+        expectedShortExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
+        expectedShortExitOrder.setGoodAfterTime(orderTime);
+        expectedShortExitOrder.setReferenceString("EOD-Pair-Strategy:123:Exit:ShortSide*");
+        
+        expectedShortOrder.addChildOrder(expectedShortExitOrder);
+        
+        strategy.placeMOCOrders(longTicker, shortTicker);
+        
+        verify(mockIbClient).placeOrder(expectedLongOrder);
+        verify(mockIbClient).placeOrder(expectedShortOrder);
+    }
+    
+    
     @Test
     public void testQuoteRecieved_NotLast() {
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
@@ -123,7 +221,7 @@ public class EODTradingStrategyTest {
     
 
 @Test
-    public void testQuoteReceived_AllPricesInitialized_OrdersPacePlaced_AfterBeforeTradeTime() {
+    public void testQuoteReceived_AllPricesInitialized_OrdersPacePlaced_BeforeTradeTime() {
         ZonedDateTime zdt = ZonedDateTime.of(2015, 6, 15, 21, 30, 0, 0, ZoneId.of("Z"));
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
         Ticker ticker = new StockTicker("ABC");
@@ -140,22 +238,29 @@ public class EODTradingStrategyTest {
         verify(strategy).setAllPricesInitialized();
         verify(strategy,never()).placeMOCOrders(any(Ticker.class), any(Ticker.class));
     }    
+    
+    @Test
+    public void testQuoteReceived_AllPricesInitialized_OrdersNotPlaced_AfterTradeTime() {
+        ZonedDateTime zdt = ZonedDateTime.of(2015, 6, 15, 23, 30, 0, 0, ZoneId.of("Z"));
+        ILevel1Quote mockQuote = mock(ILevel1Quote.class);
+        strategy.longShortPairMap.put(longTicker,shortTicker);
+        
+        when(mockQuote.getType()).thenReturn(QuoteType.LAST);
+        when(mockQuote.getTicker()).thenReturn(longTicker);
+        when(mockQuote.getValue()).thenReturn(BigDecimal.ONE);
+        when(mockQuote.getTimeStamp()).thenReturn(zdt);
+        doReturn(true).when(strategy).setAllPricesInitialized();
+        doNothing().when(strategy).placeMOCOrders(any(Ticker.class), any(Ticker.class));
+        strategy.ordersPlaced = false;
+        
+        strategy.quoteRecieved(mockQuote);
+        
+        assertTrue(strategy.ordersPlaced);
+        verify(strategy).setAllPricesInitialized();
+        verify(strategy).placeMOCOrders(longTicker,shortTicker);
+    }   
 
-    /**
-     * @Override public void quoteRecieved(ILevel1Quote quote) { if
-        if (currentTime.isAfter(timeToPlaceOrders) && !ordersPlaced) {
-            if (allPricesInitialized) {
-                ordersPlaced = true;
-                longShortPairMap.keySet().stream().forEach((longTicker) -> {
-                    placeMOCOrders(longTicker, longShortPairMap.get(longTicker));
-                });
-            }
-        } else if(! currentTime.isAfter(timeToPlaceOrders) ) {
-            ordersPlaced = false;
-        }
-     */
-    
-    
+ 
 
     @Test
     public void testGetNextBusinessDay_Thursday() {

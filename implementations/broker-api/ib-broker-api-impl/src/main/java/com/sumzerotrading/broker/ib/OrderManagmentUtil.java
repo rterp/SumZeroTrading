@@ -50,10 +50,10 @@ public class OrderManagmentUtil {
      * @param whyHeld
      * @return 
      */
-    public static OrderEvent createOrderEvent(TradeOrder order, String statusString, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
+    public static OrderEvent createOrderEvent(TradeOrder order, String statusString, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld, ZonedDateTime timestamp) {
         OrderStatus.Status status = IbUtils.getOrderStatus(statusString);
         
-        OrderStatus orderStatus = new OrderStatus(status, order.getOrderId(), filled, remaining, new BigDecimal(avgFillPrice), order.getTicker(), ZonedDateTime.now() );
+        OrderStatus orderStatus = new OrderStatus(status, order.getOrderId(), filled, remaining, new BigDecimal(avgFillPrice), order.getTicker(), timestamp );
         OrderEvent orderEvent = new OrderEvent( order, orderStatus );
         
         return orderEvent;

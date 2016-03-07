@@ -57,11 +57,12 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     
     public static InteractiveBrokersClientInterface getInstance(String host, int port, int clientId) {
         StringBuilder sb = new StringBuilder();
-        sb.append("host").append("-").append(port).append("-").append(clientId);
+        sb.append(host).append("-").append(port).append("-").append(clientId);
         
         InteractiveBrokersClientInterface client = ibClientMap.get(sb.toString());
         if(client == null ) {
             client = new InteractiveBrokersClient(host, port, clientId);
+            ibClientMap.put(sb.toString(), client);
         }
         
         return client;

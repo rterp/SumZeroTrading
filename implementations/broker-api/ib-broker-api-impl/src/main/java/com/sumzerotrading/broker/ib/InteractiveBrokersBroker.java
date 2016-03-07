@@ -98,8 +98,17 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected Semaphore tradeFileSemaphore = new Semaphore(1);
     protected boolean started = false;
     protected String directory;
-    protected PassiveExpiringMap<String, OrderEvent> orderEventMap;
+    protected Map<String, OrderEvent> orderEventMap;
 
+    
+    
+    /**
+     * Used by Unit tests
+     */
+    protected InteractiveBrokersBroker() {
+        
+    }
+    
     public InteractiveBrokersBroker(IBSocket ibSocket) {
         try {
             loadOrderMaps();
@@ -107,7 +116,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
             logger.error(ex.getMessage(), ex);
         }
         this.ibSocket = ibSocket;
-        orderEventMap = new PassiveExpiringMap<>(1, TimeUnit.MINUTES);
+        orderEventMap = new PassiveExpiringMap<>(30, TimeUnit.SECONDS);
         callbackInterface = ibSocket.getConnection();
         ibConnection = ibSocket.getClientSocket();
         callbackInterface.addOrderStatusListener(this);
@@ -190,7 +199,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         order.setFilledPrice(avgFillPrice);
         
         try {
-            OrderEvent event = OrderManagmentUtil.createOrderEvent(order, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
+            OrderEvent event = OrderManagmentUtil.createOrderEvent(order, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld, getZoneDateTime());
             
             //Check if this order status has been seen in the last minute
             OrderEvent cachedEvent = orderEventMap.get(order.getOrderId());
@@ -427,6 +436,10 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
                 currencyOrderList.clear();
             }
         }
+    }
+    
+    protected ZonedDateTime getZoneDateTime() {
+        return ZonedDateTime.now();
     }
 
     protected boolean isIdealProClosed() {
