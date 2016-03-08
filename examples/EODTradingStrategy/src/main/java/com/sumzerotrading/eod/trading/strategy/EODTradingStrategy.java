@@ -40,7 +40,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected Map<Ticker, Ticker> longShortPairMap = new HashMap<>();
     protected Map<Ticker, Double> lastPriceMap = new HashMap<>();
     protected String ibHost = "localhost";
-    protected int ibPort = 10000;
+    protected int ibPort = 7999;
     protected int ibClientId = 3;
 
     protected double orderSizeInDollars = 1000;
@@ -56,7 +56,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         List<TradeOrder> openOrders = ibClient.getOpenOrders();
         logger.debug("Found " + openOrders.size() + " open orders");
         longShortPairMap.put(new StockTicker("QQQ"), new StockTicker("SPY"));
-        longShortPairMap.put(new StockTicker("IWM"), new StockTicker("DIA"));
+        //longShortPairMap.put(new StockTicker("IWM"), new StockTicker("DIA"));
         ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
         logger.debug("Checking if orders have already been placed today: " + ordersPlaced );
         
@@ -126,6 +126,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
 
     @Override
     public void quoteRecieved(ILevel1Quote quote) {
+        logger.debug("Received quote: " + quote);
         if (quote.getType() == QuoteType.LAST) {
             lastPriceMap.put(quote.getTicker(), quote.getValue().doubleValue());
             if (!allPricesInitialized) {
@@ -202,6 +203,13 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             }
         }
         return false;
+    }
+    
+    
+    
+    public static void main(String[] args) {
+        EODTradingStrategy strategy = new EODTradingStrategy();
+        strategy.start();
     }
 
 }
