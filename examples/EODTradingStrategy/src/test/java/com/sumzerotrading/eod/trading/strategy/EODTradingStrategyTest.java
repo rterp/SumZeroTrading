@@ -37,6 +37,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -91,41 +92,13 @@ public class EODTradingStrategyTest {
         strategy.start();
         
         verify(mockIbClient).subscribeLevel1(eq(new StockTicker("QQQ")), any(Level1QuoteListener.class));
-        //verify(mockIbClient).subscribeLevel1(eq(new StockTicker("SPY")), any(EODTradingStrategy.class));
-        //verify(mockIbClient).subscribeLevel1(new StockTicker("SPY"), strategy);
-        //verify(mockIbClient).subscribeLevel1(new StockTicker("IWM"), strategy);
-        //verify(mockIbClient).subscribeLevel1(new StockTicker("DIA"), strategy);
-        //verify(mockIbClient).subscribeLevel1(new StockTicker("IWM"), strategy);
+        verify(mockIbClient, times(2)).subscribeLevel1(eq(new StockTicker("SPY")), any(Level1QuoteListener.class));
+        verify(mockIbClient, times(2)).subscribeLevel1(eq(new StockTicker("IWM")), any(Level1QuoteListener.class));
+        verify(mockIbClient).subscribeLevel1(eq(new StockTicker("DIA")), any(Level1QuoteListener.class));
         
         
     }
     
-    /**
-     *     public void start() {
-        ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
-        logger.info( "Connecting to IB client at:" + ibHost + ":" + ibPort + " with clientID: " + ibClientId);
-        ibClient.connect();
-        List<TradeOrder> openOrders = ibClient.getOpenOrders();
-        logger.debug("Found " + openOrders.size() + " open orders");
-        longShortPairMap.put(new StockTicker("QQQ"), new StockTicker("SPY"));
-        longShortPairMap.put(new StockTicker("SPY"), new StockTicker("IWM"));
-        longShortPairMap.put(new StockTicker("DIA"), new StockTicker("IWM"));
-        ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
-        logger.debug("Checking if orders have already been placed today: " + ordersPlaced );
-        
-        
-        logger.info( "Strategy will place orders after: " + timeToPlaceOrders.toString());
-        
-        
-        longShortPairMap.keySet().stream().map((ticker) -> {
-            ibClient.subscribeLevel1(ticker, this);
-            return ticker;
-        }).forEach((ticker) -> {
-            ibClient.subscribeLevel1(longShortPairMap.get(ticker), this);
-        });
-
-    }
-     */
     
     
     @Test

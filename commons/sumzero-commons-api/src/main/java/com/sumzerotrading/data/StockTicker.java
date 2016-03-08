@@ -70,7 +70,8 @@ public class StockTicker extends Ticker {
         if (this.instrumentType != other.instrumentType) {
             return false;
         }
-        return true;
+        
+        return super.equals(obj);
     }
     
     

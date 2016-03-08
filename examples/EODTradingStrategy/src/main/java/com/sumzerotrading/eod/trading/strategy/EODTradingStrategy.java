@@ -70,7 +70,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             System.out.println("Subscribing to: " + ticker);
             return ticker;
         }).forEach((ticker) -> {
-            System.out.println("Subscribing to12: " + ticker);
+            System.out.println("Subscribing to12: " + longShortPairMap.get(ticker));
             ibClient.subscribeLevel1(longShortPairMap.get(ticker), this);
         });
 
