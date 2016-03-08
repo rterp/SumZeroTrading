@@ -56,8 +56,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         List<TradeOrder> openOrders = ibClient.getOpenOrders();
         logger.debug("Found " + openOrders.size() + " open orders");
         longShortPairMap.put(new StockTicker("QQQ"), new StockTicker("SPY"));
-        longShortPairMap.put(new StockTicker("SPY"), new StockTicker("IWM"));
-        longShortPairMap.put(new StockTicker("DIA"), new StockTicker("IWM"));
+        longShortPairMap.put(new StockTicker("IWM"), new StockTicker("DIA"));
         ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
         logger.debug("Checking if orders have already been placed today: " + ordersPlaced );
         
