@@ -28,9 +28,5 @@ package com.sumzerotrading.broker.order;
  */
 public interface OrderEventListener {
     
-    
-    public OrderEventFilter getOrderEventFilter();
-    
-    
     public void orderEvent( OrderEvent event );
 }

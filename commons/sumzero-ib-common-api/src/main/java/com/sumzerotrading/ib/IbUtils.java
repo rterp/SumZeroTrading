@@ -57,13 +57,22 @@ public class IbUtils {
     }
 
     public static String getOrderType(TradeOrder.Type orderType) {
-        if (orderType == TradeOrder.Type.LIMIT) {
-            return "LMT";
-        } else if (orderType == TradeOrder.Type.MARKET) {
-            return "MKT";
-        } else if (orderType == TradeOrder.Type.STOP) {
-            return "STP";
-        } else {
+        if (null != orderType) {
+            switch (orderType) {
+            case LIMIT:
+                return "LMT";
+            case MARKET:
+                return "MKT";
+            case STOP:
+                return "STP";
+            case MARKET_ON_CLOSE:
+                return "MOC";
+            case MARKET_ON_OPEN:
+                return "MOO";
+            default:
+                throw new IllegalStateException("Unknown order type: " + orderType);
+        }
+        }else {
             throw new IllegalStateException("Unknown order type: " + orderType);
         }
     }
@@ -91,6 +100,8 @@ public class IbUtils {
             return "OPT";
         } else if (instrumentType == InstrumentType.INDEX) {
             return "IND";
+        } else if( instrumentType == InstrumentType.COMBO ) {
+            return "BAG";
         } else {
             throw new IllegalStateException("Unknown instrument type: " + instrumentType);
         }

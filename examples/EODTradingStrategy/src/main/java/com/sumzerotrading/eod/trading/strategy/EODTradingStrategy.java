@@ -5,8 +5,9 @@
  */
 package com.sumzerotrading.eod.trading.strategy;
 
+import com.sumzerotrading.broker.BrokerError;
+import com.sumzerotrading.broker.BrokerErrorListener;
 import com.sumzerotrading.broker.order.OrderEvent;
-import com.sumzerotrading.broker.order.OrderEventFilter;
 import com.sumzerotrading.broker.order.OrderEventListener;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author RobTerpilowski
  */
-public class EODTradingStrategy implements Level1QuoteListener, OrderEventListener {
+public class EODTradingStrategy implements Level1QuoteListener, OrderEventListener, BrokerErrorListener {
 
     protected static Logger logger = LoggerFactory.getLogger(EODTradingStrategy.class);
     
@@ -44,19 +45,32 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected int ibClientId = 3;
 
     protected double orderSizeInDollars = 1000;
-    protected ZonedDateTime lastReportedTime;
     protected boolean ordersPlaced = false;
     protected boolean allPricesInitialized = false;
-    protected LocalTime timeToPlaceOrders  = LocalTime.of(12, 40, 0);
+    protected LocalTime timeToPlaceOrders  = LocalTime.of(6, 17, 0);
 
     public void start() {
         ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
         logger.info( "Connecting to IB client at:" + ibHost + ":" + ibPort + " with clientID: " + ibClientId);
+        //ibClient.addBrokerErrorListener(this);
         ibClient.connect();
+        
         List<TradeOrder> openOrders = ibClient.getOpenOrders();
         logger.debug("Found " + openOrders.size() + " open orders");
+        
+        /**CurrencyTicker eur = new CurrencyTicker();
+        eur.setSymbol("EUR");
+        eur.setCurrency("USD");
+        eur.setExchange(Exchange.IDEALPRO);
+        
+        CurrencyTicker aud = new CurrencyTicker();
+        aud.setSymbol("AUD");
+        aud.setCurrency("USD");
+        aud.setExchange(Exchange.IDEALPRO);
+        longShortPairMap.put(eur, aud);
+        */
         longShortPairMap.put(new StockTicker("QQQ"), new StockTicker("SPY"));
-        //longShortPairMap.put(new StockTicker("IWM"), new StockTicker("DIA"));
+        longShortPairMap.put(new StockTicker("IWM"), new StockTicker("DIA"));
         ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
         logger.debug("Checking if orders have already been placed today: " + ordersPlaced );
         
@@ -75,7 +89,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
 
     }
 
-    public synchronized void placeMOCOrders(Ticker longTicker, Ticker shortTicker) { 
+    public synchronized void placeMOCOrders(Ticker longTicker, Ticker shortTicker, ZonedDateTime lastReportedTime) { 
         
         String correlationId = getUUID();
         int longSize = getOrderSize(longTicker);
@@ -115,11 +129,6 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     }
 
     @Override
-    public OrderEventFilter getOrderEventFilter() {
-        return new OrderEventFilter(false);
-    }
-
-    @Override
     public void orderEvent(OrderEvent event) {
         logger.info("Received order event: " + event);
     }
@@ -143,7 +152,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             if (allPricesInitialized) {
                 ordersPlaced = true;
                 longShortPairMap.keySet().stream().forEach((longTicker) -> {
-                    placeMOCOrders(longTicker, longShortPairMap.get(longTicker));
+                    placeMOCOrders(longTicker, longShortPairMap.get(longTicker), quote.getTimeStamp());
                 });
             }
         } else if(! currentTime.isAfter(timeToPlaceOrders) ) {
@@ -161,6 +170,13 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         date = ZonedDateTime.of(date.getYear(),date.getMonthValue(),date.getDayOfMonth(), 5, 30, 0, 0, ZoneId.systemDefault());
         return date;
     }
+
+    @Override
+    public void brokerErrorFired(BrokerError error) {
+        logger.error( "Error: " + error.getErrorCode() + ": " + error.getMessage() );
+    }
+    
+    
     
     protected String getUUID() {
         return UUID.randomUUID().toString();

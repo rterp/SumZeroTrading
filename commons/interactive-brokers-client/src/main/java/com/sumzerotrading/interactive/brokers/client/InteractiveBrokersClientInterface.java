@@ -5,6 +5,7 @@
  */
 package com.sumzerotrading.interactive.brokers.client;
 
+import com.sumzerotrading.broker.BrokerErrorListener;
 import com.sumzerotrading.broker.order.OrderEventListener;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.BarData;
@@ -45,6 +46,10 @@ public interface InteractiveBrokersClientInterface {
     void unsubscribeLevel1(Ticker ticker, Level1QuoteListener listener);
 
     void unsubscribeMarketDepth(Ticker ticker, Level2QuoteListener listener);
+    
+    void addBrokerErrorListener( BrokerErrorListener listener );
+    
+    void removeBrokerErrorListener( BrokerErrorListener listener );
     
     List<TradeOrder> getOpenOrders();
     

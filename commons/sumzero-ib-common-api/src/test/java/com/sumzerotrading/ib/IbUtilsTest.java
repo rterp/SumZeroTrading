@@ -62,6 +62,11 @@ public class IbUtilsTest {
 
     @Test
     public void testGetTif() {
+        TradeOrder.Duration[] values = TradeOrder.Duration.values();
+        for( TradeOrder.Duration value : values ) {
+            assertNotNull( IbUtils.getTif(value));
+        }
+        
         assertEquals("DAY", IbUtils.getTif(TradeOrder.Duration.DAY));
         assertEquals("GTC", IbUtils.getTif(TradeOrder.Duration.GOOD_UNTIL_CANCELED));
         assertEquals("IOC", IbUtils.getTif(TradeOrder.Duration.FILL_OR_KILL));
@@ -71,6 +76,11 @@ public class IbUtilsTest {
 
     @Test
     public void testGetAction() {
+        TradeDirection[] values = TradeDirection.values();
+        for( TradeDirection value : values ) {
+            assertNotNull( IbUtils.getAction(value));
+        }
+        
         assertEquals("BUY", IbUtils.getAction(TradeDirection.BUY));
         assertEquals("SELL", IbUtils.getAction(TradeDirection.SELL));
         assertEquals("SELL", IbUtils.getAction(TradeDirection.SELL_SHORT));
@@ -85,9 +95,19 @@ public class IbUtilsTest {
 
     @Test
     public void testGetOrderType() {
+        
+        //First make sure we have a mapping for all types.
+        TradeOrder.Type[] values = TradeOrder.Type.values();
+        for( TradeOrder.Type value : values ) {
+            assertNotNull(IbUtils.getOrderType(value));
+        }
+        
         assertEquals("MKT", IbUtils.getOrderType(TradeOrder.Type.MARKET));
         assertEquals("LMT", IbUtils.getOrderType(TradeOrder.Type.LIMIT));
         assertEquals("STP", IbUtils.getOrderType(TradeOrder.Type.STOP));
+        assertEquals("MOO", IbUtils.getOrderType(TradeOrder.Type.MARKET_ON_OPEN));
+        assertEquals("MOC", IbUtils.getOrderType(TradeOrder.Type.MARKET_ON_CLOSE));
+        
         try {
             IbUtils.getOrderType(null);
             fail();
@@ -98,17 +118,17 @@ public class IbUtilsTest {
 
     @Test
     public void testGetSecurityType() {
+        InstrumentType[] values = InstrumentType.values();
+        for( InstrumentType value : values ) {
+            assertNotNull( IbUtils.getSecurityType(value));
+        }
+        
         assertEquals("STK", IbUtils.getSecurityType(InstrumentType.STOCK));
         assertEquals("OPT", IbUtils.getSecurityType(InstrumentType.OPTION));
         assertEquals("CASH", IbUtils.getSecurityType(InstrumentType.FOREX));
         assertEquals("FUT", IbUtils.getSecurityType(InstrumentType.FUTURES));
         assertEquals("IND", IbUtils.getSecurityType(InstrumentType.INDEX));
-        try {
-            IbUtils.getSecurityType(InstrumentType.BOND);
-            fail();
-        } catch (IllegalStateException ex) {
-            //this should happen.
-        }
+        assertEquals("BAG", IbUtils.getSecurityType(InstrumentType.COMBO));
     }
 
     @Test

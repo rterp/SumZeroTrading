@@ -102,13 +102,14 @@ public class EODTradingStrategyTest {
         String corrId = "123";
         int longSize = 100;
         int shortSize = 200;
+        ZonedDateTime currentDateTime = ZonedDateTime.of(2016, 3, 3, 5, 5, 1, 0, ZoneId.systemDefault());
         ZonedDateTime orderTime = ZonedDateTime.now();
         strategy.ibClient = mockIbClient;
 
         doReturn(corrId).when(strategy).getUUID();
         doReturn(longSize).when(strategy).getOrderSize(longTicker);
         doReturn(shortSize).when(strategy).getOrderSize(shortTicker);
-        doReturn(orderTime).when(strategy).getNextBusinessDay(any(ZonedDateTime.class));
+        doReturn(orderTime).when(strategy).getNextBusinessDay(currentDateTime);
         when(mockIbClient.getNextOrderId()).thenReturn("100", "101", "102", "103", "104", "105");
 
         TradeOrder expectedLongOrder = new TradeOrder("100", longTicker, longSize, TradeDirection.BUY);
@@ -133,8 +134,9 @@ public class EODTradingStrategyTest {
 
         expectedShortOrder.addChildOrder(expectedShortExitOrder);
 
-        strategy.placeMOCOrders(longTicker, shortTicker);
+        strategy.placeMOCOrders(longTicker, shortTicker, currentDateTime);
 
+        
         verify(mockIbClient).placeOrder(expectedLongOrder);
         verify(mockIbClient).placeOrder(expectedShortOrder);
     }
@@ -165,7 +167,7 @@ public class EODTradingStrategyTest {
 
         assertFalse(strategy.ordersPlaced);
         verify(strategy).setAllPricesInitialized();
-        verify(strategy, never()).placeMOCOrders(any(Ticker.class), any(Ticker.class));
+        verify(strategy, never()).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));
     }
 
     @Test
@@ -192,7 +194,7 @@ public class EODTradingStrategyTest {
 
         assertFalse(strategy.ordersPlaced);
         verify(strategy).setAllPricesInitialized();
-        verify(strategy, never()).placeMOCOrders(any(Ticker.class), any(Ticker.class));
+        verify(strategy, never()).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));
     }
 
     @Test
@@ -216,7 +218,7 @@ public class EODTradingStrategyTest {
 
         assertFalse(strategy.ordersPlaced);
         verify(strategy).setAllPricesInitialized();
-        verify(strategy, never()).placeMOCOrders(any(Ticker.class), any(Ticker.class));
+        verify(strategy, never()).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));
     }
 
     @Test
@@ -236,14 +238,14 @@ public class EODTradingStrategyTest {
         when(mockQuote.getValue()).thenReturn(BigDecimal.ONE);
         when(mockQuote.getTimeStamp()).thenReturn(zdt);
         doReturn(true).when(strategy).setAllPricesInitialized();
-        doNothing().when(strategy).placeMOCOrders(any(Ticker.class), any(Ticker.class));
+        doNothing().when(strategy).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));
         strategy.ordersPlaced = false;
 
         strategy.quoteRecieved(mockQuote);
 
         assertTrue(strategy.ordersPlaced);
         verify(strategy).setAllPricesInitialized();
-        verify(strategy).placeMOCOrders(longTicker, shortTicker);
+        verify(strategy).placeMOCOrders(longTicker, shortTicker, zdt);
     }
 
     @Test

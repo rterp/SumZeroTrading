@@ -143,6 +143,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     @Override
     public boolean isConnected() {
         return ibSocket.isConnected();
+        
     }
 
     public void connect() {
@@ -239,14 +240,17 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     }
 
     public void error(Exception e) {
+        logger.error("BrokerError: " + e.getMessage(), e);
         putOnErrorQueue(new BrokerError(e));
     }
 
     public void error(String str) {
+        logger.error("BrokerError: " + str);
         putOnErrorQueue(new BrokerError(str));
     }
 
     public void error(int id, int errorCode, String errorMsg) {
+        logger.error( "BrokerError: ID:" + id + " errorCode:" + errorCode + " errorMessage: " + errorMsg);
         putOnErrorQueue(new BrokerError(id, errorCode, errorMsg));
     }
 
@@ -458,9 +462,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected void fireOrderEvent(OrderEvent event) {
         synchronized (orderEventListeners) {
             for (OrderEventListener listener : orderEventListeners) {
-                if (listener.getOrderEventFilter().matches(event.getOrder().getOrderId())) {
                     listener.orderEvent(event);
-                }
             }
         }
     }

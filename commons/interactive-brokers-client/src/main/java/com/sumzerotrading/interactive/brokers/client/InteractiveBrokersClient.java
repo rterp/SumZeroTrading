@@ -20,6 +20,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.interactive.brokers.client;
 
+import com.sumzerotrading.broker.BrokerErrorListener;
 import com.sumzerotrading.broker.IBroker;
 import com.sumzerotrading.broker.ib.InteractiveBrokersBroker;
 import com.sumzerotrading.broker.order.OrderEventListener;
@@ -115,6 +116,18 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     public void unsubscribeMarketDepth( Ticker ticker, Level2QuoteListener listener ) {
         quoteEngine.unsubscribeMarketDepth(ticker, listener);
     }
+
+    @Override
+    public void addBrokerErrorListener(BrokerErrorListener listener) {
+        broker.addBrokerErrorListener(listener);
+    }
+
+    @Override
+    public void removeBrokerErrorListener(BrokerErrorListener listener) {
+        broker.removeBrokerErrorListener(listener);
+    }
+    
+    
     
     
     
