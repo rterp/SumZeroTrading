@@ -15,6 +15,7 @@ import com.sumzerotrading.marketdata.ILevel1Quote;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.QuoteType;
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -70,6 +71,7 @@ public class EODTradingStrategyTest {
         mockIbClient = mock(InteractiveBrokersClientInterface.class);
         InteractiveBrokersClient.setMockInteractiveBrokersClient(mockIbClient, ibHost, ibPort, ibClientId);
         strategy = spy(EODTradingStrategy.class);
+        strategy.timeToPlaceOrders  = LocalTime.of(12, 40, 0);
         strategy.ibHost = ibHost;
         strategy.ibPort = ibPort;
         strategy.ibClientId = ibClientId;

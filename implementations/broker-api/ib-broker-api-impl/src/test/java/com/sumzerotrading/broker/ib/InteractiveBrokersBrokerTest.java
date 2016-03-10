@@ -14,12 +14,14 @@ import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import static org.jmock.Expectations.any;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -84,6 +86,14 @@ public class InteractiveBrokersBrokerTest {
     }
 
     
+    @Test
+    public void testGetFormattedDate() {
+        ZonedDateTime date = ZonedDateTime.of(2015, 10, 5, 13, 30,30, 0, ZoneId.of("America/New_York"));
+        String expectedString = "20151005 13:30:30 America/New_York";
+        
+        String formattedDate = broker.getFormattedDate(date);
+        assertEquals(expectedString, formattedDate);
+    }
     
     @Test
     public void testAddTimeUpdateListener() {

@@ -31,8 +31,8 @@
      </execution>
   </executions>
 </plugin>
-      
         </plugins>
+        
         </build>
     
     <artifactId>EODTradingStrategy</artifactId>

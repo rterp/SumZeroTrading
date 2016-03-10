@@ -47,7 +47,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected double orderSizeInDollars = 1000;
     protected boolean ordersPlaced = false;
     protected boolean allPricesInitialized = false;
-    protected LocalTime timeToPlaceOrders  = LocalTime.of(6, 17, 0);
+    protected LocalTime timeToPlaceOrders  = LocalTime.of(6, 45, 0);
 
     public void start() {
         ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);

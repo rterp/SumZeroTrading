@@ -55,6 +55,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -87,6 +88,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected BlockingQueue<ContractDetails> contractDetailsQueue = new LinkedBlockingDeque<>();
     protected int nextOrderId = -1;
     protected SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+    protected DateTimeFormatter zonedDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss");
     protected Map<String, TradeOrder> orderMap = new HashMap<>();
     protected Map<String, TradeOrder> completedOrderMap = new HashMap<>();
     protected List<OrderEventListener> orderEventListeners = new ArrayList<>();
@@ -289,10 +291,12 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public String getFormattedDate(ZonedDateTime date) {
-        return dateFormatter.format(date);
+        return date.format(zonedDateFormatter);
     }
 
+    @Override
     public synchronized String getNextOrderId() {
         if (nextOrderId == -1) {
             try {
@@ -300,7 +304,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
                 nextOrderId = nextIdQueue.take();
                 return nextOrderId + "";
             } catch (InterruptedException ex) {
-                ex.printStackTrace();
+                logger.error(ex.getMessage(), ex);
                 return -1 + "";
             }
         }
