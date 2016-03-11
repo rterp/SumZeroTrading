@@ -7,6 +7,7 @@ package com.sumzerotrading.eod.trading.strategy;
 
 import com.sumzerotrading.broker.order.OrderEvent;
 import com.sumzerotrading.broker.order.OrderEventListener;
+import com.sumzerotrading.broker.order.OrderStatus.Status;
 import com.sumzerotrading.broker.order.TradeOrder;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class ReportGenerator implements OrderEventListener {
     @Override  
     public void orderEvent(OrderEvent event) {
         TradeOrder order = event.getOrder();
-        if( order.getCurrentStatus() == TradeOrder.Status.FILLED ) {
+        if( order.getCurrentStatus() == Status.FILLED ) {
             TradeReferenceLine line = new TradeReferenceLine();
             line.parse(order.getReferenceString());
         }

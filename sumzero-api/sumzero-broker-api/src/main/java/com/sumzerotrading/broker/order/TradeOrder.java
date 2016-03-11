@@ -20,6 +20,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.broker.order;
 
+import com.sumzerotrading.broker.order.OrderStatus.Status;
 import com.sumzerotrading.data.Ticker;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,10 +41,6 @@ public class TradeOrder implements Serializable {
         DAY, GOOD_UNTIL_CANCELED, GOOD_UTNIL_TIME, FILL_OR_KILL
     };
 
-    public enum Status {
-
-        OPEN, PARTIAL_FILL, FILLED, CANCELED, INACTIVE, UNKNOWN
-    };
 
     protected Ticker ticker;
     protected TradeDirection direction;
@@ -70,7 +67,7 @@ public class TradeOrder implements Serializable {
     protected double filledSize = 0;
     protected double filledPrice = 0;
     protected double commission = 0;
-    protected Status currentStatus = Status.OPEN;
+    protected Status currentStatus = Status.NEW;
 
     public TradeOrder(String orderId, Ticker ticker, int size, TradeDirection tradeDirection) {
         type = Type.MARKET;

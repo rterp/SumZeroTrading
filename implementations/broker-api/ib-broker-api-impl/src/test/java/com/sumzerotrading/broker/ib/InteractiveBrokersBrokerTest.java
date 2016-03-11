@@ -89,7 +89,7 @@ public class InteractiveBrokersBrokerTest {
     @Test
     public void testGetFormattedDate() {
         ZonedDateTime date = ZonedDateTime.of(2015, 10, 5, 13, 30,30, 0, ZoneId.of("America/New_York"));
-        String expectedString = "20151005 13:30:30 America/New_York";
+        String expectedString = "20151005 13:30:30";
         
         String formattedDate = broker.getFormattedDate(date);
         assertEquals(expectedString, formattedDate);

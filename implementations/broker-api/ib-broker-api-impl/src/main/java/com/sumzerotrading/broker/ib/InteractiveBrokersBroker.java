@@ -217,6 +217,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
                 completedOrderMap.put(order.getOrderId(), order);
                 orderMap.remove(order.getOrderId());
                 }
+            order.setCurrentStatus(event.getOrderStatus().getStatus());
             orderEventQueue.put(event);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);

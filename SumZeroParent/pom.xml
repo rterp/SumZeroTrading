@@ -40,6 +40,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <configuration>
                     <forkMode>always</forkMode>
                     <argLine>-Xmx1024m</argLine>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -60,13 +63,14 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 </executions>
             </plugin>
 
-                    <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+
                 </configuration>
             </plugin> 
             
