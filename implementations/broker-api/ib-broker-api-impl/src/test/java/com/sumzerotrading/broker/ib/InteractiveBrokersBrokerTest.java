@@ -5,7 +5,7 @@
  */
 package com.sumzerotrading.broker.ib;
 
-import com.ib.client.ClientSocketInterface;
+import com.ib.client.EClientSocket;
 import com.sumzerotrading.broker.order.OrderEvent;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
@@ -44,7 +44,7 @@ public class InteractiveBrokersBrokerTest {
     protected InteractiveBrokersBroker broker;
     protected IBSocket mockIbSocket;
     protected IBConnectionInterface mockConnectionInterface;
-    protected ClientSocketInterface mockClientSocketInterface;
+    protected EClientSocket mockClientSocketInterface;
     protected BlockingQueue mockOrderEventQueue;
     protected Logger mockLogger = mock(Logger.class);
     
@@ -63,7 +63,7 @@ public class InteractiveBrokersBrokerTest {
     public void setUp() {
         mockIbSocket = mock(IBSocket.class);
         mockConnectionInterface = mock(IBConnectionInterface.class);
-        mockClientSocketInterface = mock(ClientSocketInterface.class);
+        mockClientSocketInterface = mock(EClientSocket.class);
         mockOrderEventQueue = mock(BlockingQueue.class);
         
         when(mockIbSocket.getClientSocket()).thenReturn(mockClientSocketInterface);

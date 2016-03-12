@@ -21,3 +21,4 @@ nb-configuration.xml
 /examples/EODTradingStrategy/nbproject/
 /implementations/broker-api/ib-broker-api-impl/nbproject/
 /commons/interactive-brokers-client/nbproject/
+/commons/interactive-brokers-integration-tests/nbproject/

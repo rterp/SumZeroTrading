@@ -1,26 +1,25 @@
 /**
  * MIT License
-
-Copyright (c) 2015  Rob Terpilowski
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
-and associated documentation files (the "Software"), to deal in the Software without restriction, 
-including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
-OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Copyright (c) 2015  Rob Terpilowski
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-
 package com.sumzerotrading.ib;
 
+import com.ib.client.TagValue;
 import com.sumzerotrading.broker.order.OrderStatus;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
@@ -28,6 +27,9 @@ import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.data.InstrumentType;
 import com.sumzerotrading.marketdata.QuoteType;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -63,10 +65,10 @@ public class IbUtilsTest {
     @Test
     public void testGetTif() {
         TradeOrder.Duration[] values = TradeOrder.Duration.values();
-        for( TradeOrder.Duration value : values ) {
-            assertNotNull( IbUtils.getTif(value));
+        for (TradeOrder.Duration value : values) {
+            assertNotNull(IbUtils.getTif(value));
         }
-        
+
         assertEquals("DAY", IbUtils.getTif(TradeOrder.Duration.DAY));
         assertEquals("GTC", IbUtils.getTif(TradeOrder.Duration.GOOD_UNTIL_CANCELED));
         assertEquals("IOC", IbUtils.getTif(TradeOrder.Duration.FILL_OR_KILL));
@@ -77,10 +79,10 @@ public class IbUtilsTest {
     @Test
     public void testGetAction() {
         TradeDirection[] values = TradeDirection.values();
-        for( TradeDirection value : values ) {
-            assertNotNull( IbUtils.getAction(value));
+        for (TradeDirection value : values) {
+            assertNotNull(IbUtils.getAction(value));
         }
-        
+
         assertEquals("BUY", IbUtils.getAction(TradeDirection.BUY));
         assertEquals("SELL", IbUtils.getAction(TradeDirection.SELL));
         assertEquals("SELL", IbUtils.getAction(TradeDirection.SELL_SHORT));
@@ -95,19 +97,19 @@ public class IbUtilsTest {
 
     @Test
     public void testGetOrderType() {
-        
+
         //First make sure we have a mapping for all types.
         TradeOrder.Type[] values = TradeOrder.Type.values();
-        for( TradeOrder.Type value : values ) {
+        for (TradeOrder.Type value : values) {
             assertNotNull(IbUtils.getOrderType(value));
         }
-        
+
         assertEquals("MKT", IbUtils.getOrderType(TradeOrder.Type.MARKET));
         assertEquals("LMT", IbUtils.getOrderType(TradeOrder.Type.LIMIT));
         assertEquals("STP", IbUtils.getOrderType(TradeOrder.Type.STOP));
         assertEquals("MOO", IbUtils.getOrderType(TradeOrder.Type.MARKET_ON_OPEN));
         assertEquals("MOC", IbUtils.getOrderType(TradeOrder.Type.MARKET_ON_CLOSE));
-        
+
         try {
             IbUtils.getOrderType(null);
             fail();
@@ -119,10 +121,10 @@ public class IbUtilsTest {
     @Test
     public void testGetSecurityType() {
         InstrumentType[] values = InstrumentType.values();
-        for( InstrumentType value : values ) {
-            assertNotNull( IbUtils.getSecurityType(value));
+        for (InstrumentType value : values) {
+            assertNotNull(IbUtils.getSecurityType(value));
         }
-        
+
         assertEquals("STK", IbUtils.getSecurityType(InstrumentType.STOCK));
         assertEquals("OPT", IbUtils.getSecurityType(InstrumentType.OPTION));
         assertEquals("CASH", IbUtils.getSecurityType(InstrumentType.FOREX));
@@ -165,7 +167,6 @@ public class IbUtilsTest {
         assertEquals("GBP", IbUtils.translateToIbFuturesSymbol("GBP"));
     }
 
-
     @Test
     public void testGetContractMultiplier() {
         FuturesTicker ticker = new FuturesTicker();
@@ -190,6 +191,22 @@ public class IbUtilsTest {
         ticker.setSymbol("HG");
 
         assertNull(IbUtils.getIbMultiplier(ticker));
+    }
+
+    @Test
+    public void testGetDefaultTagVector() {
+        Vector<TagValue> expected = new Vector<>();
+        expected.add(new TagValue("XYZ", "XYZ"));
+
+        assertEquals(expected, IbUtils.getDefaultTagVector());
+    }
+
+    @Test
+    public void testGetDefaultTagList() {
+        List<TagValue> expected = new ArrayList<>();
+        expected.add(new TagValue("XYZ", "XYZ"));
+
+        assertEquals(expected, IbUtils.getDefaultTagList());
     }
 
 }

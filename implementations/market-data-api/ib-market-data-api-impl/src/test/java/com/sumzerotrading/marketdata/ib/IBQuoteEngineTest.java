@@ -22,9 +22,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.sumzerotrading.marketdata.ib;
 
 import com.ib.client.Contract;
+import com.ib.client.EClientSocket;
+import com.ib.client.TagValue;
 import com.sumzerotrading.ib.ContractBuilderFactory;
 import com.sumzerotrading.data.StockTicker;
-import com.ib.client.ClientSocketInterface;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
@@ -32,6 +33,8 @@ import com.sumzerotrading.marketdata.ILevel1Quote;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.QuoteError;
 import com.sumzerotrading.marketdata.QuoteType;
+import java.util.ArrayList;
+import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.After;
@@ -85,7 +88,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testConstructor() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
         mockery.checking(new Expectations() {
@@ -105,7 +108,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testTickPrice() throws Exception {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final int tickerId = 1;
         final int field = 2;
@@ -137,7 +140,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testTickPrice_NullTicker() throws Exception {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final int tickerId = 1;
         final int field = 99;
@@ -162,7 +165,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testTickSize() throws Exception {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final int tickerId = 1;
         final int field = 2;
@@ -196,7 +199,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testTickSize_NullTicker() throws Exception {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final int tickerId = 1;
         final int field = 99;
@@ -222,7 +225,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testOverloadedTickPrice() throws Exception {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final int tickerId = 1;
         final int field = 99;
@@ -254,7 +257,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testErrorException() throws Exception {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         Exception e = new Exception("Bogus Exception");
         int id = 1;
@@ -280,7 +283,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testErrorString() throws Exception {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final String errorString = "Bogus Error";
         QuoteError quoteError = new QuoteError(errorString);
@@ -303,7 +306,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testErrorCode_Exception() throws Exception {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final int id = 1;
         final int errorCode = 2;
@@ -329,18 +332,20 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testSubscribeLevel1() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final Level1QuoteListener mockQuoteListener = mockery.mock(Level1QuoteListener.class);
         final Ticker ticker = new StockTicker("LUT");
         final int requestId = 1;
         final Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
+        final List<TagValue> list = new ArrayList<>();
+        list.add(new TagValue("XYZ", "XYZ"));
 
         mockery.checking(new Expectations() {
             {
                 one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
                 one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-                one(mockSocketInterface).reqMktData(requestId + 1, contract, "", false);
+                one(mockSocketInterface).reqMktData(requestId + 1, contract, "", false, list);
             }
         });
 
@@ -356,7 +361,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testSubscribeLevel1_alreadySubscribed() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final Level1QuoteListener mockQuoteListener = mockery.mock(Level1QuoteListener.class);
         final Ticker ticker = new StockTicker("LUT");
@@ -404,7 +409,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testUnsubscribeLevel1() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final Level1QuoteListener mockQuoteListener = mockery.mock(Level1QuoteListener.class);
         final Ticker ticker = new StockTicker("LUT");
@@ -434,7 +439,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testUnsubscribeLevel1_NoRequestIdFound() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final Level1QuoteListener mockQuoteListener = mockery.mock(Level1QuoteListener.class);
         final Ticker ticker = new StockTicker("LUT");
@@ -462,7 +467,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testUnsubscribeLevel1_EmptyListenerList() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final Level1QuoteListener mockQuoteListener = mockery.mock(Level1QuoteListener.class);
         final Ticker ticker = new StockTicker("LUT");
@@ -492,7 +497,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testUnsubscribeLevel1_ListenerListNotEmpty() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
         final Level1QuoteListener mockQuoteListener = mockery.mock(Level1QuoteListener.class);
         final Ticker ticker = new StockTicker("LUT");
@@ -527,7 +532,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testGetServerTime() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
         mockery.checking(new Expectations() {
@@ -551,7 +556,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testStartEngine() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
         mockery.checking(new Expectations() {
@@ -575,7 +580,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testStartEngine_NoArgs() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
         mockery.checking(new Expectations() {
@@ -598,7 +603,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testStopEngine() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
         mockery.checking(new Expectations() {
@@ -622,7 +627,7 @@ public class IBQuoteEngineTest {
     @Test
     @Ignore
     public void testStarted() {
-        final ClientSocketInterface mockSocketInterface = mockery.mock(ClientSocketInterface.class);
+        final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
         mockery.checking(new Expectations() {

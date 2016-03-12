@@ -1,28 +1,27 @@
 /**
  * MIT License
-
-Copyright (c) 2015  Rob Terpilowski
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
-and associated documentation files (the "Software"), to deal in the Software without restriction, 
-including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
-OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Copyright (c) 2015  Rob Terpilowski
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package com.sumzerotrading.broker.ib;
 
-import com.ib.client.ClientSocketInterface;
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
+import com.ib.client.EClientSocket;
 import com.ib.client.Execution;
 import com.ib.client.ExecutionFilter;
 import com.ib.client.Order;
@@ -68,7 +67,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Supported Order types are: Market, Stop and Limit Supported order parameters 
+ * Supported Order types are: Market, Stop and Limit Supported order parameters
  * are parent/child, OCA, Good-after-time, good-till-date. Supported
  * Time-in-force: DAY, Good-till-canceled, Good-till-time, Immediate-or-cancel
  *
@@ -76,8 +75,10 @@ import org.slf4j.LoggerFactory;
  */
 public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, TimeListener, ContractDetailsListener {
 
+    protected static int contractRequestId = 1;
+    protected static int executionRequestId = 1;
     protected static Logger logger = LoggerFactory.getLogger(InteractiveBrokersBroker.class);
-    protected ClientSocketInterface ibConnection;
+    protected EClientSocket ibConnection;
     protected IBSocket ibSocket;
     protected IBConnectionInterface callbackInterface;
     protected Set<TradeOrder> currencyOrderList = new HashSet<>();
@@ -102,15 +103,13 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected String directory;
     protected Map<String, OrderEvent> orderEventMap;
 
-    
-    
     /**
      * Used by Unit tests
      */
     protected InteractiveBrokersBroker() {
-        
+
     }
-    
+
     public InteractiveBrokersBroker(IBSocket ibSocket) {
         try {
             loadOrderMaps();
@@ -129,7 +128,6 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         currencyOrderTimer.schedule(getCurrencyOrderMonitor(), 0, 1000 * 60);
     }
 
-
     @Override
     public void addTimeUpdateListener(TimeUpdatedListener listener) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -140,12 +138,10 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    
     @Override
     public boolean isConnected() {
         return ibSocket.isConnected();
-        
+
     }
 
     public void connect() {
@@ -192,37 +188,35 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 
         TradeOrder order = orderMap.get(Integer.toString(orderId));
 
-        
         if (order == null) {
             logger.error("Open Order with ID: " + orderId + " not found");
             return;
         }
-        
+
         order.setFilledSize(filled);
         order.setFilledPrice(avgFillPrice);
-        
+
         try {
             OrderEvent event = OrderManagmentUtil.createOrderEvent(order, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld, getZoneDateTime());
-            
+
             //Check if this order status has been seen in the last minute
             OrderEvent cachedEvent = orderEventMap.get(order.getOrderId());
-            if( cachedEvent != null && event.equals(cachedEvent) ) {
+            if (cachedEvent != null && event.equals(cachedEvent)) {
                 orderEventMap.put(order.getOrderId(), event);
                 logger.info("Duplicate order status received....skipping");
                 return;
             }
-            if (event.getOrderStatus().getStatus() == OrderStatus.Status.FILLED ||
-                event.getOrderStatus().getStatus() == OrderStatus.Status.CANCELED
-                    ) {
+            if (event.getOrderStatus().getStatus() == OrderStatus.Status.FILLED
+                    || event.getOrderStatus().getStatus() == OrderStatus.Status.CANCELED) {
                 completedOrderMap.put(order.getOrderId(), order);
                 orderMap.remove(order.getOrderId());
-                }
+            }
             order.setCurrentStatus(event.getOrderStatus().getStatus());
             orderEventQueue.put(event);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }
-        
+
         try {
             saveOrderMaps();
         } catch (Exception ex) {
@@ -253,7 +247,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     }
 
     public void error(int id, int errorCode, String errorMsg) {
-        logger.error( "BrokerError: ID:" + id + " errorCode:" + errorCode + " errorMessage: " + errorMsg);
+        logger.error("BrokerError: ID:" + id + " errorCode:" + errorCode + " errorMessage: " + errorMsg);
         putOnErrorQueue(new BrokerError(id, errorCode, errorMsg));
     }
 
@@ -286,7 +280,6 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
             return ZonedDateTime.now();
         }
     }
-
 
     public String getFormattedDate(int hour, int minute, int second) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -369,7 +362,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 
     public ContractDetails getContractDetails(Ticker ticker) {
         final Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
-        ibConnection.reqContractDetails(contract);
+        ibConnection.reqContractDetails(contractRequestId++, contract);
         try {
             return contractDetailsQueue.poll(2, TimeUnit.SECONDS);
         } catch (InterruptedException ex) {
@@ -377,34 +370,32 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         }
     }
 
-    
     @Override
     public synchronized TradeOrder requestOrderStatus(String orderId) {
         ExecutionFilter filter = new ExecutionFilter();
-        ibConnection.reqExecutions(filter);
+        ibConnection.reqExecutions(executionRequestId++, filter);
         throw new IllegalStateException("Not yet implemented");
     }
 
     @Override
     public List<TradeOrder> getOpenOrders() {
-       return new ArrayList<>(orderMap.values());
+        return new ArrayList<>(orderMap.values());
     }
 
-    
-    
-    
     protected void saveOrderMaps() throws Exception {
         tradeFileSemaphore.acquire();
-        createDir();
-        ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(getDirName() + "orders.ser"));
-        output.writeObject(completedOrderMap);
-        output.writeObject(orderMap);
-        output.flush();
-        output.close();
-        tradeFileSemaphore.release();
+        try {
+            createDir();
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(getDirName() + "orders.ser"));
+            output.writeObject(completedOrderMap);
+            output.writeObject(orderMap);
+            output.flush();
+            output.close();
+        } finally {
+            tradeFileSemaphore.release();
+        }
     }
-    
-    
+
     protected void loadOrderMaps() throws Exception {
         tradeFileSemaphore.acquire();
         createDir();
@@ -414,8 +405,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         input.close();
         tradeFileSemaphore.release();
     }
-    
-    
+
     protected void createDir() {
         try {
             Files.createDirectories(Paths.get(getDirName()));
@@ -423,7 +413,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
             logger.error(ex.getMessage(), ex);
         }
     }
-    
+
     protected String getDirName() {
         return System.getProperty("user.dir") + "/" + "ib-order-management/";
     }
@@ -446,7 +436,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
             }
         }
     }
-    
+
     protected ZonedDateTime getZoneDateTime() {
         return ZonedDateTime.now();
     }
@@ -467,7 +457,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     protected void fireOrderEvent(OrderEvent event) {
         synchronized (orderEventListeners) {
             for (OrderEventListener listener : orderEventListeners) {
-                    listener.orderEvent(event);
+                listener.orderEvent(event);
             }
         }
     }
@@ -479,7 +469,6 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         Contract contract = ContractBuilderFactory.getContractBuilder(order.getTicker()).buildContract(order.getTicker());
 
         Order ibOrder = new Order();
-
         ibOrder.m_action = IbUtils.getAction(order.getTradeDirection());
         ibOrder.m_orderType = IbUtils.getOrderType(order.getType());
         ibOrder.m_tif = IbUtils.getTif(order.getDuration());
@@ -554,9 +543,6 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     public void cancelAndReplaceOrder(String originalOrderId, TradeOrder newOrder) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-    
 
     protected static class IbOrderAndContract {
 

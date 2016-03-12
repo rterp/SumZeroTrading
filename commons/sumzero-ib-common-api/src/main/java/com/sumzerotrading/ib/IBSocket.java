@@ -21,7 +21,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
-import com.ib.client.ClientSocketInterface;
+import com.ib.client.EClientSocket;
 import java.util.concurrent.CyclicBarrier;
 
 /**
@@ -31,10 +31,10 @@ import java.util.concurrent.CyclicBarrier;
 public class IBSocket {
     
     protected IBConnectionInterface connection;
-    protected ClientSocketInterface clientSocket;
+    protected EClientSocket clientSocket;
     protected boolean connected = false;
 
-    public IBSocket(IBConnectionInterface connection, ClientSocketInterface clientSocket) {
+    public IBSocket(IBConnectionInterface connection, EClientSocket clientSocket) {
         this.connection = connection;
         this.clientSocket = clientSocket;
     }
@@ -43,7 +43,7 @@ public class IBSocket {
         return connection;
     }
 
-    public ClientSocketInterface getClientSocket() {
+    public EClientSocket getClientSocket() {
         return clientSocket;
     }
     
@@ -72,6 +72,13 @@ public class IBSocket {
             } catch( Exception ex ) {
                 ex.printStackTrace();
             }
+    }
+    
+    public void disconnect() {
+        if( clientSocket.isConnected() ) {
+            clientSocket.eDisconnect();
+            connected = false;
+        }
     }
     
     

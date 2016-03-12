@@ -69,8 +69,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     </dependency>
     <dependency>
       <groupId>com.ib</groupId>
-      <artifactId>interactive-brokers-client</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <artifactId>interactive-brokers-api</artifactId>
+      <version>9.71</version>
     </dependency>
     <dependency>
       <groupId>com.sumzerotrading</groupId>

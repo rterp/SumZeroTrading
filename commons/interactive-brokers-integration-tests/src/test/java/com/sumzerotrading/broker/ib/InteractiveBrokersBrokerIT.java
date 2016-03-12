@@ -16,6 +16,7 @@ import com.sumzerotrading.ib.IBConnectionUtil;
 import com.sumzerotrading.ib.IBSocket;
 import java.util.ArrayList;
 import java.util.List;
+import net.jcip.annotations.NotThreadSafe;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,6 +28,8 @@ import static org.junit.Assert.*;
  *
  * @author RobTerpilowski
  */
+
+@NotThreadSafe
 public class InteractiveBrokersBrokerIT implements OrderEventListener {
     
     
@@ -49,19 +52,31 @@ public class InteractiveBrokersBrokerIT implements OrderEventListener {
     
     @Before
     public void setUp() {
+        System.out.println("running setup");
         socket = util.getIBSocket();
         broker = new InteractiveBrokersBroker(socket);
         broker.addOrderEventListener(this);
         eventList.clear();
+        socket.connect();
+        System.out.println("done running setup");
     }
     
     @After
     public void tearDown() {
+        
     }
 
     
     @Test
+    
     public void testConnect() {
+        System.out.println("Running test connect");
+        if( socket.isConnected() ) {
+            broker.disconnect();
+            socket.disconnect();
+            
+        }
+        
         assertFalse(broker.isConnected());
         assertFalse(broker.started);
         assertFalse(broker.orderProcessor.shouldRun);
@@ -71,16 +86,23 @@ public class InteractiveBrokersBrokerIT implements OrderEventListener {
         assertTrue(broker.started);
         assertTrue(broker.isConnected());
         assertTrue(broker.orderProcessor.shouldRun);
+        System.out.println("done with test connect");
     }
     
     @Test
     public void testGetNextOrderId() {
-        assertEquals("1", broker.getNextOrderId());
-        assertEquals("2", broker.getNextOrderId());
+        System.out.println("running next order id");
+        broker.connect();
+        String id = broker.getNextOrderId();
+        assertNotNull(id);
+        
+        String nextId = Integer.toString(Integer.parseInt(id) + 1);
+        assertEquals(nextId, broker.getNextOrderId());
     }
     
     @Test
     public void testSubmitMarketOrder() throws Exception {
+        System.out.println("running test submit");
         broker.connect();
         
         String orderId = broker.getNextOrderId();
@@ -121,20 +143,24 @@ public class InteractiveBrokersBrokerIT implements OrderEventListener {
         assertTrue(filledSizeCorrect);
         assertTrue(remainingCorrect);
         assertTrue(filledOrderStatusCorrect);
-        
+        System.out.println("done with test order");
         
     }
     
 
     @Test
     public void testDisconnect() {
+        System.out.println("running test disconnect");
+        broker.connect();
         assertTrue(broker.isConnected());
         broker.disconnect();
         assertFalse(broker.orderProcessor.shouldRun);
+        System.out.println("done with test disconnect");
     }
 
     @Override
     public void orderEvent(OrderEvent event) {
+        System.out.println("Received order event: " + event);
         eventList.add(event);
     }
     

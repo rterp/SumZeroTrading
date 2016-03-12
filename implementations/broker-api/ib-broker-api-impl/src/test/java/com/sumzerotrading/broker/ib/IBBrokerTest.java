@@ -22,8 +22,8 @@ package com.sumzerotrading.broker.ib;
 
 import java.util.List;
 import java.util.Date;
-import com.ib.client.ClientSocketInterface;
 import com.ib.client.Contract;
+import com.ib.client.EClientSocket;
 import com.ib.client.Order;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
@@ -57,7 +57,7 @@ import static org.mockito.Mockito.verify;
 public class IBBrokerTest {
 
     Mockery mockery;
-    ClientSocketInterface mockClientSocket;
+    EClientSocket mockClientSocket;
     IBConnectionInterface mockConnection;
     IBSocket testIbSocket;
     InteractiveBrokersBroker testBroker;
@@ -76,7 +76,7 @@ public class IBBrokerTest {
     @Before
     public void setUp() {
         mockery = new Mockery();
-        mockClientSocket = Mockito.mock( ClientSocketInterface.class );
+        mockClientSocket = Mockito.mock( EClientSocket.class );
         mockConnection = Mockito.mock( IBConnectionInterface.class );
         
         testIbSocket = new IBSocket(mockConnection, mockClientSocket);

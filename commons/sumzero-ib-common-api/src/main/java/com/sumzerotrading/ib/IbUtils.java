@@ -21,6 +21,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
+import com.ib.client.TagValue;
 import com.sumzerotrading.broker.order.OrderStatus;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
@@ -31,6 +32,9 @@ import com.sumzerotrading.marketdata.QuoteType;
 import java.awt.Image;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 import javax.imageio.ImageIO;
 
 /**
@@ -202,5 +206,21 @@ public class IbUtils {
         
         return ticker.getContractMultiplier();
     }
+    
+    public static Vector<TagValue> getDefaultTagVector() {
+        Vector<TagValue> list = new Vector<>();
+        list.add(new TagValue("XYZ", "XYZ"));
+        
+        return list;
+    }
+    
+        public static List<TagValue> getDefaultTagList() {
+        List<TagValue> list = new ArrayList<>();
+        list.add(new TagValue("XYZ", "XYZ"));
+        
+        return list;
+    }
+    
+    
     
 }

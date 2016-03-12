@@ -21,8 +21,9 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.marketdata.ib;
 
-import com.ib.client.ClientSocketInterface;
 import com.ib.client.Contract;
+import com.ib.client.EClientSocket;
+import com.ib.client.TagValue;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.ib.ContractBuilderFactory;
 import com.sumzerotrading.ib.IBConnectionInterface;
@@ -31,11 +32,13 @@ import com.sumzerotrading.ib.IBSocket;
 import com.sumzerotrading.ib.MarketDepthListener;
 import com.sumzerotrading.ib.TickListener;
 import com.sumzerotrading.marketdata.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 //import org.apache.log4j.Logger;
@@ -54,7 +57,7 @@ public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDe
     protected Map<Ticker, ILevel1Quote> closeQuoteMap = new HashMap<>();
     protected Map<Ticker, ILevel1Quote> openQuoteMap = new HashMap<>();
     protected BlockingQueue<QuoteError> quoteErrorQueue = new LinkedBlockingQueue<QuoteError>();
-    protected ClientSocketInterface ibConnection;
+    protected EClientSocket ibConnection;
     protected Map<Ticker, Integer> tickerMap = new HashMap<Ticker, Integer>();
     protected Map<Integer, Ticker> idToTickerMap = new HashMap<Integer, Ticker>();
     protected Map<Ticker, Integer> level2TickerMap = new HashMap<Ticker, Integer>();
@@ -159,7 +162,9 @@ public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDe
             level2TickerMap.put(ticker, quoteId);
             level2IdToTickerMap.put(quoteId, ticker);
             Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
-            ibConnection.reqMktDepth(quoteId, contract, 100);
+            Vector<TagValue> v = new Vector<>();
+            v.add(new TagValue("XYZ", "XYZ"));
+            ibConnection.reqMktDepth(quoteId, contract, 100, v);
 
         }
     }
@@ -187,7 +192,9 @@ public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDe
             tickerMap.put(ticker, quoteId);
             idToTickerMap.put(quoteId, ticker);
             Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
-            ibConnection.reqMktData(nextQuoteId, contract, "", false);
+            List<TagValue> list = new ArrayList<>();
+            list.add(new TagValue("XYZ","XYZ"));
+            ibConnection.reqMktData(nextQuoteId, contract, "", false, list);
         }
 
         if (closeQuoteMap.get(ticker) != null) {

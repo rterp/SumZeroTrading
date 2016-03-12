@@ -42,6 +42,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <module>interactive-brokers-api</module>
     <module>sumzero-ib-common-api</module>
     <module>interactive-brokers-client</module>
+    <module>interactive-brokers-integration-tests</module>
   </modules>
   
 </project>

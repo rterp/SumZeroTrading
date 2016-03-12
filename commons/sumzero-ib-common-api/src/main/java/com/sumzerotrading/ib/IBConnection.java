@@ -21,21 +21,20 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
+import com.ib.client.CommissionReport;
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.EClientSocket;
 import com.ib.client.Execution;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
-import com.ib.client.TickType;
+import com.ib.client.UnderComp;
 import com.sumzerotrading.ib.historical.ContractDetailsListener;
 import com.sumzerotrading.ib.historical.HistoricalDataListener;
-import static java.lang.System.out;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 //import org.apache.log4j.Logger;
 
@@ -85,6 +84,7 @@ public class IBConnection implements IBConnectionInterface {
     }
     
     public void execDetails(int orderId, Contract contract, Execution execution) {
+        System.out.println("Exec details called: " + execution);
         fireExecDetails(orderId, contract, execution);
     }
     
@@ -101,10 +101,12 @@ public class IBConnection implements IBConnectionInterface {
     }
     
     public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
+        System.out.println("Open Order Called: " + orderState);
         fireOpenOrderEvent(orderId, contract, order, orderState);
     }
     
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
+        System.out.println("Order status called: " + status);
         fireOrderStatusEvent(orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
     }
     
@@ -190,16 +192,123 @@ public class IBConnection implements IBConnectionInterface {
     }
     
     public void error(Exception e) {
+        e.printStackTrace();
         fireErrorEvent(e);
     }
     
     public void error(String str) {
+        System.out.println("Error: " + str);
         fireErrorEvent(str);
     }
     
     public void error(int id, int errorCode, String errorMsg) {
+        System.out.println("Error: " + errorMsg + " Code: " + errorCode);
         fireErrorEvent(id, errorCode, errorMsg);
     }
+
+    @Override
+    public void tickOptionComputation(int tickerId, int field, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
+        //not implemented
+    }
+
+    @Override
+    public void openOrderEnd() {
+        //not implemented
+    }
+
+    @Override
+    public void accountDownloadEnd(String accountName) {
+        //not implemented
+    }
+
+    @Override
+    public void contractDetails(int reqId, ContractDetails contractDetails) {
+        //not implemented
+    }
+
+    @Override
+    public void bondContractDetails(int reqId, ContractDetails contractDetails) {
+        //not implemented
+    }
+
+    @Override
+    public void contractDetailsEnd(int reqId) {
+        //not implemented
+    }
+
+    @Override
+    public void execDetailsEnd(int reqId) {
+        //not implemented
+    }
+
+    @Override
+    public void fundamentalData(int reqId, String data) {
+        //not implemented
+    }
+
+    @Override
+    public void deltaNeutralValidation(int reqId, UnderComp underComp) {
+        //not implemented
+    }
+
+    @Override
+    public void tickSnapshotEnd(int reqId) {
+        //not implemented
+    }
+
+    @Override
+    public void marketDataType(int reqId, int marketDataType) {
+        //not implemented
+    }
+
+    @Override
+    public void commissionReport(CommissionReport commissionReport) {
+        //not implemented
+    }
+
+    @Override
+    public void position(String account, Contract contract, int pos, double avgCost) {
+        //not implemented
+    }
+
+    @Override
+    public void positionEnd() {
+        //not implemented
+    }
+
+    @Override
+    public void accountSummary(int reqId, String account, String tag, String value, String currency) {
+        //not implemented
+    }
+
+    @Override
+    public void accountSummaryEnd(int reqId) {
+        //not implemented
+    }
+
+    @Override
+    public void verifyMessageAPI(String apiData) {
+        System.out.println("API data: " + apiData);
+        //not implemented
+    }
+
+    @Override
+    public void verifyCompleted(boolean isSuccessful, String errorText) {
+        //not implemented
+    }
+
+    @Override
+    public void displayGroupList(int reqId, String groups) {
+        //not implemented
+    }
+
+    @Override
+    public void displayGroupUpdated(int reqId, String contractInfo) {
+        //not implemented
+    }
+    
+    
+    
     
     protected void fireHistoricalDataEvent(int reqId, String date, double open, double high, double low, double close, int volume, int count, double WAP, boolean hasGaps) {
         synchronized (historicalDataListeners) {

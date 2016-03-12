@@ -21,14 +21,15 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib.historical;
 
-import com.ib.client.ClientSocketInterface;
 import com.ib.client.Contract;
+import com.ib.client.EClientSocket;
 import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
 import com.sumzerotrading.ib.ContractBuilderFactory;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
+import com.sumzerotrading.ib.IbUtils;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,7 +44,7 @@ import java.util.concurrent.SynchronousQueue;
  */
 public class IBHistoricalDataProvider implements IHistoricalDataProvider, HistoricalDataListener {
 
-    protected ClientSocketInterface ibConnection;
+    protected EClientSocket ibConnection;
     protected IBConnectionInterface callbackInterface;
     protected IBSocket ibSocket;
     protected BlockingQueue<List<BarData>> dataQueue = new SynchronousQueue<List<BarData>>();
@@ -100,7 +101,7 @@ public class IBHistoricalDataProvider implements IHistoricalDataProvider, Histor
         String endDate = dateFormatter.format(endDateTime);
 
         //ibConnection.reqHistoricalData(id, contract, new Date(), null, null, null, barSize, duration);
-        ibConnection.reqHistoricalData(id, contract, endDate, durationString, barSizeString, whatToShowString, rth, 1);
+        ibConnection.reqHistoricalData(id, contract, endDate, durationString, barSizeString, whatToShowString, rth, 1, IbUtils.getDefaultTagVector());
         List<BarData> bars = processor.getHistoricalData();
         historicalProcessorMap.remove(id);
         return bars;

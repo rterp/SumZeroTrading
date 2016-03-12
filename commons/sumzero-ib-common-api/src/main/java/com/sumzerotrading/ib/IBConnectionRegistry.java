@@ -21,7 +21,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
-import com.ib.client.ClientSocketInterface;
 import com.ib.client.EClientSocket;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class IBConnectionRegistry {
                 connection.setHost(info.getHost());
                 connection.setPort(info.getPort());
 
-                ClientSocketInterface clientSocket = new EClientSocket(connection);
+                EClientSocket clientSocket = new EClientSocket(connection);
 
                 savedSocket = new IBSocket(connection, clientSocket);
 
