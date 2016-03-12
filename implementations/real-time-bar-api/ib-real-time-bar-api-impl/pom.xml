@@ -85,10 +85,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <artifactId>interactive-brokers-client</artifactId>
             <groupId>com.ib</groupId>
+            <artifactId>interactive-brokers-api</artifactId>
             <type>jar</type>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>9.71</version>
         </dependency>
         <dependency>
             <artifactId>sumzero-commons-api</artifactId>
