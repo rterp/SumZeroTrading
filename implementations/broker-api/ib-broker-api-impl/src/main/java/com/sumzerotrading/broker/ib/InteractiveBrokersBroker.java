@@ -144,6 +144,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 
     }
 
+    @Override
     public void connect() {
         if (!isConnected()) {
             ibSocket.connect();
@@ -154,16 +155,20 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         }
     }
 
+    @Override
     public void disconnect() {
         if (started) {
             orderProcessor.stopProcessor();
+            started = false;
         }
     }
 
+    @Override
     public void execDetails(int orderId, Contract contract, Execution execution) {
         //not currently implemented
     }
 
+    @Override
     public void nextValidId(int orderId) {
         try {
             nextIdQueue.put(orderId);
@@ -253,7 +258,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 
     protected void putOnErrorQueue(BrokerError error) {
         try {
-            brokerErrorQueue.put(error);
+           // brokerErrorQueue.put(error);
         } catch (Exception ex) {
             //logger.error(ex, ex);
             ex.printStackTrace();
@@ -398,12 +403,15 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 
     protected void loadOrderMaps() throws Exception {
         tradeFileSemaphore.acquire();
-        createDir();
-        ObjectInputStream input = new ObjectInputStream(new FileInputStream(getDirName() + "orders.ser"));
-        completedOrderMap = (HashMap) input.readObject();
-        orderMap = (HashMap) input.readObject();
-        input.close();
-        tradeFileSemaphore.release();
+        try {
+            createDir();
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(getDirName() + "orders.ser"));
+            completedOrderMap = (HashMap) input.readObject();
+            orderMap = (HashMap) input.readObject();
+            input.close();
+        } finally {
+            tradeFileSemaphore.release();
+        }
     }
 
     protected void createDir() {
@@ -463,14 +471,20 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     }
 
     protected List<IbOrderAndContract> buildOrderAndContract(TradeOrder order) {
-        List<IbOrderAndContract> orderList = new ArrayList<IbOrderAndContract>();
+        List<IbOrderAndContract> orderList = new ArrayList<>();
         orderMap.put(order.getOrderId(), order);
 
         Contract contract = ContractBuilderFactory.getContractBuilder(order.getTicker()).buildContract(order.getTicker());
 
         Order ibOrder = new Order();
+        if( order.getType() == TradeOrder.Type.MARKET_ON_OPEN ) {
+            order.setDuration(TradeOrder.Duration.MARKET_ON_OPEN);
+        }
+
         ibOrder.m_action = IbUtils.getAction(order.getTradeDirection());
         ibOrder.m_orderType = IbUtils.getOrderType(order.getType());
+
+        
         ibOrder.m_tif = IbUtils.getTif(order.getDuration());
         ibOrder.m_orderId = Integer.parseInt(order.getOrderId());
         ibOrder.m_totalQuantity = order.getSize();

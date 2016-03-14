@@ -72,7 +72,7 @@ public class IbUtils {
             case MARKET_ON_CLOSE:
                 return "MOC";
             case MARKET_ON_OPEN:
-                return "MOO";
+                return "MKT";
             default:
                 throw new IllegalStateException("Unknown order type: " + orderType);
         }
@@ -82,14 +82,23 @@ public class IbUtils {
     }
 
     public static String getTif(TradeOrder.Duration duration) {
-        if (duration == TradeOrder.Duration.GOOD_UNTIL_CANCELED) {
-            return "GTC";
-        } else if (duration == TradeOrder.Duration.GOOD_UTNIL_TIME) {
-            return "GTD";
-        } else if (duration == TradeOrder.Duration.FILL_OR_KILL) {
-            return "IOC";
-        } else {
+        if( duration == null ) {
             return "DAY";
+        }
+        
+        switch (duration) {
+            case DAY:
+                return "DAY";
+            case GOOD_UNTIL_CANCELED:
+                return "GTC";
+            case GOOD_UTNIL_TIME:
+                return "GTD";
+            case FILL_OR_KILL:
+                return "IOC";
+            case MARKET_ON_OPEN:
+                return "OPG";
+            default:
+                throw new IllegalStateException("Unknown duration: " + duration);
         }
     }
 

@@ -73,6 +73,7 @@ public class IbUtilsTest {
         assertEquals("GTC", IbUtils.getTif(TradeOrder.Duration.GOOD_UNTIL_CANCELED));
         assertEquals("IOC", IbUtils.getTif(TradeOrder.Duration.FILL_OR_KILL));
         assertEquals("GTD", IbUtils.getTif(TradeOrder.Duration.GOOD_UTNIL_TIME));
+        assertEquals("OPG", IbUtils.getTif(TradeOrder.Duration.MARKET_ON_OPEN));
         assertEquals("DAY", IbUtils.getTif(null));
     }
 
@@ -107,7 +108,7 @@ public class IbUtilsTest {
         assertEquals("MKT", IbUtils.getOrderType(TradeOrder.Type.MARKET));
         assertEquals("LMT", IbUtils.getOrderType(TradeOrder.Type.LIMIT));
         assertEquals("STP", IbUtils.getOrderType(TradeOrder.Type.STOP));
-        assertEquals("MOO", IbUtils.getOrderType(TradeOrder.Type.MARKET_ON_OPEN));
+        assertEquals("MKT", IbUtils.getOrderType(TradeOrder.Type.MARKET_ON_OPEN));
         assertEquals("MOC", IbUtils.getOrderType(TradeOrder.Type.MARKET_ON_CLOSE));
 
         try {
