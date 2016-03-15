@@ -116,23 +116,23 @@ public class EODTradingStrategyTest {
 
         TradeOrder expectedLongOrder = new TradeOrder("100", longTicker, longSize, TradeDirection.BUY);
         expectedLongOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
-        expectedLongOrder.setReferenceString("EOD-Pair-Strategy:123:Entry:LongSide*");
+        expectedLongOrder.setReference("EOD-Pair-Strategy:123:Entry:LongSide*");
 
         TradeOrder expectedLongExitOrder = new TradeOrder("101", longTicker, longSize, TradeDirection.SELL);
         expectedLongExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
         expectedLongExitOrder.setGoodAfterTime(orderTime);
-        expectedLongExitOrder.setReferenceString("EOD-Pair-Strategy:123:Exit:LongSide*");
+        expectedLongExitOrder.setReference("EOD-Pair-Strategy:123:Exit:LongSide*");
 
         expectedLongOrder.addChildOrder(expectedLongExitOrder);
 
         TradeOrder expectedShortOrder = new TradeOrder("102", shortTicker, shortSize, TradeDirection.SELL_SHORT);
         expectedShortOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
-        expectedShortOrder.setReferenceString("EOD-Pair-Strategy:123:Entry:ShortSide*");
+        expectedShortOrder.setReference("EOD-Pair-Strategy:123:Entry:ShortSide*");
 
         TradeOrder expectedShortExitOrder = new TradeOrder("103", shortTicker, shortSize, TradeDirection.BUY_TO_COVER);
         expectedShortExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
         expectedShortExitOrder.setGoodAfterTime(orderTime);
-        expectedShortExitOrder.setReferenceString("EOD-Pair-Strategy:123:Exit:ShortSide*");
+        expectedShortExitOrder.setReference("EOD-Pair-Strategy:123:Exit:ShortSide*");
 
         expectedShortOrder.addChildOrder(expectedShortExitOrder);
 

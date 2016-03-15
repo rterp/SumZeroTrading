@@ -25,7 +25,7 @@ public class ReportGenerator implements OrderEventListener {
         TradeOrder order = event.getOrder();
         if( order.getCurrentStatus() == Status.FILLED ) {
             TradeReferenceLine line = new TradeReferenceLine();
-            line.parse(order.getReferenceString());
+            line.parse(order.getReference());
         }
     }
     

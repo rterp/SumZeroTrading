@@ -47,7 +47,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected double orderSizeInDollars = 1000;
     protected boolean ordersPlaced = false;
     protected boolean allPricesInitialized = false;
-    protected LocalTime timeToPlaceOrders  = LocalTime.of(6, 45, 0);
+    protected LocalTime timeToPlaceOrders  = LocalTime.of(5, 31, 0);
 
     public void start() {
         ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
@@ -58,17 +58,6 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         List<TradeOrder> openOrders = ibClient.getOpenOrders();
         logger.debug("Found " + openOrders.size() + " open orders");
         
-        /**CurrencyTicker eur = new CurrencyTicker();
-        eur.setSymbol("EUR");
-        eur.setCurrency("USD");
-        eur.setExchange(Exchange.IDEALPRO);
-        
-        CurrencyTicker aud = new CurrencyTicker();
-        aud.setSymbol("AUD");
-        aud.setCurrency("USD");
-        aud.setExchange(Exchange.IDEALPRO);
-        longShortPairMap.put(eur, aud);
-        */
         longShortPairMap.put(new StockTicker("QQQ"), new StockTicker("SPY"));
         longShortPairMap.put(new StockTicker("IWM"), new StockTicker("DIA"));
         ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
@@ -100,25 +89,25 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
 
         TradeOrder longOrder = new TradeOrder(ibClient.getNextOrderId(), longTicker, longSize, TradeDirection.BUY);
         longOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
-        longOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Entry:LongSide*");
+        longOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Entry:LongSide*");
         
 
         TradeOrder longExitOrder = new TradeOrder(ibClient.getNextOrderId(), longTicker, longSize, TradeDirection.SELL);
         longExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
         longExitOrder.setGoodAfterTime(getNextBusinessDay(lastReportedTime));
-        longExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
+        longExitOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
         
         logger.info( "Placing long orders: " + longOrder);
         longOrder.addChildOrder(longExitOrder);
-
+                                                                                                                        
         TradeOrder shortOrder = new TradeOrder(ibClient.getNextOrderId(), shortTicker, shortSize, TradeDirection.SELL_SHORT);
         shortOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
-        shortOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Entry:ShortSide*");
+        shortOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Entry:ShortSide*");
 
         TradeOrder shortExitOrder = new TradeOrder(ibClient.getNextOrderId(), shortTicker, shortSize, TradeDirection.BUY_TO_COVER);
         shortExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
         shortExitOrder.setGoodAfterTime(getNextBusinessDay(lastReportedTime));
-        shortExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:ShortSide*");
+        shortExitOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Exit:ShortSide*");
 
         logger.info( "Placing short orders: " + shortOrder);
         shortOrder.addChildOrder(shortExitOrder);

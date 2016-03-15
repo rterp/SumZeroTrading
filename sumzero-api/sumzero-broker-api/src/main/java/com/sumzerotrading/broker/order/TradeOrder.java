@@ -54,7 +54,6 @@ public class TradeOrder implements Serializable {
     protected String orderId;
     protected String parentOrderId = "";
     protected String ocaGroup;
-    protected String referenceString;
     protected String positionId;
     protected List<TradeOrder> childOrders = new ArrayList<TradeOrder>();
     protected TradeOrder comboOrder;
@@ -248,14 +247,6 @@ public class TradeOrder implements Serializable {
         this.direction = direction;
     }
 
-    public String getReferenceString() {
-        return referenceString;
-    }
-
-    public void setReferenceString(String referenceString) {
-        this.referenceString = referenceString;
-    }
-
     public ZonedDateTime getOrderEntryTime() {
         return orderEntryTime;
     }
@@ -311,7 +302,6 @@ public class TradeOrder implements Serializable {
         hash = 97 * hash + (this.orderId != null ? this.orderId.hashCode() : 0);
         hash = 97 * hash + (this.parentOrderId != null ? this.parentOrderId.hashCode() : 0);
         hash = 97 * hash + (this.ocaGroup != null ? this.ocaGroup.hashCode() : 0);
-        hash = 97 * hash + (this.referenceString != null ? this.referenceString.hashCode() : 0);
         hash = 97 * hash + (this.positionId != null ? this.positionId.hashCode() : 0);
         hash = 97 * hash + (this.childOrders != null ? this.childOrders.hashCode() : 0);
         hash = 97 * hash + (this.comboOrder != null ? this.comboOrder.hashCode() : 0);
@@ -365,9 +355,6 @@ public class TradeOrder implements Serializable {
         if ((this.ocaGroup == null) ? (other.ocaGroup != null) : !this.ocaGroup.equals(other.ocaGroup)) {
             return false;
         }
-        if ((this.referenceString == null) ? (other.referenceString != null) : !this.referenceString.equals(other.referenceString)) {
-            return false;
-        }
         if ((this.positionId == null) ? (other.positionId != null) : !this.positionId.equals(other.positionId)) {
             return false;
         }
@@ -415,7 +402,7 @@ public class TradeOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "TradeOrder{" + "ticker=" + ticker + ", direction=" + direction + ", type=" + type + ", goodAfterTime=" + goodAfterTime + ", goodUntilTime=" + goodUntilTime + ", limitPrice=" + limitPrice + ", stopPrice=" + stopPrice + ", duration=" + duration + ", size=" + size + ", orderId=" + orderId + ", parentOrderId=" + parentOrderId + ", ocaGroup=" + ocaGroup + ", referenceString=" + referenceString + ", positionId=" + positionId + ", childOrders=" + childOrders + ", comboOrder=" + comboOrder + ", reference=" + reference + ", submitted=" + submitted + ", submitChildOrdersFirst=" + submitChildOrdersFirst + ", orderEntryTime=" + orderEntryTime + ", orderTimeInForceMinutes=" + orderTimeInForceMinutes + ", filledSize=" + filledSize + ", filledPrice=" + filledPrice + ", currentStatus=" + currentStatus + '}';
+        return "TradeOrder{" + "ticker=" + ticker + ", direction=" + direction + ", type=" + type + ", goodAfterTime=" + goodAfterTime + ", goodUntilTime=" + goodUntilTime + ", limitPrice=" + limitPrice + ", stopPrice=" + stopPrice + ", duration=" + duration + ", size=" + size + ", orderId=" + orderId + ", parentOrderId=" + parentOrderId + ", ocaGroup=" + ocaGroup + ", positionId=" + positionId + ", childOrders=" + childOrders + ", comboOrder=" + comboOrder + ", reference=" + reference + ", submitted=" + submitted + ", submitChildOrdersFirst=" + submitChildOrdersFirst + ", orderEntryTime=" + orderEntryTime + ", orderTimeInForceMinutes=" + orderTimeInForceMinutes + ", filledSize=" + filledSize + ", filledPrice=" + filledPrice + ", currentStatus=" + currentStatus + '}';
     }
 
     
