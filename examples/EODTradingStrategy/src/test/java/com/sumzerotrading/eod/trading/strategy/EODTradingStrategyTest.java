@@ -15,6 +15,7 @@ import com.sumzerotrading.marketdata.ILevel1Quote;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.QuoteType;
 import java.math.BigDecimal;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -48,12 +49,13 @@ import static org.mockito.Mockito.verify;
 public class EODTradingStrategyTest {
 
     protected InteractiveBrokersClientInterface mockIbClient;
-    protected String ibHost = "myHost";
-    protected int ibPort = 9999;
-    protected int ibClientId = 1111;
+    protected String ibHost = "localhost";
+    protected int ibPort = 7999;
+    protected int ibClientId = 1;
     protected Ticker longTicker = new StockTicker("LONG");
     protected Ticker shortTicker = new StockTicker("SHORT");
     protected EODTradingStrategy strategy;
+    protected String propFile;
 
     public EODTradingStrategyTest() {
     }
@@ -67,14 +69,16 @@ public class EODTradingStrategyTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         mockIbClient = mock(InteractiveBrokersClientInterface.class);
         InteractiveBrokersClient.setMockInteractiveBrokersClient(mockIbClient, ibHost, ibPort, ibClientId);
         strategy = spy(EODTradingStrategy.class);
         strategy.timeToPlaceOrders  = LocalTime.of(12, 40, 0);
+        strategy.marketCloseTime = LocalTime.of(13,0);
         strategy.ibHost = ibHost;
         strategy.ibPort = ibPort;
         strategy.ibClientId = ibClientId;
+        propFile = Paths.get( getClass().getResource("/eod.test.properties").toURI()).toString();
     }
 
     @After
@@ -90,7 +94,7 @@ public class EODTradingStrategyTest {
         when(mockIbClient.getOpenOrders()).thenReturn(openOrders);
         doReturn(true).when(strategy).checkOpenOrders(openOrders, strategy.longShortPairMap);
 
-        strategy.start();
+        strategy.start(propFile);
 
         verify(mockIbClient).subscribeLevel1(eq(new StockTicker("QQQ")), any(Level1QuoteListener.class));
         verify(mockIbClient).subscribeLevel1(eq(new StockTicker("SPY")), any(Level1QuoteListener.class));
@@ -223,8 +227,9 @@ public class EODTradingStrategyTest {
         verify(strategy, never()).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));
     }
 
-    @Test
-    public void testQuoteReceived_AllPricesInitialized_OrdersNotPlaced_AfterTradeTime() {
+    
+        @Test
+    public void testQuoteReceived_AllPricesInitialized_OrdersNotPlaced_AfterTradeTime_AfterMarketClose() {
         ZonedDateTime local = ZonedDateTime.of(2015, 6, 15, 0, 0, 0, 0, ZoneId.systemDefault());
         ZoneOffset offset = local.getOffset();
         ZonedDateTime zdt = ZonedDateTime.of(2015, 6, 15, 21, 50, 0, 0, ZoneId.of("Z"));
@@ -232,6 +237,34 @@ public class EODTradingStrategyTest {
         int hour = 1 + strategy.timeToPlaceOrders.getHour() + (-offset.getTotalSeconds() / (3600));
         System.out.println("Offset hour: " + hour);
         zdt = zdt.withHour(hour);
+        ILevel1Quote mockQuote = mock(ILevel1Quote.class);
+        strategy.longShortPairMap.put(longTicker, shortTicker);
+
+        when(mockQuote.getType()).thenReturn(QuoteType.LAST);
+        when(mockQuote.getTicker()).thenReturn(longTicker);
+        when(mockQuote.getValue()).thenReturn(BigDecimal.ONE);
+        when(mockQuote.getTimeStamp()).thenReturn(zdt);
+        doReturn(true).when(strategy).setAllPricesInitialized();
+        doNothing().when(strategy).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));
+        strategy.ordersPlaced = false;
+
+        strategy.quoteRecieved(mockQuote);
+
+        assertFalse(strategy.ordersPlaced);
+        verify(strategy).setAllPricesInitialized();
+        verify(strategy, never()).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));
+    }
+    
+    
+    @Test
+    public void testQuoteReceived_AllPricesInitialized_OrdersNotPlaced_AfterTradeTime() {
+        ZonedDateTime local = ZonedDateTime.of(2015, 6, 15, 0, 0, 0, 0, ZoneId.systemDefault());
+        ZoneOffset offset = local.getOffset();
+        ZonedDateTime zdt = ZonedDateTime.of(2015, 6, 15, 21, 50, 0, 0, ZoneId.of("Z"));
+        System.out.println("Offset: " + offset.getTotalSeconds() / 3600);
+        int hour = strategy.timeToPlaceOrders.getHour()+ (-offset.getTotalSeconds() / (3600));
+        zdt = zdt.withHour(hour);
+        zdt = zdt.plusMinutes(1);
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
         strategy.longShortPairMap.put(longTicker, shortTicker);
 
@@ -274,8 +307,24 @@ public class EODTradingStrategyTest {
         assertEquals(expectedDatetime, strategy.getNextBusinessDay(ldt));
     }
 
+    
+    @Test
+    public void testInitProps() {
+        strategy.initProps(propFile);
+        assertEquals("localhost", strategy.ibHost);
+        assertEquals(7999, strategy.ibPort);
+        assertEquals(1, strategy.ibClientId);
+        assertEquals(1000, strategy.orderSizeInDollars);
+        assertEquals(LocalTime.of(12, 40), strategy.timeToPlaceOrders);
+        assertEquals(LocalTime.of(13,0), strategy.marketCloseTime);
+        assertEquals(2, strategy.longShortPairMap.size());
+        assertEquals(new StockTicker("SPY"), strategy.longShortPairMap.get(new StockTicker("QQQ")));
+        assertEquals(new StockTicker("IWM"), strategy.longShortPairMap.get(new StockTicker("DIA")));
+    }
+    
     @Test
     public void testGetOrderSize() {
+        strategy.start(propFile);
         strategy.lastPriceMap.put(longTicker, 50.00);
         int expectedSize = 20;
 

@@ -18,6 +18,7 @@ import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInt
 import com.sumzerotrading.marketdata.ILevel1Quote;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.QuoteType;
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -40,16 +41,23 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected InteractiveBrokersClientInterface ibClient;
     protected Map<Ticker, Ticker> longShortPairMap = new HashMap<>();
     protected Map<Ticker, Double> lastPriceMap = new HashMap<>();
-    protected String ibHost = "localhost";
-    protected int ibPort = 7999;
-    protected int ibClientId = 3;
+    protected String ibHost;
+    protected int ibPort;
+    protected int ibClientId;
 
-    protected double orderSizeInDollars = 1000;
+    protected int orderSizeInDollars;
     protected boolean ordersPlaced = false;
     protected boolean allPricesInitialized = false;
-    protected LocalTime timeToPlaceOrders  = LocalTime.of(5, 31, 0);
+    protected LocalTime timeToPlaceOrders;
+    protected LocalTime marketCloseTime;
+    protected EODSystemProperties systemProperties;
+    
+    
+    
+    
 
-    public void start() {
+    public void start(String propFile) {
+        initProps(propFile);
         ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
         logger.info( "Connecting to IB client at:" + ibHost + ":" + ibPort + " with clientID: " + ibClientId);
         //ibClient.addBrokerErrorListener(this);
@@ -58,21 +66,17 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         List<TradeOrder> openOrders = ibClient.getOpenOrders();
         logger.debug("Found " + openOrders.size() + " open orders");
         
-        longShortPairMap.put(new StockTicker("QQQ"), new StockTicker("SPY"));
-        longShortPairMap.put(new StockTicker("IWM"), new StockTicker("DIA"));
         ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
         logger.debug("Checking if orders have already been placed today: " + ordersPlaced );
-        
-        
         logger.info( "Strategy will place orders after: " + timeToPlaceOrders.toString());
         
         
         longShortPairMap.keySet().stream().map((ticker) -> {
             ibClient.subscribeLevel1(ticker, this);
-            System.out.println("Subscribing to: " + ticker);
+            logger.debug("Subscribing to: " + ticker);
             return ticker;
         }).forEach((ticker) -> {
-            System.out.println("Subscribing to12: " + longShortPairMap.get(ticker));
+            logger.debug("Subscribing to12: " + longShortPairMap.get(ticker));
             ibClient.subscribeLevel1(longShortPairMap.get(ticker), this);
         });
 
@@ -136,8 +140,10 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
 
         
         LocalTime currentTime = quote.getTimeStamp().withZoneSameInstant(ZoneId.systemDefault()).toLocalTime();
-
-        if (currentTime.isAfter(timeToPlaceOrders) && !ordersPlaced) {
+        if( currentTime.isAfter( marketCloseTime ) ) {
+            return;
+        }
+        if ( ( currentTime.isBefore(marketCloseTime)) && currentTime.isAfter(timeToPlaceOrders) && !ordersPlaced) {
             if (allPricesInitialized) {
                 ordersPlaced = true;
                 longShortPairMap.keySet().stream().forEach((longTicker) -> {
@@ -165,6 +171,28 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         logger.error( "Error: " + error.getErrorCode() + ": " + error.getMessage() );
     }
     
+    
+    protected void initProps(String filename) {
+        try {
+            EODSystemProperties props = new EODSystemProperties(filename);
+            ibHost = props.getTwsHost();
+            ibPort = props.getTwsPort();
+            ibClientId = props.getTwsClientId();
+            orderSizeInDollars = props.getTradeSizeDollars();
+            timeToPlaceOrders = props.getStartTime();
+            marketCloseTime = props.getMarketCloseTime();
+            Map<String,String> tickers = props.getLongShortTickerMap();
+            tickers.keySet().stream().forEach((ticker) -> {
+                longShortPairMap.put( new StockTicker(ticker), new StockTicker(tickers.get(ticker)));
+            });
+            
+            
+            
+        } catch( IOException ex ) {
+            throw new IllegalStateException(ex);
+        }
+        
+    }
     
     
     protected String getUUID() {
@@ -214,7 +242,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     
     public static void main(String[] args) {
         EODTradingStrategy strategy = new EODTradingStrategy();
-        strategy.start();
+        strategy.start(args[0]);
     }
 
 }
