@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author RobTerpilowski
  */
-public class TradeReferenceLineTest {
+public class ReportGeneratorTest {
     
-    public TradeReferenceLineTest() {
+    public ReportGeneratorTest() {
     }
     
     @BeforeClass
@@ -39,7 +39,9 @@ public class TradeReferenceLineTest {
 
 
     @Test
-    public void testParse() {
+    public void testOrderEvent() {
         fail();
     }
+    
+    
 }

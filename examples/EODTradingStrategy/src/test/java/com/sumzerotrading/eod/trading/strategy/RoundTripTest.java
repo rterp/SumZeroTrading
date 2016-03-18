@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author RobTerpilowski
  */
-public class TradeReferenceLineTest {
+public class RoundTripTest {
     
-    public TradeReferenceLineTest() {
+    public RoundTripTest() {
     }
     
     @BeforeClass
@@ -39,7 +39,16 @@ public class TradeReferenceLineTest {
 
 
     @Test
-    public void testParse() {
+    public void testAddTradeReferenceLine() {
+        
+        /**
+         * Test if order events get fired under the following conditions.
+         * - App disconnects from TWS, order is filled, app reconnects to TWS.
+         * - TWS shuts down, order is filled, tws starts back up, app reconnects to TWS.
+         * --If above test works, test how long TWS can be off for, before the app does
+         * --not receive the order event.
+         */
+        
         fail();
     }
 }

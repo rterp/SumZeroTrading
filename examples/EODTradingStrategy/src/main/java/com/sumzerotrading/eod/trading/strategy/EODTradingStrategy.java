@@ -67,16 +67,16 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         logger.debug("Found " + openOrders.size() + " open orders");
         
         ordersPlaced = checkOpenOrders(openOrders, longShortPairMap);
-        logger.debug("Checking if orders have already been placed today: " + ordersPlaced );
+        logger.info("Checking if orders have already been placed today: " + ordersPlaced );
         logger.info( "Strategy will place orders after: " + timeToPlaceOrders.toString());
         
         
         longShortPairMap.keySet().stream().map((ticker) -> {
             ibClient.subscribeLevel1(ticker, this);
-            logger.debug("Subscribing to: " + ticker);
+            logger.info("Subscribing to: " + ticker);
             return ticker;
         }).forEach((ticker) -> {
-            logger.debug("Subscribing to12: " + longShortPairMap.get(ticker));
+            logger.info("Subscribing to: " + longShortPairMap.get(ticker));
             ibClient.subscribeLevel1(longShortPairMap.get(ticker), this);
         });
 

@@ -18,7 +18,13 @@ import java.util.Map;
  */
 public class ReportGenerator implements OrderEventListener {
 
-    protected Map<String, RoundTrip> map = new HashMap<>();
+    protected Map<String, RoundTrip> roundTripMap = new HashMap<>();
+    protected String outputFile;
+    
+    
+    public ReportGenerator(String outputFile) {
+        this.outputFile = outputFile;
+    }
 
     @Override  
     public void orderEvent(OrderEvent event) {
@@ -26,7 +32,22 @@ public class ReportGenerator implements OrderEventListener {
         if( order.getCurrentStatus() == Status.FILLED ) {
             TradeReferenceLine line = new TradeReferenceLine();
             line.parse(order.getReference());
+            RoundTrip roundTrip = roundTripMap.get(line.getCorrelationId());
+            if( roundTrip == null ) {
+                roundTrip = new RoundTrip();
+                roundTripMap.put(line.getCorrelationId(), roundTrip);
+            }
+            roundTrip.addTradeReference(order, line);
+            if( roundTrip.isComplete() ) {
+                writeRoundTripToFile(roundTrip);
+            }
         }
+    }
+    
+    
+    protected synchronized void writeRoundTripToFile(RoundTrip roundTrip) {
+        
+        
     }
     
     

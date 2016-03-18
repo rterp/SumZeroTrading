@@ -6,6 +6,7 @@
 package com.sumzerotrading.eod.trading.strategy;
 
 import com.sumzerotrading.broker.order.TradeOrder;
+import java.time.format.DateTimeFormatter;
 
 /** 
  *    
@@ -38,10 +39,29 @@ public class RoundTrip {
     
     
     public String getResults() {
-        // Long-entry-date, longTicker, LongShares, Long Entry price, Long Entry Commission, LongExitDate, Long Exit Price, shortTicker, shortShares, shortEntryPrice, shortEntryCommissions, shortExitPrice, shortExitCommissions
+        // Long-entry-date, longTicker, LongShares, Long Entry price, Long Entry Commission, 
+        //LongExitDate, Long Exit Price, shortTicker, shortShares, shortEntryPrice, shortEntryCommissions,
+        //shortExitPrice, shortExitCommissions
         //2016-03-20T12:40:00PST,QQQ,200,100.23,1.45,2016-03-21T12:40:00PST,
         StringBuilder sb = new StringBuilder();
-        
+        sb.append(longEntry.getOrderEntryTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
+                .append(longEntry.getTicker().getSymbol()).append(",")
+                .append(longEntry.getSize()).append(",")
+                .append(longEntry.getFilledPrice()).append(",")
+                //long entry commissions
+                .append(0).append(",")
+                .append(longExit.getOrderEntryTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
+                .append(longExit.getFilledPrice()).append(",")
+                //long exit commissions
+                .append(0).append(",")
+                .append(shortEntry.getTicker().getSymbol()).append(",")
+                .append(shortEntry.getSize()).append(",")
+                .append(shortEntry.getFilledPrice()).append(",")
+                //short entry commissions
+                .append(0).append(",")
+                .append(shortExit.getFilledPrice()).append(",")
+                //short exit commissions.
+                .append(0);
         
         return sb.toString();
     }
