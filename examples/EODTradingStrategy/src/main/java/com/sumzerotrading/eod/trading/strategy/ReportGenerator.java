@@ -40,6 +40,8 @@ public class ReportGenerator implements OrderEventListener {
             roundTrip.addTradeReference(order, line);
             if( roundTrip.isComplete() ) {
                 writeRoundTripToFile(roundTrip);
+            } else {
+                throw new IllegalStateException("Write this transaction to a temp file");
             }
         }
     }
