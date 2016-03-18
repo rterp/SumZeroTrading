@@ -5,6 +5,7 @@
  */
 package com.sumzerotrading.eod.trading.strategy;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 
@@ -12,6 +13,7 @@ import lombok.Getter;
  *
  * @author RobTerpilowski
  */
+@EqualsAndHashCode
 public class TradeReferenceLine {
     //longExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
     

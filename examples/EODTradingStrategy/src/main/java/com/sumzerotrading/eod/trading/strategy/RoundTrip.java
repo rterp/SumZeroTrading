@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
  * @author RobTerpilowski
  */
 public class RoundTrip {
+
     
     protected TradeOrder longEntry;
     protected TradeOrder longExit;
@@ -31,7 +32,7 @@ public class RoundTrip {
             if( tradeReference.getSide() == TradeReferenceLine.Side.ENTRY ) {
                 shortEntry = order;
             } else {
-                shortEntry = order;
+                shortExit = order;
             }
         }
     }
