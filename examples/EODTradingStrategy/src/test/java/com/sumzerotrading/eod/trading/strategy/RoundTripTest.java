@@ -174,9 +174,4 @@ public class RoundTripTest {
         roundTrip.shortExit = order;
         assertTrue(roundTrip.isComplete());
     }
-    
-    public void testAddTradeReferenceLine() {
-
-
-    }
 }

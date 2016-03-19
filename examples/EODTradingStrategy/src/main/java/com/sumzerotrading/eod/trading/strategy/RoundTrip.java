@@ -6,6 +6,7 @@
 package com.sumzerotrading.eod.trading.strategy;
 
 import com.sumzerotrading.broker.order.TradeOrder;
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 
 /** 
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class RoundTrip {
 
+    
     
     protected TradeOrder longEntry;
     protected TradeOrder longExit;

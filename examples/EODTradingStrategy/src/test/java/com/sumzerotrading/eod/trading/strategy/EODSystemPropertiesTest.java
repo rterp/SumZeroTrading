@@ -84,6 +84,7 @@ public class EODSystemPropertiesTest {
         props.setProperty("pair.1", "QQQ:SPY");
         props.setProperty("foo", "bar");
         props.setProperty("pair.2", "IWM:DIA");
+        props.setProperty("strategy.directory", "/my/dir");
         
         systemProps.parseProps(props);
         
@@ -91,6 +92,7 @@ public class EODSystemPropertiesTest {
         assertEquals(123, systemProps.getTwsPort());
         assertEquals(13, systemProps.getTwsClientId());
         assertEquals(999, systemProps.getTradeSizeDollars());
+        assertEquals("/my/dir", systemProps.getStrategyDirectory());
         assertEquals(LocalTime.of(5, 32, 44), systemProps.getStartTime());
         assertEquals(LocalTime.of(13,0), systemProps.getMarketCloseTime());
         assertEquals(expectedMap, systemProps.getLongShortTickerMap());

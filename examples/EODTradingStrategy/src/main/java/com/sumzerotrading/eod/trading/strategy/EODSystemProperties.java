@@ -30,6 +30,7 @@ public class EODSystemProperties {
     protected int twsClientId;
     protected int tradeSizeDollars;
     protected Map<String,String> longShortTickerMap = new HashMap<>();
+    protected String strategyDirectory;
     
     
     //For Unit tests
@@ -76,6 +77,10 @@ public class EODSystemProperties {
     public LocalTime getMarketCloseTime() {
         return marketCloseTime;
     }
+
+    public String getStrategyDirectory() {
+        return strategyDirectory;
+    }
     
     
     
@@ -88,6 +93,7 @@ public class EODSystemProperties {
         tradeSizeDollars = Integer.parseInt(props.getProperty("trade.size.dollars"));
         startTime = LocalTime.parse(props.getProperty("start.time"));
         marketCloseTime = LocalTime.parse(props.getProperty("market.close.time"));
+        strategyDirectory = props.getProperty("strategy.directory");
         longShortTickerMap = getLongShortTickers(props);
     }
 
@@ -107,14 +113,15 @@ public class EODSystemProperties {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 71 * hash + Objects.hashCode(this.startTime);
-        hash = 71 * hash + Objects.hashCode(this.marketCloseTime);
-        hash = 71 * hash + Objects.hashCode(this.twsHost);
-        hash = 71 * hash + this.twsPort;
-        hash = 71 * hash + this.twsClientId;
-        hash = 71 * hash + this.tradeSizeDollars;
-        hash = 71 * hash + Objects.hashCode(this.longShortTickerMap);
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.startTime);
+        hash = 37 * hash + Objects.hashCode(this.marketCloseTime);
+        hash = 37 * hash + Objects.hashCode(this.twsHost);
+        hash = 37 * hash + this.twsPort;
+        hash = 37 * hash + this.twsClientId;
+        hash = 37 * hash + this.tradeSizeDollars;
+        hash = 37 * hash + Objects.hashCode(this.longShortTickerMap);
+        hash = 37 * hash + Objects.hashCode(this.strategyDirectory);
         return hash;
     }
 
@@ -142,6 +149,9 @@ public class EODSystemProperties {
         if (!Objects.equals(this.twsHost, other.twsHost)) {
             return false;
         }
+        if (!Objects.equals(this.strategyDirectory, other.strategyDirectory)) {
+            return false;
+        }
         if (!Objects.equals(this.startTime, other.startTime)) {
             return false;
         }
@@ -156,8 +166,9 @@ public class EODSystemProperties {
 
     @Override
     public String toString() {
-        return "EODSystemProperties{" + "startTime=" + startTime + ", marketCloseTime=" + marketCloseTime + ", twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", longShortTickerMap=" + longShortTickerMap + '}';
+        return "EODSystemProperties{" + "startTime=" + startTime + ", marketCloseTime=" + marketCloseTime + ", twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", longShortTickerMap=" + longShortTickerMap + ", strategyDirectory=" + strategyDirectory + '}';
     }
+
 
         
     
