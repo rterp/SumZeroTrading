@@ -67,6 +67,8 @@ public class TradeOrder implements Serializable {
     protected double filledPrice = 0;
     protected double commission = 0;
     protected Status currentStatus = Status.NEW;
+    
+    public TradeOrder() {}
 
     public TradeOrder(String orderId, Ticker ticker, int size, TradeDirection tradeDirection) {
         type = Type.MARKET;
