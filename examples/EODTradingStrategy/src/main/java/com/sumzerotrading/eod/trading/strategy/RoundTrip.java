@@ -8,15 +8,16 @@ package com.sumzerotrading.eod.trading.strategy;
 import com.sumzerotrading.broker.order.TradeOrder;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /** 
  *    
  * @author RobTerpilowski
  */
-public class RoundTrip {
+public class RoundTrip implements Serializable {
 
-    
-    
+    public static final long serialVersionUID = 1l;
+    protected String correlationId;
     protected TradeOrder longEntry;
     protected TradeOrder longExit;
     protected TradeOrder shortEntry;
@@ -24,6 +25,7 @@ public class RoundTrip {
     
     
     public void addTradeReference( TradeOrder order, TradeReferenceLine tradeReference ) {
+        correlationId = tradeReference.getCorrelationId();
         if( tradeReference.getDirection() == TradeReferenceLine.Direction.LONG ) {
             if( tradeReference.getSide() == TradeReferenceLine.Side.ENTRY ) {
                 longEntry = order;
@@ -78,6 +80,57 @@ public class RoundTrip {
                 shortEntry != null &&
                 shortExit != null;
     }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    
+    
+    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + Objects.hashCode(this.correlationId);
+        hash = 61 * hash + Objects.hashCode(this.longEntry);
+        hash = 61 * hash + Objects.hashCode(this.longExit);
+        hash = 61 * hash + Objects.hashCode(this.shortEntry);
+        hash = 61 * hash + Objects.hashCode(this.shortExit);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RoundTrip other = (RoundTrip) obj;
+        if (!Objects.equals(this.correlationId, other.correlationId)) {
+            return false;
+        }
+        if (!Objects.equals(this.longEntry, other.longEntry)) {
+            return false;
+        }
+        if (!Objects.equals(this.longExit, other.longExit)) {
+            return false;
+        }
+        if (!Objects.equals(this.shortEntry, other.shortEntry)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "RoundTrip{" + "correlationId=" + correlationId + ", longEntry=" + longEntry + ", longExit=" + longExit + ", shortEntry=" + shortEntry + ", shortExit=" + shortExit + '}';
+    }
+    
     
     
     

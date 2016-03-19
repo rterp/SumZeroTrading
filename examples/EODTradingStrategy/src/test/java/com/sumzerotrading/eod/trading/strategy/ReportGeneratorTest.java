@@ -17,11 +17,14 @@ import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Directi
 import com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side;
 import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side.ENTRY;
 import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side.EXIT;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -45,6 +48,8 @@ public class ReportGeneratorTest {
     
     protected ReportGenerator reportGenerator;
     protected TradeOrder order;
+    protected String tmpDir;
+    protected String partialDir;
     
     public ReportGeneratorTest() {
     }
@@ -58,9 +63,12 @@ public class ReportGeneratorTest {
     }
     
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         reportGenerator = spy(ReportGenerator.class);
         order = new TradeOrder("123", new StockTicker("QQQ"), 100, TradeDirection.BUY);
+        tmpDir = System.getProperty("java.io.tmpdir") + "rg-test/";
+        partialDir  = tmpDir + "partial/";
+        FileUtils.deleteDirectory(new File(tmpDir));
     }
     
     @After
@@ -69,17 +77,61 @@ public class ReportGeneratorTest {
     
     @Test
     public void testConstructor_NoSlashInPath() {
-        String dir = "/my/dir";
-        ReportGenerator generator = new ReportGenerator(dir);
-        assertEquals("/my/dir/report.csv", generator.outputFile);
+        ReportGenerator generator = new ReportGenerator(tmpDir);
+        assertEquals( tmpDir + "report.csv", generator.outputFile);
+        assertEquals( tmpDir, generator.outputDir);
+        assertEquals( tmpDir + "/partial/", generator.partialDir);
+        assertTrue( Files.exists(Paths.get(generator.outputDir)));
+        assertTrue( Files.exists(Paths.get(generator.partialDir)));
+        
+        
     }
     
+    
     @Test
-    public void testConstructor_WithSlashInPath() {
-        String dir = "/my/dir/";
-        ReportGenerator generator = new ReportGenerator(dir);
-        assertEquals("/my/dir/report.csv", generator.outputFile);
+    public void testLoadSaveDeletePartial() throws Exception {
+        ReportGenerator generator = new ReportGenerator(tmpDir);
+        
+        RoundTrip roundTrip = new RoundTrip();
+        TradeReferenceLine tradeReferenceLine = buildReferenceLine("123", LONG, ENTRY);
+        tradeReferenceLine.correlationId = "123";
+        tradeReferenceLine.direction = TradeReferenceLine.Direction.LONG;
+        tradeReferenceLine.side = TradeReferenceLine.Side.ENTRY;
+        roundTrip.addTradeReference(order, tradeReferenceLine);
+        
+        order.setCurrentStatus(OrderStatus.Status.FILLED);
+        OrderEvent orderEvent = new OrderEvent(order, new OrderStatus(OrderStatus.Status.NEW, "", "", new StockTicker("QQQ"), ZonedDateTime.now()));
+        
+        TradeReferenceLine longExitLine = buildReferenceLine("123", LONG, EXIT);
+        TradeReferenceLine shortEntryLine = buildReferenceLine("123", SHORT, ENTRY);
+        TradeReferenceLine shortExitLine = buildReferenceLine("123", SHORT, EXIT);
+        
+        roundTrip.addTradeReference(order, longExitLine);
+        roundTrip.addTradeReference(order, shortEntryLine);
+        
+        File[] files = new File(partialDir).listFiles();
+        assertEquals(0, files.length);
+        
+        generator.savePartial("123", roundTrip);
+        
+        files = new File(partialDir).listFiles();
+        assertEquals(1, files.length);
+        
+
+        generator.roundTripMap.clear();
+        assertTrue(generator.roundTripMap.isEmpty());
+        
+        generator.loadPartialRoundTrips();
+        assertEquals(1, generator.roundTripMap.size());
+        assertEquals(roundTrip, generator.roundTripMap.get("123"));
+        
+        generator.deletePartial("123");
+        files = new File(partialDir).listFiles();
+        assertEquals(0, files.length);
+        
+        
     }
+
     
     @Test
     public void testOrderEvent_NotFilled() {

@@ -49,6 +49,7 @@ public class RoundTripTest {
         ticker = new StockTicker("QQQ");
         order = new TradeOrder("123", ticker, 100, TradeDirection.BUY);
         referenceLine = new TradeReferenceLine();
+        referenceLine.correlationId = "999";
     }
 
     @After
@@ -61,6 +62,7 @@ public class RoundTripTest {
         referenceLine.side = ENTRY;
         roundTrip.addTradeReference(order, referenceLine);
 
+        assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.longEntry);
         assertNull(roundTrip.longExit);
         assertNull(roundTrip.shortEntry);
@@ -74,6 +76,7 @@ public class RoundTripTest {
         referenceLine.side = EXIT;
         roundTrip.addTradeReference(order, referenceLine);
 
+        assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.longExit);
         assertNull(roundTrip.longEntry);
         assertNull(roundTrip.shortEntry);
@@ -87,6 +90,7 @@ public class RoundTripTest {
         referenceLine.side = ENTRY;
         roundTrip.addTradeReference(order, referenceLine);
 
+        assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.shortEntry);
         assertNull(roundTrip.longEntry);
         assertNull(roundTrip.longExit);
@@ -100,6 +104,7 @@ public class RoundTripTest {
         referenceLine.side = EXIT;
         roundTrip.addTradeReference(order, referenceLine);
 
+        assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.shortExit);
         assertNull(roundTrip.longEntry);
         assertNull(roundTrip.longExit);
