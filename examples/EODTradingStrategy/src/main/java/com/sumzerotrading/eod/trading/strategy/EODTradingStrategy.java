@@ -44,6 +44,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected String ibHost;
     protected int ibPort;
     protected int ibClientId;
+    protected String strategyDirectory;
 
     protected int orderSizeInDollars;
     protected boolean ordersPlaced = false;
@@ -51,6 +52,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected LocalTime timeToPlaceOrders;
     protected LocalTime marketCloseTime;
     protected EODSystemProperties systemProperties;
+    protected IReportGenerator reportGenerator;
     
     
     
@@ -60,7 +62,10 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         initProps(propFile);
         ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
         logger.info( "Connecting to IB client at:" + ibHost + ":" + ibPort + " with clientID: " + ibClientId);
-        //ibClient.addBrokerErrorListener(this);
+
+        reportGenerator = getReportGenerator(strategyDirectory);
+        ibClient.addOrderStatusListener(this);
+        ibClient.addOrderStatusListener(reportGenerator);
         ibClient.connect();
         
         List<TradeOrder> openOrders = ibClient.getOpenOrders();
@@ -172,6 +177,11 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     }
     
     
+    
+    protected IReportGenerator getReportGenerator(String homeDir) {
+        return new ReportGenerator(homeDir);
+    }
+    
     protected void initProps(String filename) {
         try {
             EODSystemProperties props = new EODSystemProperties(filename);
@@ -182,6 +192,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             timeToPlaceOrders = props.getStartTime();
             marketCloseTime = props.getMarketCloseTime();
             Map<String,String> tickers = props.getLongShortTickerMap();
+            strategyDirectory = props.getStrategyDirectory();
             tickers.keySet().stream().forEach((ticker) -> {
                 longShortPairMap.put( new StockTicker(ticker), new StockTicker(tickers.get(ticker)));
             });

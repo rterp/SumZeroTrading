@@ -125,6 +125,7 @@ public class EODSystemPropertiesTest {
         props.marketCloseTime = LocalTime.of(13,0);
         props.longShortTickerMap.put("QQQ", "SPY");
         props.longShortTickerMap.put("DIA", "IWM");
+        props.strategyDirectory = "/some/test/dir/";
         
         return props;
                 

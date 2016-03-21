@@ -149,5 +149,14 @@ public class InteractiveBrokersBrokerTest {
         verify(mockOrderEventQueue).put(expectedEvent);
         
     }        
+    
+    @Test
+    public void testGetDirName() {
+        when(mockIbSocket.getClientId()).thenReturn(99);
+        String userDir = System.getProperty("user.dir");
+        String expectedString = userDir + "/ib-order-management/client-99/";
+        assertEquals(expectedString, broker.getDirName());
+        
+    }
 
 }

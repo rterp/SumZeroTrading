@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author RobTerpilowski
  */
-public class ReportGenerator implements OrderEventListener {
+public class ReportGenerator implements IReportGenerator {
 
     protected Logger logger = LoggerFactory.getLogger(ReportGenerator.class);
     protected Map<String, RoundTrip> roundTripMap = new HashMap<>();
@@ -78,6 +78,7 @@ public class ReportGenerator implements OrderEventListener {
     
     
     
+    @Override
     public void loadPartialRoundTrips() throws IOException {
         File[] files = new File(partialDir).listFiles();
         for( File file : files ) {
@@ -94,6 +95,7 @@ public class ReportGenerator implements OrderEventListener {
         }
     }
     
+    @Override
     public void savePartial(String correlationId, RoundTrip trip ) throws IOException {
         String filename = partialDir + correlationId + ".ser";
         ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename));
@@ -101,6 +103,7 @@ public class ReportGenerator implements OrderEventListener {
         output.close();
     }
     
+    @Override
     public void deletePartial(String correlationId) throws IOException {
         String filename = partialDir + correlationId + ".ser";
         Files.deleteIfExists(Paths.get(filename));

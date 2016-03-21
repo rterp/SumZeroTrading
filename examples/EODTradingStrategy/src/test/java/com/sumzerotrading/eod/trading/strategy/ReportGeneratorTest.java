@@ -80,7 +80,7 @@ public class ReportGeneratorTest {
         ReportGenerator generator = new ReportGenerator(tmpDir);
         assertEquals( tmpDir + "report.csv", generator.outputFile);
         assertEquals( tmpDir, generator.outputDir);
-        assertEquals( tmpDir + "/partial/", generator.partialDir);
+        assertEquals( tmpDir + "partial/", generator.partialDir);
         assertTrue( Files.exists(Paths.get(generator.outputDir)));
         assertTrue( Files.exists(Paths.get(generator.partialDir)));
         

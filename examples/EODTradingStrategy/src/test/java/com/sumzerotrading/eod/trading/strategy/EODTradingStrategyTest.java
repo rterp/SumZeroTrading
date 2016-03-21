@@ -56,6 +56,7 @@ public class EODTradingStrategyTest {
     protected Ticker shortTicker = new StockTicker("SHORT");
     protected EODTradingStrategy strategy;
     protected String propFile;
+    protected IReportGenerator mockReportGenerator;
 
     public EODTradingStrategyTest() {
     }
@@ -79,6 +80,7 @@ public class EODTradingStrategyTest {
         strategy.ibPort = ibPort;
         strategy.ibClientId = ibClientId;
         propFile = Paths.get( getClass().getResource("/eod.test.properties").toURI()).toString();
+        doReturn(mockReportGenerator).when(strategy).getReportGenerator(any(String.class));
     }
 
     @After
@@ -96,6 +98,8 @@ public class EODTradingStrategyTest {
 
         strategy.start(propFile);
 
+        
+        verify(mockIbClient).addOrderStatusListener(mockReportGenerator);
         verify(mockIbClient).subscribeLevel1(eq(new StockTicker("QQQ")), any(Level1QuoteListener.class));
         verify(mockIbClient).subscribeLevel1(eq(new StockTicker("SPY")), any(Level1QuoteListener.class));
         verify(mockIbClient).subscribeLevel1(eq(new StockTicker("DIA")), any(Level1QuoteListener.class));
@@ -320,6 +324,7 @@ public class EODTradingStrategyTest {
         assertEquals(2, strategy.longShortPairMap.size());
         assertEquals(new StockTicker("SPY"), strategy.longShortPairMap.get(new StockTicker("QQQ")));
         assertEquals(new StockTicker("IWM"), strategy.longShortPairMap.get(new StockTicker("DIA")));
+        assertEquals("/some/test/dir/", strategy.strategyDirectory);
     }
     
     @Test

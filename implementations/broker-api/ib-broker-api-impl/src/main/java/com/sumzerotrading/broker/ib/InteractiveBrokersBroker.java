@@ -423,7 +423,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     }
 
     protected String getDirName() {
-        return System.getProperty("user.dir") + "/" + "ib-order-management/";
+        return System.getProperty("user.dir") + "/" + "ib-order-management/client-" + ibSocket.getClientId() + "/";
     }
 
     protected void queueOrder(TradeOrder order) {

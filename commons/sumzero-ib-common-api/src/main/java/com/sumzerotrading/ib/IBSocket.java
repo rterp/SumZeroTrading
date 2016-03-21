@@ -32,11 +32,13 @@ public class IBSocket {
     
     protected IBConnectionInterface connection;
     protected EClientSocket clientSocket;
+    protected int clientId;
     protected boolean connected = false;
 
     public IBSocket(IBConnectionInterface connection, EClientSocket clientSocket) {
         this.connection = connection;
         this.clientSocket = clientSocket;
+        clientId = connection.getClientId();
     }
 
     public IBConnectionInterface getConnection() {
@@ -93,6 +95,11 @@ public class IBSocket {
             clientSocket.eConnect(connection.getHost(), connection.getPort(), connection.getClientId() );
         }
     }
+
+    public int getClientId() {
+        return clientId;
+    }
+    
     
     
     @Override
