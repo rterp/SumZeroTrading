@@ -37,16 +37,13 @@ public class ReportGenerator implements IReportGenerator {
     protected String outputFile;
     protected String outputDir;
     protected String partialDir;
-    protected ObjectMapper mapper = new ObjectMapper();
     
 
     //For unit tests
     protected ReportGenerator() {
-        configureMapper();
     }
 
     public ReportGenerator(String dir) {
-        configureMapper();
         StringBuilder sb = new StringBuilder();
         sb.append(dir);
         if( ! dir.endsWith("/") ) {
@@ -73,6 +70,14 @@ public class ReportGenerator implements IReportGenerator {
         
         logger.info( "Created new Report Generator with output dir: " + outputDir );
         logger.info( "...and partialDir: " + partialDir);
+        
+        try {
+            logger.info( "Loading partial round trips..." );
+            loadPartialRoundTrips();
+            logger.info( "Round Trips loaded");
+        } catch( IOException ex ) {
+            throw new IllegalStateException(ex);
+        }
         
     }
     
@@ -122,21 +127,23 @@ public class ReportGenerator implements IReportGenerator {
             }
             roundTrip.addTradeReference(order, line);
             if (roundTrip.isComplete()) {
-                writeRoundTripToFile(roundTrip);
-                roundTripMap.remove(line.getCorrelationId());
+                try {
+                    writeRoundTripToFile(roundTrip);
+                    deletePartial(roundTrip.getCorrelationId());
+                    roundTripMap.remove(line.getCorrelationId());
+                } catch( IOException ex ) {
+                    throw new IllegalStateException(ex);
+                }
             } else {
-                throw new IllegalStateException("Write this transaction to a temp file");
+                try {
+                    savePartial(line.getCorrelationId(), roundTrip);
+                } catch( IOException ex ) {
+                    throw new IllegalStateException(ex);
+                }
             }
         }
     }
     
-    protected final void configureMapper() {
-        mapper.setVisibilityChecker(mapper.getSerializationConfig().getDefaultVisibilityChecker()
-                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
-    }
 
     protected synchronized void writeRoundTripToFile(RoundTrip roundTrip) {
         String resultString = roundTrip.getResults() + "\n";
