@@ -117,6 +117,7 @@ public class ReportGenerator implements IReportGenerator {
     
     @Override
     public void orderEvent(OrderEvent event) {
+        logger.info("Received order event: " + event);
         TradeOrder order = event.getOrder();
         if (order.getCurrentStatus() == Status.FILLED) {
             TradeReferenceLine line = getTradeReferenceLine(order.getReference());

@@ -5,6 +5,7 @@
  */
 package com.sumzerotrading.eod.trading.strategy;
 
+import com.sumzerotrading.broker.order.TradeOrder;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +16,7 @@ import java.util.Properties;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -66,6 +68,21 @@ public class EODSystemPropertiesTest {
         
     }
     
+    
+    @Test
+    public void testGetOrderType() {
+        assertEquals( TradeOrder.Type.MARKET, systemProps.getOrderType("MKT") );
+        assertEquals( TradeOrder.Type.MARKET_ON_CLOSE, systemProps.getOrderType("MOC") );
+        
+        try {
+            systemProps.getOrderType("foo");
+            fail();
+        } catch( IllegalStateException ex ) {
+            //this should happen
+        }
+    }
+    
+    
     @Test
     public void testParseProps() {
         Map<String,String> expectedMap = new HashMap<>();
@@ -85,6 +102,7 @@ public class EODSystemPropertiesTest {
         props.setProperty("foo", "bar");
         props.setProperty("pair.2", "IWM:DIA");
         props.setProperty("strategy.directory", "/my/dir");
+        props.setProperty("order.type", "MOC");
         
         systemProps.parseProps(props);
         
@@ -95,6 +113,7 @@ public class EODSystemPropertiesTest {
         assertEquals("/my/dir", systemProps.getStrategyDirectory());
         assertEquals(LocalTime.of(5, 32, 44), systemProps.getStartTime());
         assertEquals(LocalTime.of(13,0), systemProps.getMarketCloseTime());
+        assertEquals(TradeOrder.Type.MARKET_ON_CLOSE, systemProps.getOrderType());
         assertEquals(expectedMap, systemProps.getLongShortTickerMap());
     }
     
@@ -126,6 +145,7 @@ public class EODSystemPropertiesTest {
         props.longShortTickerMap.put("QQQ", "SPY");
         props.longShortTickerMap.put("DIA", "IWM");
         props.strategyDirectory = "/some/test/dir/";
+        props.orderType = TradeOrder.Type.MARKET_ON_CLOSE;
         
         return props;
                 

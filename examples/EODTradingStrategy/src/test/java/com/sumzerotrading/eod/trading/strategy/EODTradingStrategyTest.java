@@ -79,6 +79,7 @@ public class EODTradingStrategyTest {
         strategy.ibHost = ibHost;
         strategy.ibPort = ibPort;
         strategy.ibClientId = ibClientId;
+        strategy.orderType = TradeOrder.Type.MARKET_ON_CLOSE;
         propFile = Paths.get( getClass().getResource("/eod.test.properties").toURI()).toString();
         doReturn(mockReportGenerator).when(strategy).getReportGenerator(any(String.class));
     }
@@ -124,23 +125,23 @@ public class EODTradingStrategyTest {
 
         TradeOrder expectedLongOrder = new TradeOrder("100", longTicker, longSize, TradeDirection.BUY);
         expectedLongOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
-        expectedLongOrder.setReference("EOD-Pair-Strategy:123:Entry:LongSide*");
+        expectedLongOrder.setReference("EOD-Pair-Strategy:123:Entry:Long*");
 
         TradeOrder expectedLongExitOrder = new TradeOrder("101", longTicker, longSize, TradeDirection.SELL);
         expectedLongExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
         expectedLongExitOrder.setGoodAfterTime(orderTime);
-        expectedLongExitOrder.setReference("EOD-Pair-Strategy:123:Exit:LongSide*");
+        expectedLongExitOrder.setReference("EOD-Pair-Strategy:123:Exit:Long*");
 
         expectedLongOrder.addChildOrder(expectedLongExitOrder);
 
         TradeOrder expectedShortOrder = new TradeOrder("102", shortTicker, shortSize, TradeDirection.SELL_SHORT);
         expectedShortOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
-        expectedShortOrder.setReference("EOD-Pair-Strategy:123:Entry:ShortSide*");
+        expectedShortOrder.setReference("EOD-Pair-Strategy:123:Entry:Short*");
 
         TradeOrder expectedShortExitOrder = new TradeOrder("103", shortTicker, shortSize, TradeDirection.BUY_TO_COVER);
         expectedShortExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
         expectedShortExitOrder.setGoodAfterTime(orderTime);
-        expectedShortExitOrder.setReference("EOD-Pair-Strategy:123:Exit:ShortSide*");
+        expectedShortExitOrder.setReference("EOD-Pair-Strategy:123:Exit:Short*");
 
         expectedShortOrder.addChildOrder(expectedShortExitOrder);
 
@@ -325,6 +326,7 @@ public class EODTradingStrategyTest {
         assertEquals(new StockTicker("SPY"), strategy.longShortPairMap.get(new StockTicker("QQQ")));
         assertEquals(new StockTicker("IWM"), strategy.longShortPairMap.get(new StockTicker("DIA")));
         assertEquals("/some/test/dir/", strategy.strategyDirectory);
+        assertEquals(TradeOrder.Type.MARKET_ON_CLOSE, strategy.orderType);
     }
     
     @Test

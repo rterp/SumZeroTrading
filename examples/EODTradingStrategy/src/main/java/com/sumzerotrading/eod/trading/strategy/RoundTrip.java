@@ -50,6 +50,7 @@ public class RoundTrip implements Serializable {
         //2016-03-20T12:40:00PST,QQQ,200,100.23,1.45,2016-03-21T12:40:00PST,
         StringBuilder sb = new StringBuilder();
         sb.append(longEntry.getOrderEntryTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
+                .append("Long,")
                 .append(longEntry.getTicker().getSymbol()).append(",")
                 .append(longEntry.getSize()).append(",")
                 .append(longEntry.getFilledPrice()).append(",")
@@ -59,6 +60,7 @@ public class RoundTrip implements Serializable {
                 .append(longExit.getFilledPrice()).append(",")
                 //long exit commissions
                 .append(0).append(",")
+                .append("Short,")
                 .append(shortEntry.getTicker().getSymbol()).append(",")
                 .append(shortEntry.getSize()).append(",")
                 .append(shortEntry.getFilledPrice()).append(",")

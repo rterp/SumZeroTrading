@@ -119,7 +119,7 @@ public class RoundTripTest {
     @Test
     public void testGetResults() {
         StockTicker shortTicker = new StockTicker("SPY");
-        String expected = "2016-03-03T05:30:45,QQQ,100,50.43,0,2016-03-04T12:45:00,51.46,0,SPY,50,1.23,0,2.34,0";
+        String expected = "2016-03-03T05:30:45,Long,QQQ,100,50.43,0,2016-03-04T12:45:00,51.46,0,Short,SPY,50,1.23,0,2.34,0";
         ZonedDateTime entryDate = ZonedDateTime.of(2016, 3, 3, 5, 30, 45, 0, ZoneId.systemDefault());
         ZonedDateTime exitDate =ZonedDateTime.of(2016, 3, 4, 12, 45, 00, 0, ZoneId.systemDefault());
         

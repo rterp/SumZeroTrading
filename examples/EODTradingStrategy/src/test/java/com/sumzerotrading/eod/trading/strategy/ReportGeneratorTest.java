@@ -227,7 +227,7 @@ public class ReportGeneratorTest {
     public void testWriteRoundTrip() throws Exception {
         Path path = Files.createTempFile("ReportGeneratorUnitTest", ".txt");
         reportGenerator.outputFile = path.toString();
-        String expected = "2016-03-19T07:01:10,ABC,100,100.23,0,2016-03-20T06:01:10,101.23,0,XYZ,50,250.34,0,251.34,0";
+        String expected = "2016-03-19T07:01:10,Long,ABC,100,100.23,0,2016-03-20T06:01:10,101.23,0,Short,XYZ,50,250.34,0,251.34,0";
 
         Ticker longTicker = new StockTicker("ABC");
         Ticker shortTicker = new StockTicker("XYZ");

@@ -45,6 +45,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected int ibPort;
     protected int ibClientId;
     protected String strategyDirectory;
+    protected TradeOrder.Type orderType;
 
     protected int orderSizeInDollars;
     protected boolean ordersPlaced = false;
@@ -97,26 +98,26 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
         logger.info("Placing short orders for: " + shortSize + " shares of: " + shortTicker );
 
         TradeOrder longOrder = new TradeOrder(ibClient.getNextOrderId(), longTicker, longSize, TradeDirection.BUY);
-        longOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
-        longOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Entry:LongSide*");
+        longOrder.setType(orderType);
+        longOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Entry:Long*");
         
 
         TradeOrder longExitOrder = new TradeOrder(ibClient.getNextOrderId(), longTicker, longSize, TradeDirection.SELL);
         longExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
         longExitOrder.setGoodAfterTime(getNextBusinessDay(lastReportedTime));
-        longExitOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
+        longExitOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Exit:Long*");
         
         logger.info( "Placing long orders: " + longOrder);
         longOrder.addChildOrder(longExitOrder);
                                                                                                                         
         TradeOrder shortOrder = new TradeOrder(ibClient.getNextOrderId(), shortTicker, shortSize, TradeDirection.SELL_SHORT);
-        shortOrder.setType(TradeOrder.Type.MARKET_ON_CLOSE);
-        shortOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Entry:ShortSide*");
+        shortOrder.setType(orderType);
+        shortOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Entry:Short*");
 
         TradeOrder shortExitOrder = new TradeOrder(ibClient.getNextOrderId(), shortTicker, shortSize, TradeDirection.BUY_TO_COVER);
         shortExitOrder.setType(TradeOrder.Type.MARKET_ON_OPEN);
         shortExitOrder.setGoodAfterTime(getNextBusinessDay(lastReportedTime));
-        shortExitOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Exit:ShortSide*");
+        shortExitOrder.setReference("EOD-Pair-Strategy:" + correlationId + ":Exit:Short*");
 
         logger.info( "Placing short orders: " + shortOrder);
         shortOrder.addChildOrder(shortExitOrder);
@@ -133,7 +134,6 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
 
     @Override
     public void quoteRecieved(ILevel1Quote quote) {
-        logger.debug("Received quote: " + quote);
         if (quote.getType() == QuoteType.LAST) {
             lastPriceMap.put(quote.getTicker(), quote.getValue().doubleValue());
             if (!allPricesInitialized) {
@@ -196,6 +196,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             tickers.keySet().stream().forEach((ticker) -> {
                 longShortPairMap.put( new StockTicker(ticker), new StockTicker(tickers.get(ticker)));
             });
+            orderType = props.getOrderType();
             
             
             
@@ -252,8 +253,10 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     
     
     public static void main(String[] args) {
+        //String propFile = args[0];
+        String propFile = "/Users/RobTerpilowski/Downloads/ZoiData/EodTest/eod.props";
         EODTradingStrategy strategy = new EODTradingStrategy();
-        strategy.start(args[0]);
+        strategy.start(propFile);
     }
 
 }
