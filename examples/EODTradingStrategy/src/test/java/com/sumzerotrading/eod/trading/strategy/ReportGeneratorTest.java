@@ -68,7 +68,13 @@ public class ReportGeneratorTest {
     public void setUp() throws Exception {
         reportGenerator = spy(ReportGenerator.class);
         order = new TradeOrder("123", new StockTicker("QQQ"), 100, TradeDirection.BUY);
-        tmpDir = System.getProperty("java.io.tmpdir") + "rg-test/";
+        String systemTmpDir = System.getProperty("java.io.tmpdir");
+        if(! systemTmpDir.endsWith("/")) {
+            systemTmpDir += "/";
+        }
+        
+        System.out.println("System tmp dir is: " + systemTmpDir);
+        tmpDir = systemTmpDir + "rg-test/";
         partialDir = tmpDir + "partial/";
         FileUtils.deleteDirectory(new File(tmpDir));
     }
