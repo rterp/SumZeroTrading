@@ -280,8 +280,8 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         try {
             return brokerTimeQueue.poll(2, TimeUnit.SECONDS);
         } catch (InterruptedException ex) {
+            logger.error(directory);
             System.out.println("Time Out waiting to get current time from broker, returning local current time");
-            //logger.error("Time Out waiting to get current time from broker, returning local current time");
             return ZonedDateTime.now();
         }
     }

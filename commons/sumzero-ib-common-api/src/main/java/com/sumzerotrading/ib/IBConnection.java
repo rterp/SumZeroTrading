@@ -36,7 +36,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-//import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -44,7 +45,9 @@ import java.util.List;
  */
 public class IBConnection implements IBConnectionInterface {
     
-    private static IBConnectionInterface connection = null;
+
+    protected Logger logger = LoggerFactory.getLogger(IBConnection.class);
+    protected static IBConnectionInterface connection = null;
     
     protected List<TickListener> tickListeners = new ArrayList<TickListener>();
     protected List<MarketDepthListener> marketDepthListeners = new ArrayList<MarketDepthListener>();
@@ -79,63 +82,76 @@ public class IBConnection implements IBConnectionInterface {
         fireContractDetailsEvent(contractDetails);
     }
     
+    @Override
     public void currentTime(long time) {
         fireTimeEvent(ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()));
     }
     
+    @Override
     public void execDetails(int orderId, Contract contract, Execution execution) {
-        System.out.println("Exec details called: " + execution);
+        logger.debug("Exec details called: " + execution);
         fireExecDetails(orderId, contract, execution);
     }
     
+    @Override
     public void historicalData(int reqId, String date, double open, double high, double low, double close, int volume, int count, double WAP, boolean hasGaps) {
         fireHistoricalDataEvent(reqId, date, open, high, low, close, volume, count, WAP, hasGaps);
     }
     
+    @Override
     public void managedAccounts(String accountsList) {
         //Do nothing for now.
     }
     
+    @Override
     public void nextValidId(int orderId) {
         fireNextOrderIdEvent(orderId);
     }
     
+    @Override
     public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
-        System.out.println("Open Order Called: " + orderState);
+        logger.debug("Open Order Called: " + orderState);
         fireOpenOrderEvent(orderId, contract, order, orderState);
     }
     
+    @Override
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
-        System.out.println("Order status called: " + status);
+        logger.debug("Order status called: " + status);
         fireOrderStatusEvent(orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
     }
     
+    @Override
     public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
         //Do nothing for now.
     }
     
+    @Override
     public void receiveFA(int faDataType, String xml) {
         //Do nothing for now.
     }
     
+    @Override
     public void scannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {
         //Do nothing for now.
     }
     
+    @Override
     public void scannerDataEnd(int reqId) {
         //Do nothing for now.
     }
     
+    @Override
     public void scannerParameters(String xml) {
         //Do nothing for now.
     }
     
+    @Override
     public void tickEFP(int tickerId, int tickType, double basisPoints, String formattedBasisPoints, double impliedFuture, int holdDays, String futureExpiry, double dividendImpact, double dividendsToExpiry) {
         //Do nothing for now.
     }
     
+    @Override
     public void tickGeneric(int tickerId, int tickType, double value) {
-        System.out.println(" ");
         //Do nothing for now.
     }
     
@@ -143,6 +159,7 @@ public class IBConnection implements IBConnectionInterface {
         //Do nothing for now.
     }
     
+    @Override
     public void tickPrice(int tickerId, int field, double price, int canAutoExecute) {
         synchronized (tickListeners) {
             for (TickListener listener : tickListeners) {
@@ -151,6 +168,7 @@ public class IBConnection implements IBConnectionInterface {
         }
     }
     
+    @Override
     public void tickSize(int tickerId, int field, int size) {
         synchronized (tickListeners) {
             for (TickListener listener : tickListeners) {
@@ -159,50 +177,60 @@ public class IBConnection implements IBConnectionInterface {
         }
     }
     
+    @Override
     public void tickString(int tickerId, int tickType, String value) {
-        System.out.println("");
     }
     
+    @Override
     public void updateAccountTime(String timeStamp) {
         //Do nothing for now.
     }
     
+    @Override
     public void updateAccountValue(String key, String value, String currency, String accountName) {
         //Do nothing for now.
     }
     
+    @Override
     public void updateMktDepth(int tickerId, int position, int operation, int side, double price, int size) {
         fireMarketDepthEvent(tickerId, position, operation, side, price, size);
     }
     
+    @Override
     public void updateMktDepthL2(int tickerId, int position, String marketMaker, int operation, int side, double price, int size) {
         fireMarketDepth2Event(tickerId, position, marketMaker, operation, side, price, size);
     }
     
+    @Override
     public void updateNewsBulletin(int msgId, int msgType, String message, String origExchange) {
         //Do nothing for now.
     }
     
+    @Override
     public void updatePortfolio(Contract contract, int position, double marketPrice, double marketValue, double averageCost, double unrealizedPNL, double realizedPNL, String accountName) {
         //Do nothing for now.
     }
     
+    @Override
     public void connectionClosed() {
         //Do nothing for now.
     }
     
+    @Override
     public void error(Exception e) {
-        e.printStackTrace();
+        logger.error(e.getMessage(), e);
         fireErrorEvent(e);
     }
     
+    @Override
     public void error(String str) {
-        System.out.println("Error: " + str);
+        logger.error(str);
         fireErrorEvent(str);
     }
     
+    @Override
     public void error(int id, int errorCode, String errorMsg) {
-        System.out.println("Error: " + errorMsg + " Code: " + errorCode);
+        logger.error( "Broker Error: ID: " + id + " ErrorCode: " + errorCode + " ErrorMessage: " + errorMsg );
         fireErrorEvent(id, errorCode, errorMsg);
     }
 
@@ -288,7 +316,7 @@ public class IBConnection implements IBConnectionInterface {
 
     @Override
     public void verifyMessageAPI(String apiData) {
-        System.out.println("API data: " + apiData);
+        logger.info("API data: " + apiData);
         //not implemented
     }
 

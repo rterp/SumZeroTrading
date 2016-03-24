@@ -30,13 +30,13 @@ import com.sumzerotrading.ib.ContractBuilderFactory;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
 import com.sumzerotrading.ib.IbUtils;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
-//import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -44,6 +44,7 @@ import java.util.concurrent.SynchronousQueue;
  */
 public class IBHistoricalDataProvider implements IHistoricalDataProvider, HistoricalDataListener {
 
+    protected Logger logger = LoggerFactory.getLogger(IBHistoricalDataProvider.class);
     protected EClientSocket ibConnection;
     protected IBConnectionInterface callbackInterface;
     protected IBSocket ibSocket;
@@ -121,7 +122,7 @@ public class IBHistoricalDataProvider implements IHistoricalDataProvider, Histor
                 Date tempDate = processor.getDateFormatter().parse(date);
                 calendarDate.setTime(tempDate);
             } else {
-                System.out.println("Unable to find Historical Data Processor for requestId: " + reqId);
+                logger.error("Unable to find Historical Data Processor for requestId: " + reqId);
             }
         } catch (ParseException ex) {
             throw new IllegalStateException(ex);
@@ -129,8 +130,7 @@ public class IBHistoricalDataProvider implements IHistoricalDataProvider, Histor
         if (processor != null) {
             processor.addHistoricalData(new HistoricalData(reqId, calendarDate, open, high, low, close, volume, count, WAP, hasGaps));
         } else {
-            // logger.error("Unable to find Historical Data Processor for requestId: " + reqId);
-            System.out.println("Unable to find Historical Data Processor for requestId: " + reqId);
+            logger.error("Unable to find Historical Data Processor for requestId: " + reqId);
         }
     }
 }

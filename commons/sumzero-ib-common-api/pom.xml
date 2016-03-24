@@ -88,5 +88,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.12</version>
+    </dependency>
   </dependencies>
 </project>

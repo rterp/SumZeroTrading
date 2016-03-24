@@ -41,7 +41,8 @@ import java.util.Properties;
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-//import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -49,6 +50,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDepthListener {
 
+    protected Logger logger = LoggerFactory.getLogger(IBQuoteEngine.class);
     protected IBDataQueue dataQueue;
     protected IBSocket ibSocket;
     protected IBConnectionInterface callbackInterface;
@@ -66,7 +68,6 @@ public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDe
     protected IBQuoteProcessor level1QuoteProcessor;
     protected IBQuoteProcessor level2QuoteProcessor;
     protected IBQuoteProcessor errorQuoteProcessor;
-    //  protected Logger logger = Logger.getLogger(IBQuoteEngine.class);
     protected boolean started = false;
     protected String name = "";
 
@@ -103,12 +104,10 @@ public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDe
             try {
                 level1QuoteQueue.put(level1Data);
             } catch (InterruptedException ex) {
-                //logger.error(ex, ex);
-                ex.printStackTrace();
+                logger.error(ex.getMessage(), ex);
             }
         } else {
-            //logger.error("Ticker with id: " + tickerId + " not found");
-            System.out.println("Ticker with id: " + tickerId + " not found");
+            logger.error("Ticker with id: " + tickerId + " not found");
         }
     }
 
@@ -119,17 +118,15 @@ public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDe
             try {
                 level2QuoteQueue.put(data);
             } catch (InterruptedException ex) {
-                //logger.error(ex, ex);
-                ex.printStackTrace();
+                logger.error(ex.getMessage(), ex);
             }
         } else {
-            //logger.error("Ticker with id: " + tickerId + " not found");
-            System.out.println("Ticker with id: " + tickerId + " not found");
+            logger.error("Ticker with id: " + tickerId + " not found");
         }
     }
 
     public void updateMktDepth2(int tickerId, int position, String marketMaker, int operation, int side, double price, int size) {
-        System.out.println("");
+
     }
 
     public void error(Exception e) {
@@ -148,8 +145,7 @@ public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDe
         try {
             quoteErrorQueue.put(error);
         } catch (Exception ex) {
-            //logger.error(ex, ex);
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
         }
     }
 
