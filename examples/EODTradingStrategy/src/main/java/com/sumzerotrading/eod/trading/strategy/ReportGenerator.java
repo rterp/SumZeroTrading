@@ -91,6 +91,7 @@ public class ReportGenerator implements IReportGenerator {
             RoundTrip trip;
             try {
                 trip = (RoundTrip) input.readObject();
+                logger.info("Loading round trip: " + trip );
                 roundTripMap.put(trip.getCorrelationId(), trip);
             } catch (ClassNotFoundException ex) {
                 throw new IllegalStateException(ex);
@@ -102,6 +103,7 @@ public class ReportGenerator implements IReportGenerator {
     
     @Override
     public void savePartial(String correlationId, RoundTrip trip ) throws IOException {
+        logger.info("Saving partial round trip: " + trip);
         String filename = partialDir + correlationId + ".ser";
         ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(filename));
         output.writeObject(trip);
@@ -110,6 +112,7 @@ public class ReportGenerator implements IReportGenerator {
     
     @Override
     public void deletePartial(String correlationId) throws IOException {
+        logger.info( "Deleting partial round trip with correlation ID: "  + correlationId );
         String filename = partialDir + correlationId + ".ser";
         Files.deleteIfExists(Paths.get(filename));
     }
@@ -147,6 +150,7 @@ public class ReportGenerator implements IReportGenerator {
     
 
     protected synchronized void writeRoundTripToFile(RoundTrip roundTrip) {
+        logger.info("Writing round trip to result file: " + roundTrip);
         String resultString = roundTrip.getResults() + "\n";
         try {
             Files.write(Paths.get(outputFile), resultString.getBytes(), StandardOpenOption.APPEND);
