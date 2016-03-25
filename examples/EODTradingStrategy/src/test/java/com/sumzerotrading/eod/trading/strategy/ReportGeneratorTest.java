@@ -29,6 +29,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Before;
@@ -69,10 +70,10 @@ public class ReportGeneratorTest {
         reportGenerator = spy(ReportGenerator.class);
         order = new TradeOrder("123", new StockTicker("QQQ"), 100, TradeDirection.BUY);
         String systemTmpDir = System.getProperty("java.io.tmpdir");
-        if(! systemTmpDir.endsWith("/")) {
+        if (!systemTmpDir.endsWith("/")) {
             systemTmpDir += "/";
         }
-        
+
         System.out.println("System tmp dir is: " + systemTmpDir);
         tmpDir = systemTmpDir + "rg-test/";
         partialDir = tmpDir + "partial/";
@@ -277,6 +278,78 @@ public class ReportGeneratorTest {
         assertEquals(expected, lines.get(0));
 
         Files.deleteIfExists(path);
+
+    }
+
+    @Test
+    public void testReportGeneratorEndToEnd() throws Exception {
+        StockTicker longTicker = new StockTicker("ABC");
+        StockTicker shortTicker = new StockTicker("XYZ");
+
+        ZonedDateTime entryOrderTime = ZonedDateTime.of(2016, 3, 25, 6, 18, 35, 0, ZoneId.systemDefault());
+        ZonedDateTime exitOrderTime = ZonedDateTime.of(2016, 3, 25, 6, 19, 35, 0, ZoneId.systemDefault());
+
+        String directory = System.getProperty("java.io.tmpdir");
+        if (!directory.endsWith("/")) {
+            directory += "/";
+        }
+        Path reportPath = Paths.get(directory + "report.csv");
+        Files.deleteIfExists(reportPath);
+        System.out.println("Creating directory at: " + directory);
+        ReportGenerator generator = new ReportGenerator(directory);
+
+        TradeOrder longEntryOrder = new TradeOrder("123", longTicker, 100, TradeDirection.BUY);
+        longEntryOrder.setFilledPrice(100.00);
+        longEntryOrder.setReference("EOD-Pair-Strategy:guid-123:Entry:Long*");
+        longEntryOrder.setCurrentStatus(OrderStatus.Status.FILLED);
+        longEntryOrder.setOrderEntryTime(entryOrderTime);
+
+        TradeOrder shortEntryOrder = new TradeOrder("234", shortTicker, 50, TradeDirection.SELL);
+        shortEntryOrder.setFilledPrice(50.00);
+        shortEntryOrder.setReference("EOD-Pair-Strategy:guid-123:Entry:Short*");
+        shortEntryOrder.setCurrentStatus(OrderStatus.Status.FILLED);
+        shortEntryOrder.setOrderEntryTime(entryOrderTime);
+
+        generator.orderEvent(new OrderEvent(longEntryOrder, null));
+        assertFalse(Files.exists(reportPath));
+
+        generator.orderEvent(new OrderEvent(shortEntryOrder, null));
+        assertFalse(Files.exists(reportPath));
+
+        TradeOrder longExitOrder = new TradeOrder("1234", longTicker, 100, TradeDirection.SELL);
+        longExitOrder.setFilledPrice(105.00);
+        longExitOrder.setReference("EOD-Pair-Strategy:guid-123:Exit:Long*");
+        longExitOrder.setCurrentStatus(OrderStatus.Status.FILLED);
+        longExitOrder.setOrderEntryTime(exitOrderTime);
+
+        TradeOrder shortExitOrder = new TradeOrder("2345", shortTicker, 50, TradeDirection.BUY);
+        shortExitOrder.setFilledPrice(40.00);
+        shortExitOrder.setReference("EOD-Pair-Strategy:guid-123:Exit:Short*");
+        shortExitOrder.setCurrentStatus(OrderStatus.Status.FILLED);
+        shortExitOrder.setOrderEntryTime(exitOrderTime);
+
+        generator.orderEvent(new OrderEvent(longExitOrder, null));
+        assertFalse(Files.exists(reportPath));
+
+        generator.orderEvent(new OrderEvent(shortExitOrder, null));
+        assertTrue(Files.exists(reportPath));
+
+        List<String> lines = Files.readAllLines(reportPath);
+        assertEquals(1, lines.size());
+
+        String line = lines.get(0);
+        String expected = "2016-03-25T06:18:35,Long,ABC,100,100.0,0,2016-03-25T06:19:35,105.0,0,Short,XYZ,50,50.0,0,40.0,0";
+        assertEquals(expected, line);
+
+        generator.orderEvent(new OrderEvent(longEntryOrder, null));
+        generator.orderEvent(new OrderEvent(longExitOrder, null));
+        generator.orderEvent(new OrderEvent(shortEntryOrder, null));
+        generator.orderEvent(new OrderEvent(shortExitOrder, null));
+
+        lines = Files.readAllLines(reportPath);
+        assertEquals(2, lines.size());
+        assertEquals(expected, lines.get(0));
+        assertEquals(expected, lines.get(1));
 
     }
 

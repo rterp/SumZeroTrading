@@ -153,7 +153,7 @@ public class ReportGenerator implements IReportGenerator {
         logger.info("Writing round trip to result file: " + roundTrip);
         String resultString = roundTrip.getResults() + "\n";
         try {
-            Files.write(Paths.get(outputFile), resultString.getBytes(), StandardOpenOption.APPEND);
+            Files.write(Paths.get(outputFile), resultString.getBytes(),  StandardOpenOption.APPEND, StandardOpenOption.CREATE);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
