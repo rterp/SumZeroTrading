@@ -27,15 +27,20 @@ import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TradingExample {
 
-    InteractiveBrokersClientInterface ibClient;
+    protected InteractiveBrokersClientInterface ibClient;
+    protected Logger logger = LoggerFactory.getLogger(TradingExample.class);
 
     public void start() {
         //Connect to the Interactive Brokers TWS Client
+        logger.debug("Connecting to IB Client");
         ibClient = InteractiveBrokersClient.getInstance("localhost", 7999, 1);
         ibClient.connect();
+        logger.debug("IB client connected" );
     }
 
     public void placeFuturesOrder() {
@@ -63,7 +68,7 @@ public class TradingExample {
         InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 7999, 1);
         ibClient.connect();
 
-        StockTicker amazonTicker = new StockTicker("AMZN");
+        StockTicker amazonTicker = new StockTicker("123");
         String orderId = ibClient.getNextOrderId();
         int shares = 500;
 
@@ -91,6 +96,6 @@ public class TradingExample {
     public static void main(String[] args) throws Exception {
         TradingExample example = new TradingExample();
         example.start();
-        example.placeFuturesOrder();
+        example.placeEquityOrder();
     }
 }

@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Rob Terpilowski
  */
-public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDepthListener {
+public class IBQuoteEngine extends AbstractIBQuoteEngine {
 
     protected Logger logger = LoggerFactory.getLogger(IBQuoteEngine.class);
     protected IBDataQueue dataQueue;
@@ -75,9 +75,9 @@ public class IBQuoteEngine extends QuoteEngine implements TickListener, MarketDe
         this.ibSocket = ibSocket;
 
         callbackInterface = ibSocket.getConnection();
-        callbackInterface.addTickListener(this);
-        callbackInterface.addMarketDepthListener(this);
+        callbackInterface.addIbConnectionDelegate(this);
         ibConnection = ibSocket.getClientSocket();
+        
         level1QuoteProcessor = new IBLevel1QuoteProcessor(level1QuoteQueue, this);
         level2QuoteProcessor = new IBLevel2QuoteProcessor(level2QuoteQueue, this);
         errorQuoteProcessor = new IBQuoteErrorProcessor(quoteErrorQueue, this);

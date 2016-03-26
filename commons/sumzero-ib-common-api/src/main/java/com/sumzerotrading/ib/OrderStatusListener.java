@@ -21,10 +21,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
+import com.ib.client.CommissionReport;
 import com.ib.client.Contract;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
-import com.ib.client.Execution;
 
 /**
  *
@@ -39,6 +39,7 @@ public interface OrderStatusListener extends ErrorListener {
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld);
 
     public void execDetails(int orderId, Contract contract, com.ib.client.Execution execution);
+    
     
     
 }

@@ -91,12 +91,6 @@ public class IBQuoteEngineTest {
         final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
 
 //        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        mockery.assertIsSatisfied();
@@ -116,12 +110,7 @@ public class IBQuoteEngineTest {
         final int canAutoExecute = 1;
         final Ticker ticker = new StockTicker("LUT");
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+ 
 
 //        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        
@@ -147,18 +136,8 @@ public class IBQuoteEngineTest {
         final double price = 1.23;
         final int canAutoExecute = 1;
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
 
-//        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
-//        
-//        ibQuoteEngine.tickPrice(tickerId, field, price, canAutoExecute);
-//        assertEquals( 0, ibQuoteEngine.level1QuoteQueue.size() );
-//        mockery.assertIsSatisfied();
+
         fail();
     }
 
@@ -175,12 +154,7 @@ public class IBQuoteEngineTest {
         final double price = 0;
         final Ticker ticker = new StockTicker("LUT");
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+
 
 //        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        
@@ -205,12 +179,7 @@ public class IBQuoteEngineTest {
         final int field = 99;
         final int size = 5;
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+
 
 //        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        
@@ -234,12 +203,7 @@ public class IBQuoteEngineTest {
         final double price = 4.00;
         Ticker ticker = new StockTicker("ABC");
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+
 
 //        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        ibQuoteEngine.idToTickerMap.put(tickerId, ticker);
@@ -265,12 +229,7 @@ public class IBQuoteEngineTest {
         String message = "foo";
         QuoteError quoteError = new QuoteError(id, code, message);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+
 
 //        
 //        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
@@ -288,12 +247,6 @@ public class IBQuoteEngineTest {
         final String errorString = "Bogus Error";
         QuoteError quoteError = new QuoteError(errorString);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
 
 //        
 //        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
@@ -313,12 +266,7 @@ public class IBQuoteEngineTest {
         Exception ex = new IllegalAccessException();
         QuoteError quoteError = new QuoteError(ex);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+
 
 //        
 //        IBQuoteEngine ibQuoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
@@ -343,8 +291,7 @@ public class IBQuoteEngineTest {
 
         mockery.checking(new Expectations() {
             {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
+                
                 one(mockSocketInterface).reqMktData(requestId + 1, contract, "", false, list);
             }
         });
@@ -368,12 +315,7 @@ public class IBQuoteEngineTest {
         final int requestId = 1;
         final Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+ 
 
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        quoteEngine.tickerMap.put(ticker, requestId);
@@ -418,8 +360,6 @@ public class IBQuoteEngineTest {
 
         mockery.checking(new Expectations() {
             {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
                 one(mockSocketInterface).cancelMktData(requestId);
             }
         });
@@ -446,14 +386,6 @@ public class IBQuoteEngineTest {
         final int requestId = 1;
         final Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-
-            }
-        });
-
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        quoteEngine.unsubscribeLevel1(ticker, mockQuoteListener);
 //
@@ -474,13 +406,7 @@ public class IBQuoteEngineTest {
         final int requestId = 1;
         final Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-                one(mockSocketInterface).cancelMktData(requestId);
-            }
-        });
+
 //        
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        quoteEngine.getLevel1ListenerMap().put(ticker, new ArrayList<Level1QuoteListener>() );
@@ -504,13 +430,7 @@ public class IBQuoteEngineTest {
         final int requestId = 1;
         final Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
-
+  
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        List<Level1QuoteListener> listenerList = new ArrayList<Level1QuoteListener>();
 //        quoteEngine.tickerMap.put(ticker, requestId);
@@ -535,12 +455,7 @@ public class IBQuoteEngineTest {
         final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+  
 
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        try {
@@ -559,12 +474,7 @@ public class IBQuoteEngineTest {
         final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+
 
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        try {
@@ -583,13 +493,7 @@ public class IBQuoteEngineTest {
         final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
-//        
+
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        quoteEngine.startEngine();
 //        assertTrue( quoteEngine.level1QuoteProcessor.isRunning() );
@@ -606,12 +510,7 @@ public class IBQuoteEngineTest {
         final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-            }
-        });
+
 
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        try {
@@ -630,14 +529,7 @@ public class IBQuoteEngineTest {
         final EClientSocket mockSocketInterface = mockery.mock(EClientSocket.class);
         final IBConnectionInterface mockConnectionInterface = mockery.mock(IBConnectionInterface.class);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockConnectionInterface).addTickListener(with(any(IBQuoteEngine.class)));
-                one(mockConnectionInterface).addMarketDepthListener(with(any(IBQuoteEngine.class)));
-                one(mockSocketInterface).isConnected();
-                will(returnValue(true));
-            }
-        });
+
 
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        assertTrue( quoteEngine.started() );

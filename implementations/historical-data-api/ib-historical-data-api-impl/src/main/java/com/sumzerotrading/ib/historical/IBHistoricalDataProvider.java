@@ -26,6 +26,7 @@ import com.ib.client.EClientSocket;
 import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
+import com.sumzerotrading.ib.BaseIBConnectionDelegate;
 import com.sumzerotrading.ib.ContractBuilderFactory;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Rob Terpilowski
  */
-public class IBHistoricalDataProvider implements IHistoricalDataProvider, HistoricalDataListener {
+public class IBHistoricalDataProvider extends BaseIBConnectionDelegate  implements IHistoricalDataProvider {
 
     protected Logger logger = LoggerFactory.getLogger(IBHistoricalDataProvider.class);
     protected EClientSocket ibConnection;
@@ -58,7 +59,7 @@ public class IBHistoricalDataProvider implements IHistoricalDataProvider, Histor
         this.ibSocket = ibSocket;
         this.ibConnection = ibSocket.getClientSocket();
         this.callbackInterface = ibSocket.getConnection();
-        callbackInterface.addHistoricalDataListener(this);
+        callbackInterface.addIbConnectionDelegate(this);
     }
 
     @Override

@@ -19,6 +19,7 @@
  */
 package com.sumzerotrading.broker.ib;
 
+import com.ib.client.CommissionReport;
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.EClientSocket;
@@ -36,7 +37,9 @@ import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.ComboTicker;
 import com.sumzerotrading.data.InstrumentType;
 import com.sumzerotrading.data.Ticker;
+import com.sumzerotrading.ib.BaseIBConnectionDelegate;
 import com.sumzerotrading.ib.ContractBuilderFactory;
+import com.sumzerotrading.ib.IBConnection;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
 import com.sumzerotrading.ib.IbUtils;
@@ -61,7 +64,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +75,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Rob Terpilowski
  */
-public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, TimeListener, ContractDetailsListener {
+public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implements IBroker {
 
     protected static int contractRequestId = 1;
     protected static int executionRequestId = 1;
@@ -117,12 +119,12 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
             logger.error(ex.getMessage(), ex);
         }
         this.ibSocket = ibSocket;
+        
         orderEventMap = new PassiveExpiringMap<>(30, TimeUnit.SECONDS);
         callbackInterface = ibSocket.getConnection();
+        callbackInterface.addIbConnectionDelegate(this);
+        
         ibConnection = ibSocket.getClientSocket();
-        callbackInterface.addOrderStatusListener(this);
-        callbackInterface.addTimeListener(this);
-        callbackInterface.addContractDetailsListener(this);
         orderProcessor = new IBOrderEventProcessor(orderEventQueue, this);
         currencyOrderTimer = new Timer(true);
         currencyOrderTimer.schedule(getCurrencyOrderMonitor(), 0, 1000 * 60);
@@ -137,6 +139,10 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     public void removeTimeUpdateListener(TimeUpdatedListener listener) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    
+    
+
 
     @Override
     public boolean isConnected() {
@@ -165,6 +171,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
 
     @Override
     public void execDetails(int orderId, Contract contract, Execution execution) {
+        logger.info( "Execution details: orderId: " + orderId + " contract: " + contract + " Execution: "+ execution);
         //not currently implemented
     }
 
@@ -178,7 +185,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     }
 
     public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
-        //not currently implemented;
+        logger.info( "OpenOrder: " + orderId + " Contract: " + contract + " Order: " + order + " OrderState: " + orderState);
     }
 
     public void timeReceived(ZonedDateTime time) {
@@ -190,7 +197,7 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
     }
 
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
-
+        logger.info( "OrderStatus(): orderId: " + orderId + " Status: " + status + " filled: " + filled + " remaining: " + remaining + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId + " lastFillePrice: " + lastFillPrice + " clientId: " + clientId + " whyHeld: " + whyHeld);
         TradeOrder order = orderMap.get(Integer.toString(orderId));
 
         if (order == null) {
@@ -229,6 +236,15 @@ public class InteractiveBrokersBroker implements IBroker, OrderStatusListener, T
         }
     }
 
+    @Override
+    public void commissionReport(CommissionReport commissionReport) {
+        logger.info("CommssionReport(): " + commissionReport);
+    }
+
+    
+    
+    
+    
     public void addOrderEventListener(OrderEventListener listener) {
         synchronized (orderEventListeners) {
             orderEventListeners.add(listener);

@@ -65,22 +65,6 @@ public class IBConnectionTest {
         Exception ex = new NullPointerException();
         String errorString ="Error";
         
-        assertTrue( ibConnection.errorListeners.isEmpty() );
-        
-        ibConnection.addErrorListener(mockListener);
-        
-        assertEquals(1, ibConnection.errorListeners.size() );
-        
-        ibConnection.fireErrorEvent(ibConnection.errorListeners, ex );
-        
-        verify(mockListener).error(ex);
-        
-        ibConnection.fireErrorEvent(ibConnection.errorListeners, errorString);
-        verify(mockListener).error(errorString);
-        
-        ibConnection.removeErrorListener(mockListener);
-        assertTrue( ibConnection.errorListeners.isEmpty() );
-        
         
     }
 

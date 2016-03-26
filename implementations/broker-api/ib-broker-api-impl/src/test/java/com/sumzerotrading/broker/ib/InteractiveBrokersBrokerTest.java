@@ -72,13 +72,8 @@ public class InteractiveBrokersBrokerTest {
         InteractiveBrokersBroker.logger = mockLogger;
         broker  = new InteractiveBrokersBroker(mockIbSocket);
         broker.orderEventQueue = mockOrderEventQueue;
-        
-        
-        verify(mockConnectionInterface).addOrderStatusListener(broker);
-        verify(mockConnectionInterface).addTimeListener(broker);
-        verify(mockConnectionInterface).addContractDetailsListener(broker);
-        
-        
+         
+       
     }
     
     @After

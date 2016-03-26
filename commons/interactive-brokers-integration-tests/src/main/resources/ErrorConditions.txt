@@ -1,0 +1,80 @@
+Error conditions to check for
+
+
+################
+################
+Order held till shares are located.
+
+Server Version:76
+TWS Time at connection:20160326 09:21:08 PST
+2016-03-26 09:21:11 DEBUG TradingExample:43 - IB client connected
+2016-03-26 09:21:11 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2104 errorMessage: Market data farm connection is OK:ibdemo
+2016-03-26 09:21:11 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-26 09:21:12 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:5   errorCode:404 errorMessage: Order held while securities are located.
+2016-03-26 09:21:12 INFO  InteractiveBrokersBroker:188 - OpenOrder: 5 Contract: com.ib.client.Contract@221345e1 Order: com.ib.client.Order@5aab3417 OrderState: com.ib.client.OrderState@63732c65
+2016-03-26 09:21:12 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 5 Status: PreSubmitted filled: 0 remaining: 500 avgFillPrice: 0.0 permId: 176592615 parentId: 0 lastFillePrice: 0.0 clientId: 1 whyHeld: locate
+
+
+
+################
+################
+Market order with partial fills
+
+2016-03-26 09:17:27 DEBUG TradingExample:40 - Connecting to IB Client
+2016-03-26 09:17:27 ERROR InteractiveBrokersBroker:119 - 
+java.lang.NullPointerException
+	at com.sumzerotrading.broker.ib.InteractiveBrokersBroker.getDirName(InteractiveBrokersBroker.java:442)
+	at com.sumzerotrading.broker.ib.InteractiveBrokersBroker.createDir(InteractiveBrokersBroker.java:435)
+	at com.sumzerotrading.broker.ib.InteractiveBrokersBroker.loadOrderMaps(InteractiveBrokersBroker.java:423)
+	at com.sumzerotrading.broker.ib.InteractiveBrokersBroker.<init>(InteractiveBrokersBroker.java:117)
+	at com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient.<init>(InteractiveBrokersClient.java:80)
+	at com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient.getInstance(InteractiveBrokersClient.java:65)
+	at com.sumzerotrading.ib.example.trading.TradingExample.start(TradingExample.java:41)
+	at com.sumzerotrading.ib.example.trading.TradingExample.main(TradingExample.java:98)
+Server Version:76
+TWS Time at connection:20160326 09:17:24 PST
+2016-03-26 09:17:27 DEBUG TradingExample:43 - IB client connected
+2016-03-26 09:17:27 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2104 errorMessage: Market data farm connection is OK:ibdemo
+2016-03-26 09:17:27 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-26 09:17:27 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@4a00257f Order: com.ib.client.Order@4b5ba70 OrderState: com.ib.client.OrderState@284ccb41
+2016-03-26 09:17:27 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Submitted filled: 0 remaining: 500 avgFillPrice: 0.0 permId: 176592612 parentId: 0 lastFillePrice: 0.0 clientId: 1 whyHeld: null
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:174 - Execution details: orderId: -1 contract: com.ib.client.Contract@1f71604a Execution: com.ib.client.Execution@4146d0e3
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@63185c01 Order: com.ib.client.Order@777f1318 OrderState: com.ib.client.OrderState@4914dc
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Submitted filled: 200 remaining: 300 avgFillPrice: 548.96 permId: 176592612 parentId: 0 lastFillePrice: 548.96 clientId: 1 whyHeld: null
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:174 - Execution details: orderId: -1 contract: com.ib.client.Contract@15e5d5ce Execution: com.ib.client.Execution@7cb06a88
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@3262b866 Order: com.ib.client.Order@9924041 OrderState: com.ib.client.OrderState@76898fd1
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Submitted filled: 300 remaining: 200 avgFillPrice: 548.96 permId: 176592612 parentId: 0 lastFillePrice: 548.96 clientId: 1 whyHeld: null
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@22b413a Order: com.ib.client.Order@5c81cef3 OrderState: com.ib.client.OrderState@14f036bd
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Submitted filled: 300 remaining: 200 avgFillPrice: 548.96 permId: 176592612 parentId: 0 lastFillePrice: 548.96 clientId: 1 whyHeld: null
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:241 - CommssionReport(): com.ib.client.CommissionReport@b51734e
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@1a580a17 Order: com.ib.client.Order@13ce0069 OrderState: com.ib.client.OrderState@1305ca5d
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Submitted filled: 300 remaining: 200 avgFillPrice: 548.96 permId: 176592612 parentId: 0 lastFillePrice: 548.96 clientId: 1 whyHeld: null
+2016-03-26 09:17:28 INFO  InteractiveBrokersBroker:241 - CommssionReport(): com.ib.client.CommissionReport@54280477
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@1bb067be Order: com.ib.client.Order@61692b84 OrderState: com.ib.client.OrderState@75f68062
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Submitted filled: 300 remaining: 200 avgFillPrice: 548.96 permId: 176592612 parentId: 0 lastFillePrice: 548.96 clientId: 1 whyHeld: null
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:174 - Execution details: orderId: -1 contract: com.ib.client.Contract@682c3c72 Execution: com.ib.client.Execution@727eba23
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@33d7911d Order: com.ib.client.Order@3a91f4b9 OrderState: com.ib.client.OrderState@3db9ee6a
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Submitted filled: 400 remaining: 100 avgFillPrice: 548.97 permId: 176592612 parentId: 0 lastFillePrice: 549.0 clientId: 1 whyHeld: null
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:174 - Execution details: orderId: -1 contract: com.ib.client.Contract@24dfd50f Execution: com.ib.client.Execution@7c1123fc
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@410ac310 Order: com.ib.client.Order@1b270193 OrderState: com.ib.client.OrderState@6e5cdfc8
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Filled filled: 500 remaining: 0 avgFillPrice: 548.966 permId: 176592612 parentId: 0 lastFillePrice: 548.95 clientId: 1 whyHeld: null
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@6b31267c Order: com.ib.client.Order@7a2a4b23 OrderState: com.ib.client.OrderState@33c8070d
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Filled filled: 500 remaining: 0 avgFillPrice: 548.966 permId: 176592612 parentId: 0 lastFillePrice: 548.95 clientId: 1 whyHeld: null
+2016-03-26 09:17:30 ERROR InteractiveBrokersBroker:204 - Open Order with ID: 4 not found
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:241 - CommssionReport(): com.ib.client.CommissionReport@2fd25282
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:188 - OpenOrder: 4 Contract: com.ib.client.Contract@4be577f0 Order: com.ib.client.Order@19d58ae0 OrderState: com.ib.client.OrderState@24ae9d1a
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:200 - OrderStatus(): orderId: 4 Status: Filled filled: 500 remaining: 0 avgFillPrice: 548.966 permId: 176592612 parentId: 0 lastFillePrice: 548.95 clientId: 1 whyHeld: null
+2016-03-26 09:17:30 ERROR InteractiveBrokersBroker:204 - Open Order with ID: 4 not found
+2016-03-26 09:17:30 INFO  InteractiveBrokersBroker:241 - CommssionReport(): com.ib.client.CommissionReport@9b3da08
+
+
+################
+################
+Order has security for which the ticker can't be found
+
+Server Version:76
+TWS Time at connection:20160326 09:24:32 PST
+2016-03-26 09:24:35 DEBUG TradingExample:43 - IB client connected
+2016-03-26 09:24:35 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2104 errorMessage: Market data farm connection is OK:ibdemo
+2016-03-26 09:24:35 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-26 09:24:35 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:7 errorCode:200 errorMessage: No security definition has been found for the request

@@ -1,30 +1,29 @@
 /**
  * MIT License
-
-Copyright (c) 2015  Rob Terpilowski
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
-and associated documentation files (the "Software"), to deal in the Software without restriction, 
-including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
-BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
-OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Copyright (c) 2015  Rob Terpilowski
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-
 package com.sumzerotrading.ib;
 
 import com.ib.client.CommissionReport;
 import com.ib.client.Contract;
 import com.ib.client.ContractDetails;
 import com.ib.client.EClientSocket;
+import com.ib.client.EWrapper;
 import com.ib.client.Execution;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
@@ -44,523 +43,398 @@ import org.slf4j.LoggerFactory;
  * @author Rob Terpilowski
  */
 public class IBConnection implements IBConnectionInterface {
-    
 
     protected Logger logger = LoggerFactory.getLogger(IBConnection.class);
-    protected static IBConnectionInterface connection = null;
-    
-    protected List<TickListener> tickListeners = new ArrayList<TickListener>();
-    protected List<MarketDepthListener> marketDepthListeners = new ArrayList<MarketDepthListener>();
-    protected List<OrderStatusListener> orderStatusListeners = new ArrayList<OrderStatusListener>();
-    protected List<HistoricalDataListener> historicalDataListeners = new ArrayList<HistoricalDataListener>();
-    protected List<TimeListener> timeListeners = new ArrayList<TimeListener>();
-    protected List<ContractDetailsListener> contractDetailsListeners = new ArrayList<ContractDetailsListener>();
-    protected List<ErrorListener> errorListeners = new ArrayList<>();
+    protected static IBConnection connection = null;
+
     protected EClientSocket eclientSocket;
-    //  protected Logger logger;
+    protected List<EWrapper> ibConnectionDelegates = new ArrayList<>();
+    protected int clientId;
     protected String host;
     protected int port;
-    protected int clientId;
-    
-    public synchronized static IBConnectionInterface getInstance() {
+
+    public synchronized static EWrapper getInstance() {
         if (connection == null) {
             connection = new IBConnection();
         }
         return connection;
     }
-    
+
     public IBConnection() {
-        // logger = Logger.getLogger( getClass() );
         eclientSocket = new EClientSocket(this);
     }
-    
-    public void bondContractDetails(ContractDetails contractDetails) {
-        //Do nothing for now.
-    }
-    
-    public void contractDetails(ContractDetails contractDetails) {
-        fireContractDetailsEvent(contractDetails);
-    }
-    
+
     @Override
-    public void currentTime(long time) {
-        fireTimeEvent(ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()));
-    }
-    
-    @Override
-    public void execDetails(int orderId, Contract contract, Execution execution) {
-        logger.debug("Exec details called: " + execution);
-        fireExecDetails(orderId, contract, execution);
-    }
-    
-    @Override
-    public void historicalData(int reqId, String date, double open, double high, double low, double close, int volume, int count, double WAP, boolean hasGaps) {
-        fireHistoricalDataEvent(reqId, date, open, high, low, close, volume, count, WAP, hasGaps);
-    }
-    
-    @Override
-    public void managedAccounts(String accountsList) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void nextValidId(int orderId) {
-        fireNextOrderIdEvent(orderId);
-    }
-    
-    @Override
-    public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
-        logger.debug("Open Order Called: " + orderState);
-        fireOpenOrderEvent(orderId, contract, order, orderState);
-    }
-    
-    @Override
-    public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
-        logger.debug("Order status called: " + status);
-        fireOrderStatusEvent(orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
-    }
-    
-    @Override
-    public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void receiveFA(int faDataType, String xml) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void scannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void scannerDataEnd(int reqId) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void scannerParameters(String xml) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void tickEFP(int tickerId, int tickType, double basisPoints, String formattedBasisPoints, double impliedFuture, int holdDays, String futureExpiry, double dividendImpact, double dividendsToExpiry) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void tickGeneric(int tickerId, int tickType, double value) {
-        //Do nothing for now.
-    }
-    
-    public void tickOptionComputation(int tickerId, int field, double impliedVol, double delta, double modelPrice, double pvDividend) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void tickPrice(int tickerId, int field, double price, int canAutoExecute) {
-        synchronized (tickListeners) {
-            for (TickListener listener : tickListeners) {
-                listener.tickPrice(tickerId, field, price, canAutoExecute);
-            }
-        }
-    }
-    
-    @Override
-    public void tickSize(int tickerId, int field, int size) {
-        synchronized (tickListeners) {
-            for (TickListener listener : tickListeners) {
-                listener.tickSize(tickerId, field, size);
-            }
-        }
-    }
-    
-    @Override
-    public void tickString(int tickerId, int tickType, String value) {
-    }
-    
-    @Override
-    public void updateAccountTime(String timeStamp) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void updateAccountValue(String key, String value, String currency, String accountName) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void updateMktDepth(int tickerId, int position, int operation, int side, double price, int size) {
-        fireMarketDepthEvent(tickerId, position, operation, side, price, size);
-    }
-    
-    @Override
-    public void updateMktDepthL2(int tickerId, int position, String marketMaker, int operation, int side, double price, int size) {
-        fireMarketDepth2Event(tickerId, position, marketMaker, operation, side, price, size);
-    }
-    
-    @Override
-    public void updateNewsBulletin(int msgId, int msgType, String message, String origExchange) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void updatePortfolio(Contract contract, int position, double marketPrice, double marketValue, double averageCost, double unrealizedPNL, double realizedPNL, String accountName) {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void connectionClosed() {
-        //Do nothing for now.
-    }
-    
-    @Override
-    public void error(Exception e) {
-        logger.error(e.getMessage(), e);
-        fireErrorEvent(e);
-    }
-    
-    @Override
-    public void error(String str) {
-        logger.error(str);
-        fireErrorEvent(str);
-    }
-    
-    @Override
-    public void error(int id, int errorCode, String errorMsg) {
-        logger.error( "Broker Error: ID: " + id + " ErrorCode: " + errorCode + " ErrorMessage: " + errorMsg );
-        fireErrorEvent(id, errorCode, errorMsg);
+    public void addIbConnectionDelegate(EWrapper delegate) {
+        ibConnectionDelegates.add(delegate);
     }
 
     @Override
-    public void tickOptionComputation(int tickerId, int field, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
-        //not implemented
+    public void removeIbConnectionDelegate(EWrapper delegate) {
+        ibConnectionDelegates.remove(delegate);
     }
 
     @Override
-    public void openOrderEnd() {
-        //not implemented
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
     @Override
-    public void accountDownloadEnd(String accountName) {
-        //not implemented
+    public void setHost(String host) {
+        this.host = host;
     }
 
     @Override
-    public void contractDetails(int reqId, ContractDetails contractDetails) {
-        //not implemented
+    public void setPort(int port) {
+        this.port = port;
     }
 
     @Override
-    public void bondContractDetails(int reqId, ContractDetails contractDetails) {
-        //not implemented
+    public int getClientId() {
+        return clientId;
     }
 
-    @Override
-    public void contractDetailsEnd(int reqId) {
-        //not implemented
-    }
-
-    @Override
-    public void execDetailsEnd(int reqId) {
-        //not implemented
-    }
-
-    @Override
-    public void fundamentalData(int reqId, String data) {
-        //not implemented
-    }
-
-    @Override
-    public void deltaNeutralValidation(int reqId, UnderComp underComp) {
-        //not implemented
-    }
-
-    @Override
-    public void tickSnapshotEnd(int reqId) {
-        //not implemented
-    }
-
-    @Override
-    public void marketDataType(int reqId, int marketDataType) {
-        //not implemented
-    }
-
-    @Override
-    public void commissionReport(CommissionReport commissionReport) {
-        //not implemented
-    }
-
-    @Override
-    public void position(String account, Contract contract, int pos, double avgCost) {
-        //not implemented
-    }
-
-    @Override
-    public void positionEnd() {
-        //not implemented
-    }
-
-    @Override
-    public void accountSummary(int reqId, String account, String tag, String value, String currency) {
-        //not implemented
-    }
-
-    @Override
-    public void accountSummaryEnd(int reqId) {
-        //not implemented
-    }
-
-    @Override
-    public void verifyMessageAPI(String apiData) {
-        logger.info("API data: " + apiData);
-        //not implemented
-    }
-
-    @Override
-    public void verifyCompleted(boolean isSuccessful, String errorText) {
-        //not implemented
-    }
-
-    @Override
-    public void displayGroupList(int reqId, String groups) {
-        //not implemented
-    }
-
-    @Override
-    public void displayGroupUpdated(int reqId, String contractInfo) {
-        //not implemented
-    }
-    
-    
-    
-    
-    protected void fireHistoricalDataEvent(int reqId, String date, double open, double high, double low, double close, int volume, int count, double WAP, boolean hasGaps) {
-        synchronized (historicalDataListeners) {
-            for (HistoricalDataListener listener : historicalDataListeners) {
-                listener.historicalData(reqId, date, open, high, low, close, volume, count, WAP, true);
-            }
-        }
-    }
-    
-    protected void fireExecDetails(int orderId, Contract contract, Execution execution) {
-        synchronized (orderStatusListeners) {
-            for (OrderStatusListener listener : orderStatusListeners) {
-                listener.execDetails(orderId, contract, execution);
-            }
-        }        
-    }
-    
-    protected void fireOpenOrderEvent(int orderId, Contract contract, Order order, OrderState orderState) {
-        synchronized (orderStatusListeners) {
-            for (OrderStatusListener listener : orderStatusListeners) {
-                listener.openOrder(orderId, contract, order, orderState);
-            }
-        }        
-    }
-    
-    protected void fireOrderStatusEvent(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
-        synchronized (orderStatusListeners) {
-            for (OrderStatusListener listener : orderStatusListeners) {
-                listener.orderStatus(orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
-            }
-        }
-    }
-    
-    protected void fireNextOrderIdEvent(int nextOrderId) {
-        synchronized (orderStatusListeners) {
-            for (OrderStatusListener listener : orderStatusListeners) {
-                listener.nextValidId(nextOrderId);
-            }
-        }
-    }
-    
-    protected void fireErrorEvent(Exception e) {
-        fireErrorEvent(errorListeners, e);
-        fireErrorEvent(tickListeners, e);
-        fireErrorEvent(orderStatusListeners, e);
-    }    
-    
-    protected void fireErrorEvent(List<? extends ErrorListener> listeners, Exception e) {
-        synchronized (listeners) {
-            for (ErrorListener listener : listeners) {
-                listener.error(e);
-            }
-        }
-    }
-    
-    protected void fireErrorEvent(String errorString) {
-        fireErrorEvent(tickListeners, errorString);
-        fireErrorEvent(orderStatusListeners, errorString);
-    }    
-    
-    protected void fireErrorEvent(List<? extends ErrorListener> listeners, String str) {
-        synchronized (listeners) {
-            for (ErrorListener listener : listeners) {
-                listener.error(str);
-            }
-        }
-    }    
-    
-    protected void fireErrorEvent(int id, int errorCode, String errorMsg) {
-        fireErrorEvent(tickListeners, id, errorCode, errorMsg);
-        fireErrorEvent(orderStatusListeners, id, errorCode, errorMsg);
-    }    
-    
-    protected void fireErrorEvent(List<? extends ErrorListener> listeners, int id, int errorCode, String errorMsg) {
-        synchronized (listeners) {
-            for (ErrorListener listener : listeners) {
-                listener.error(id, errorCode, errorMsg);
-            }
-        }
-    }
-    
-    protected void fireTimeEvent(ZonedDateTime time) {
-        synchronized (timeListeners) {
-            for (TimeListener listener : timeListeners) {
-                listener.timeReceived(time);
-            }
-        }
-    }
-    
-    protected void fireMarketDepthEvent(int tickerId, int position, int operation, int side, double price, int size) {
-        synchronized (marketDepthListeners) {
-            for (MarketDepthListener listener : marketDepthListeners) {
-                listener.updateMktDepth(tickerId, position, operation, side, price, size);
-            }
-        }
-    }    
-    
-    protected void fireMarketDepth2Event(int tickerId, int position, String marketMaker, int operation, int side, double price, int size) {
-        synchronized (marketDepthListeners) {
-            for (MarketDepthListener listener : marketDepthListeners) {
-                listener.updateMktDepth2(tickerId, position, marketMaker, operation, side, price, size);
-            }
-        }
-    }    
-    
-    protected void fireContractDetailsEvent(ContractDetails details) {
-        synchronized (contractDetailsListeners) {
-            for (ContractDetailsListener listener : contractDetailsListeners) {
-                listener.contractDetailsReceived(details);
-            }
-        }
-    }
-    
-    public void addTickListener(TickListener listener) {
-        synchronized (tickListeners) {
-            tickListeners.add(listener);
-        }
-    }
-    
-    public void removeTickListener(TickListener listener) {
-        synchronized (tickListeners) {
-            tickListeners.remove(listener);
-        }
-    }
-    
-    public void addErrorListener( ErrorListener listener ) {
-        synchronized(errorListeners) {
-            errorListeners.add(listener);
-        }
-    }
-    
-    public void removeErrorListener( ErrorListener listener ) {
-        synchronized(errorListeners ) {
-            errorListeners.remove(listener);
-        }
-    }
-    
-    
-    
-    public void addMarketDepthListener(MarketDepthListener listener) {
-        synchronized (marketDepthListeners) {
-            marketDepthListeners.add(listener);
-        }
-    }
-    
-    public void removeMarketDepthListener(MarketDepthListener listener) {
-        synchronized (marketDepthListeners) {
-            marketDepthListeners.remove(listener);
-        }
-    }
-    
-    public void addOrderStatusListener(OrderStatusListener listener) {
-        synchronized (orderStatusListeners) {
-            orderStatusListeners.add(listener);
-        }
-    }
-    
-    public void removeOrderStatusListener(OrderStatusListener listener) {
-        synchronized (orderStatusListeners) {
-            orderStatusListeners.remove(listener);
-        }
-    }
-    
-    public void addHistoricalDataListener(HistoricalDataListener listener) {
-        synchronized (historicalDataListeners) {
-            historicalDataListeners.add(listener);
-        }
-    }
-    
-    public void removeHistoricalDataListener(HistoricalDataListener listener) {
-        synchronized (historicalDataListeners) {
-            historicalDataListeners.remove(listener);
-        }
-    }
-    
-    public void addTimeListener(TimeListener listener) {
-        synchronized (timeListeners) {
-            timeListeners.add(listener);
-        }
-    }
-    
-    public void removeTimeListener(TimeListener listener) {
-        synchronized (timeListeners) {
-            timeListeners.remove(listener);
-        }
-    }
-    
-    public void addContractDetailsListener(ContractDetailsListener listener) {
-        synchronized (contractDetailsListeners) {
-            contractDetailsListeners.add(listener);
-        }
-    }
-    
-    public void removeContractDetailsListener(ContractDetailsListener listener) {
-        synchronized (contractDetailsListeners) {
-            contractDetailsListeners.remove(listener);
-        }
-    }
-    
     @Override
     public String getHost() {
         return host;
     }
-    
-    public void setHost(String host) {
-        this.host = host;
-    }
-    
+
     @Override
     public int getPort() {
         return port;
     }
     
-    public void setPort(int port) {
-        this.port = port;
-    }
     
+    
+    
+
     @Override
-    public int getClientId() {
-        return clientId;
+    public void tickPrice(int tickerId, int field, double price, int canAutoExecute) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.tickPrice(tickerId, field, price, canAutoExecute);
+        });
     }
-    
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
+
+    @Override
+    public void tickSize(int tickerId, int field, int size) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.tickSize(tickerId, field, size);
+        });
     }
-    
+
+    @Override
+    public void tickOptionComputation(int tickerId, int field, double impliedVol, double delta, double optPrice, double pvDividend, double gamma, double vega, double theta, double undPrice) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.tickOptionComputation(tickerId, field, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
+        });
+    }
+
+    @Override
+    public void tickGeneric(int tickerId, int tickType, double value) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.tickGeneric(tickerId, tickType, value);
+        });
+    }
+
+    @Override
+    public void tickString(int tickerId, int tickType, String value) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.tickString(tickerId, tickType, value);
+        });
+    }
+
+    @Override
+    public void tickEFP(int tickerId, int tickType, double basisPoints, String formattedBasisPoints, double impliedFuture, int holdDays, String futureExpiry, double dividendImpact, double dividendsToExpiry) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.tickEFP(tickerId, tickType, basisPoints, formattedBasisPoints, impliedFuture, holdDays, futureExpiry, dividendImpact, dividendsToExpiry);
+        });
+    }
+
+    @Override
+    public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.orderStatus(orderId, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld);
+        });
+    }
+
+    @Override
+    public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.openOrder(orderId, contract, order, orderState);
+        });
+    }
+
+    @Override
+    public void openOrderEnd() {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.openOrderEnd();
+        });
+    }
+
+    @Override
+    public void updateAccountValue(String key, String value, String currency, String accountName) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.updateAccountValue(key, value, currency, accountName);
+        });
+    }
+
+    @Override
+    public void updatePortfolio(Contract contract, int position, double marketPrice, double marketValue, double averageCost, double unrealizedPNL, double realizedPNL, String accountName) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.updatePortfolio(contract, position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL, accountName);
+        });
+    }
+
+    @Override
+    public void updateAccountTime(String timeStamp) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.updateAccountTime(timeStamp);
+        });
+    }
+
+    @Override
+    public void accountDownloadEnd(String accountName) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.accountDownloadEnd(accountName);
+        });
+    }
+
+    @Override
+    public void nextValidId(int orderId) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.nextValidId(orderId);
+        });
+    }
+
+    @Override
+    public void contractDetails(int reqId, ContractDetails contractDetails) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.contractDetails(reqId, contractDetails);
+        });
+    }
+
+    @Override
+    public void bondContractDetails(int reqId, ContractDetails contractDetails) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.bondContractDetails(reqId, contractDetails);
+        });
+    }
+
+    @Override
+    public void contractDetailsEnd(int reqId) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.contractDetailsEnd(reqId);
+        });
+    }
+
+    @Override
+    public void execDetails(int reqId, Contract contract, Execution execution) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.execDetails(reqId, contract, execution);
+        });
+    }
+
+    @Override
+    public void execDetailsEnd(int reqId) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.execDetailsEnd(reqId);
+        });
+    }
+
+    @Override
+    public void updateMktDepth(int tickerId, int position, int operation, int side, double price, int size) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.updateMktDepth(tickerId, position, operation, side, price, size);
+        });
+    }
+
+    @Override
+    public void updateMktDepthL2(int tickerId, int position, String marketMaker, int operation, int side, double price, int size) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.updateMktDepthL2(tickerId, position, marketMaker, operation, side, price, size);
+        });
+    }
+
+    @Override
+    public void updateNewsBulletin(int msgId, int msgType, String message, String origExchange) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.updateNewsBulletin(msgId, msgType, message, origExchange);
+        });
+    }
+
+    @Override
+    public void managedAccounts(String accountsList) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.managedAccounts(accountsList);
+        });
+    }
+
+    @Override
+    public void receiveFA(int faDataType, String xml) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.receiveFA(faDataType, xml);
+        });
+    }
+
+    @Override
+    public void historicalData(int reqId, String date, double open, double high, double low, double close, int volume, int count, double WAP, boolean hasGaps) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.historicalData(reqId, date, open, high, low, close, volume, count, WAP, hasGaps);
+        });
+    }
+
+    @Override
+    public void scannerParameters(String xml) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.scannerParameters(xml);
+        });
+    }
+
+    @Override
+    public void scannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.scannerData(reqId, rank, contractDetails, distance, benchmark, projection, legsStr);
+        });
+    }
+
+    @Override
+    public void scannerDataEnd(int reqId) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.scannerDataEnd(reqId);
+        });
+    }
+
+    @Override
+    public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.realtimeBar(reqId, time, open, high, low, close, volume, wap, count);
+        });
+    }
+
+    @Override
+    public void currentTime(long time) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.currentTime(time);
+        });
+    }
+
+    @Override
+    public void fundamentalData(int reqId, String data) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.fundamentalData(reqId, data);
+        });
+    }
+
+    @Override
+    public void deltaNeutralValidation(int reqId, UnderComp underComp) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.deltaNeutralValidation(reqId, underComp);
+        });
+    }
+
+    @Override
+    public void tickSnapshotEnd(int reqId) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.tickSnapshotEnd(reqId);
+        });
+    }
+
+    @Override
+    public void marketDataType(int reqId, int marketDataType) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.marketDataType(reqId, marketDataType);
+        });
+    }
+
+    @Override
+    public void commissionReport(CommissionReport commissionReport) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.commissionReport(commissionReport);
+        });
+    }
+
+    @Override
+    public void position(String account, Contract contract, int pos, double avgCost) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.position(account, contract, pos, avgCost);
+        });
+    }
+
+    @Override
+    public void positionEnd() {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.positionEnd();
+        });
+    }
+
+    @Override
+    public void accountSummary(int reqId, String account, String tag, String value, String currency) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.accountSummary(reqId, account, tag, value, currency);
+        });
+    }
+
+    @Override
+    public void accountSummaryEnd(int reqId) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.accountSummaryEnd(reqId);
+        });
+    }
+
+    @Override
+    public void verifyMessageAPI(String apiData) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.verifyMessageAPI(apiData);
+        });
+    }
+
+    @Override
+    public void verifyCompleted(boolean isSuccessful, String errorText) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.verifyCompleted(isSuccessful, errorText);
+        });
+    }
+
+    @Override
+    public void displayGroupList(int reqId, String groups) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.displayGroupList(reqId, groups);
+        });
+    }
+
+    @Override
+    public void displayGroupUpdated(int reqId, String contractInfo) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.displayGroupUpdated(reqId, contractInfo);
+        });
+    }
+
+    @Override
+    public void error(Exception e) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.error(e);
+        });
+    }
+
+    @Override
+    public void error(String str) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.error(str);
+        });
+    }
+
+    @Override
+    public void error(int id, int errorCode, String errorMsg) {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.error(id, errorCode, errorMsg);
+        });
+    }
+
+    @Override
+    public void connectionClosed() {
+        ibConnectionDelegates.stream().forEach((delegate) -> {
+            delegate.connectionClosed();
+        });
+    }
+
 }
