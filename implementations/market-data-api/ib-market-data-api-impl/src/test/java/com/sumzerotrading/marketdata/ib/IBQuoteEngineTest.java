@@ -35,7 +35,6 @@ import com.sumzerotrading.marketdata.QuoteError;
 import com.sumzerotrading.marketdata.QuoteType;
 import java.util.ArrayList;
 import java.util.List;
-import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,8 +45,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 /**
  *
@@ -55,10 +55,11 @@ import static org.mockito.Mockito.when;
  */
 public class IBQuoteEngineTest {
 
-    protected Mockery mockery;
-    protected IBConnectionInterface ibconnection;
-    protected IBSocket socket;
+    protected EClientSocket mockClientSocket;
+    protected IBConnectionInterface mockIbConnection;
+    protected IBSocket mockIbSocket;
     protected IBQuoteEngine ibQuoteEngine;
+    protected Mockery mockery;
 
     public IBQuoteEngineTest() {
     }
@@ -73,18 +74,34 @@ public class IBQuoteEngineTest {
 
     @Before
     public void setUp() {
-        mockery = new Mockery();
-        ibconnection = Mockito.mock(IBConnectionInterface.class);
-        socket = Mockito.mock(IBSocket.class);
-        when(socket.getConnection()).thenReturn(ibconnection);
+        
+        mockClientSocket = mock(EClientSocket.class);
+        mockIbSocket = mock(IBSocket.class);
+        mockIbConnection = mock(IBConnectionInterface.class);
+        when(mockIbSocket.getClientSocket()).thenReturn(mockClientSocket);
+        when(mockIbSocket.getConnection()).thenReturn(mockIbConnection);
 
-        ibQuoteEngine = new IBQuoteEngine(socket);
+        ibQuoteEngine = new IBQuoteEngine(mockIbSocket);
+        verify(mockIbConnection).addIbConnectionDelegate(ibQuoteEngine);
     }
 
     @After
     public void tearDown() {
     }
 
+    
+    @Test
+    public void testUseDelayedData() {
+        ibQuoteEngine.useDelayedData(true);
+        verify(mockClientSocket).reqMarketDataType(3);
+    }
+    
+    @Test
+    public void testUseDelayedData_No() {
+        ibQuoteEngine.useDelayedData(false);
+        verify(mockClientSocket).reqMarketDataType(1);
+    }
+    
     @Test
     @Ignore
     public void testConstructor() {
@@ -289,12 +306,12 @@ public class IBQuoteEngineTest {
         final List<TagValue> list = new ArrayList<>();
         list.add(new TagValue("XYZ", "XYZ"));
 
-        mockery.checking(new Expectations() {
-            {
-                
-                one(mockSocketInterface).reqMktData(requestId + 1, contract, "", false, list);
-            }
-        });
+//        mockery.checking(new Expectations() {
+//            {
+//                
+//                one(mockSocketInterface).reqMktData(requestId + 1, contract, "", false, list);
+//            }
+//        });
 
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        quoteEngine.subscribeLevel1(ticker, mockQuoteListener);
@@ -358,11 +375,11 @@ public class IBQuoteEngineTest {
         final int requestId = 1;
         final Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
 
-        mockery.checking(new Expectations() {
-            {
-                one(mockSocketInterface).cancelMktData(requestId);
-            }
-        });
+//        mockery.checking(new Expectations() {
+//            {
+//                one(mockSocketInterface).cancelMktData(requestId);
+//            }
+//        });
 //        
 //        IBQuoteEngine quoteEngine = new IBQuoteEngine(mockSocketInterface, mockConnectionInterface);
 //        quoteEngine.tickerMap.put(ticker, requestId);
@@ -542,7 +559,6 @@ public class IBQuoteEngineTest {
         ILevel1Quote quote = Mockito.mock(ILevel1Quote.class);
         Ticker ticker = new StockTicker("abc");
 
-        when(socket.getConnection()).thenReturn(ibconnection);
         when(quote.getType()).thenReturn(QuoteType.CLOSE);
         when(quote.getTicker()).thenReturn(ticker);
 
@@ -557,7 +573,6 @@ public class IBQuoteEngineTest {
         ILevel1Quote quote = Mockito.mock(ILevel1Quote.class);
         Ticker ticker = new StockTicker("abc");
 
-        when(socket.getConnection()).thenReturn(ibconnection);
         when(quote.getType()).thenReturn(QuoteType.OPEN);
         when(quote.getTicker()).thenReturn(ticker);
 

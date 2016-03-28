@@ -33,10 +33,10 @@ public class MarketDataStocksExample {
     
     
     public void start() {
-         InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 6468, 1);
+        InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 7999, 1);
         ibClient.connect();
         
-        StockTicker stockTicker=  new StockTicker("AMZN");
+        StockTicker stockTicker=  new StockTicker("QQQ");
         
         ibClient.subscribeLevel1(stockTicker, (ILevel1Quote quote) -> {
             if( quote.getType().equals(QuoteType.LAST) ){

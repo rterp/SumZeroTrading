@@ -129,7 +129,10 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     
     
     
-    
+    @Override
+    public void useDelayedData( boolean b ) {
+        quoteEngine.useDelayedData(b);
+    }
     
     @Override
     public String getHost() {

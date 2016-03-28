@@ -53,4 +53,5 @@ public interface InteractiveBrokersClientInterface {
     
     List<TradeOrder> getOpenOrders();
     
+    void useDelayedData( boolean useDelayedData );
 }

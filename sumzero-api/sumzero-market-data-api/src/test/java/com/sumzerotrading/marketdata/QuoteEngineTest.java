@@ -365,29 +365,42 @@ public class QuoteEngineTest {
     protected QuoteEngine createNewQuoteEngine() {
         return new QuoteEngine() {
 
+            @Override
             public boolean isConnected() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
             
+            @Override
             public void startEngine() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Override
             public void startEngine(Properties props) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Override
             public void stopEngine() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Override
             public Date getServerTime() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
+            @Override
             public boolean started() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
+
+            @Override
+            public void useDelayedData(boolean useDelayed) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+            
+            
         };
     }
 

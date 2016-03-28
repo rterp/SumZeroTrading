@@ -64,7 +64,7 @@ public class IBQuoteEngine extends AbstractIBQuoteEngine {
     protected Map<Integer, Ticker> idToTickerMap = new HashMap<Integer, Ticker>();
     protected Map<Ticker, Integer> level2TickerMap = new HashMap<Ticker, Integer>();
     protected Map<Integer, Ticker> level2IdToTickerMap = new HashMap<Integer, Ticker>();
-    protected int nextQuoteId = 1;
+    protected int nextQuoteId = 100000;
     protected IBQuoteProcessor level1QuoteProcessor;
     protected IBQuoteProcessor level2QuoteProcessor;
     protected IBQuoteProcessor errorQuoteProcessor;
@@ -272,4 +272,15 @@ public class IBQuoteEngine extends AbstractIBQuoteEngine {
     protected void setLevel1ListenerMap(Map<Ticker, List<Level1QuoteListener>> map) {
         this.level1ListenerMap = map;
     }
+
+    @Override
+    public void useDelayedData(boolean useDelayed) {
+        if( useDelayed ) {
+            ibConnection.reqMarketDataType(3);
+        } else {
+            ibConnection.reqMarketDataType(1);
+        }
+    }
+    
+    
 }

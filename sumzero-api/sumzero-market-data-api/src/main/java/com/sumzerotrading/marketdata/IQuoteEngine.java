@@ -144,4 +144,11 @@ public interface IQuoteEngine {
      * @param error The quote error to fire.
      */
     public void fireErrorEvent( QuoteError error );
+    
+    
+    /**
+     * Set to true if ok to use delayed data.
+     * @param useDelayed true if ok to use delayed rather than real-time data
+     */
+    public void useDelayedData( boolean useDelayed );
 }

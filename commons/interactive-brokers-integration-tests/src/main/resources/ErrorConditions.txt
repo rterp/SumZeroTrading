@@ -78,3 +78,82 @@ TWS Time at connection:20160326 09:24:32 PST
 2016-03-26 09:24:35 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2104 errorMessage: Market data farm connection is OK:ibdemo
 2016-03-26 09:24:35 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
 2016-03-26 09:24:35 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:7 errorCode:200 errorMessage: No security definition has been found for the request
+
+
+################
+################
+Connection between TWS and IB lost and reestablished
+Server Version:76
+TWS Time at connection:20160328 05:46:34 PST
+2016-03-28 05:46:46 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2110 errorMessage: Connectivity between TWS and server is broken. It will be restored automatically.
+2016-03-28 05:46:46 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:46:46 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:2 errorCode:200 errorMessage: No security definition has been found for the request
+2016-03-28 05:46:50 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:46:50 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:46:50 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:46:52 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:46:54 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:46:55 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:46:55 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:46:58 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:46:59 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:00 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:00 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:05 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:47:07 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:07 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:08 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:15 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:47:17 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:18 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:18 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:19 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:47:23 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:23 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:26 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:27 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:47:28 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:28 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:29 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:34 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:47:38 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:39 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:40 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:43 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:47:44 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:45 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:46 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:49 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:47:49 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:52 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:54 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:54 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+2016-03-28 05:47:55 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1102 errorMessage: Connectivity between IB and TWS has been restored - data maintained.
+2016-03-28 05:47:55 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 05:47:56 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:1100 errorMessage: Connectivity between IB and TWS has been lost.
+2016-03-28 05:47:57 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2105 errorMessage: HMDS data farm connection is broken:demohmds
+
+
+#################
+#################
+Requested market data isn't subscribed
+
+Server Version:76
+TWS Time at connection:20160328 06:24:41 PST
+2016-03-28 06:24:53 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2104 errorMessage: Market data farm connection is OK:usfuture
+2016-03-28 06:24:53 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2104 errorMessage: Market data farm connection is OK:cashfarm
+2016-03-28 06:24:53 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2104 errorMessage: Market data farm connection is OK:usfarm
+2016-03-28 06:24:53 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:ushmds
+2016-03-28 06:24:53 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:321 errorMessage: Error validating request:-'xe' : cause - Invalid market data type
+2016-03-28 06:24:53 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:2 errorCode:354 errorMessage: Requested market data is not subscribed.AMZN NASDAQ.NMS/TOP/ALL
+
+##################
+##################
+Subscribe to market data
+No security definition has been found
+
+Server Version:76
+TWS Time at connection:20160328 06:41:57 PST
+2016-03-28 06:42:10 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2104 errorMessage: Market data farm connection is OK:ibdemo
+2016-03-28 06:42:10 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:-1 errorCode:2106 errorMessage: HMDS data farm connection is OK:demohmds
+2016-03-28 06:42:11 ERROR InteractiveBrokersBroker:271 - BrokerError: ID:2 errorCode:200 errorMessage: No security definition has been found for the request
