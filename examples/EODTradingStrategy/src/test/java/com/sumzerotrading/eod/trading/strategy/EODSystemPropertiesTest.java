@@ -73,6 +73,7 @@ public class EODSystemPropertiesTest {
     public void testGetOrderType() {
         assertEquals( TradeOrder.Type.MARKET, systemProps.getOrderType("MKT") );
         assertEquals( TradeOrder.Type.MARKET_ON_CLOSE, systemProps.getOrderType("MOC") );
+        assertEquals( TradeOrder.Type.MARKET_ON_OPEN, systemProps.getOrderType("MOO"));
         
         try {
             systemProps.getOrderType("foo");
@@ -102,7 +103,9 @@ public class EODSystemPropertiesTest {
         props.setProperty("foo", "bar");
         props.setProperty("pair.2", "IWM:DIA");
         props.setProperty("strategy.directory", "/my/dir");
-        props.setProperty("order.type", "MOC");
+        props.setProperty("entry.order.type", "MOC");
+        props.setProperty("exit.order.type", "MOO");
+        props.setProperty("exit.seconds", "10");
         
         systemProps.parseProps(props);
         
@@ -113,8 +116,10 @@ public class EODSystemPropertiesTest {
         assertEquals("/my/dir", systemProps.getStrategyDirectory());
         assertEquals(LocalTime.of(5, 32, 44), systemProps.getStartTime());
         assertEquals(LocalTime.of(13,0), systemProps.getMarketCloseTime());
-        assertEquals(TradeOrder.Type.MARKET_ON_CLOSE, systemProps.getOrderType());
+        assertEquals(TradeOrder.Type.MARKET_ON_CLOSE, systemProps.getEntryOrderType());
         assertEquals(expectedMap, systemProps.getLongShortTickerMap());
+        assertEquals(TradeOrder.Type.MARKET_ON_OPEN, systemProps.getExitOrderType());
+        assertEquals( 10, systemProps.getExitSeconds() );
     }
     
     @Test
@@ -145,7 +150,9 @@ public class EODSystemPropertiesTest {
         props.longShortTickerMap.put("QQQ", "SPY");
         props.longShortTickerMap.put("DIA", "IWM");
         props.strategyDirectory = "/some/test/dir/";
-        props.orderType = TradeOrder.Type.MARKET_ON_CLOSE;
+        props.entryOrderType = TradeOrder.Type.MARKET_ON_CLOSE;
+        props.exitOrderType = TradeOrder.Type.MARKET;
+        props.exitSeconds = 3;
         
         return props;
                 

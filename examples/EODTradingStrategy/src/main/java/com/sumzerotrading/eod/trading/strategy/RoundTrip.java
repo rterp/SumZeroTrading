@@ -49,14 +49,14 @@ public class RoundTrip implements Serializable {
         //shortExitPrice, shortExitCommissions
         //2016-03-20T12:40:00PST,QQQ,200,100.23,1.45,2016-03-21T12:40:00PST,
         StringBuilder sb = new StringBuilder();
-        sb.append(longEntry.getOrderEntryTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
+        sb.append(longEntry.getOrderFilledTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
                 .append("Long,")
                 .append(longEntry.getTicker().getSymbol()).append(",")
                 .append(longEntry.getSize()).append(",")
                 .append(longEntry.getFilledPrice()).append(",")
                 //long entry commissions
                 .append(0).append(",")
-                .append(longExit.getOrderEntryTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
+                .append(longExit.getOrderFilledTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
                 .append(longExit.getFilledPrice()).append(",")
                 //long exit commissions
                 .append(0).append(",")

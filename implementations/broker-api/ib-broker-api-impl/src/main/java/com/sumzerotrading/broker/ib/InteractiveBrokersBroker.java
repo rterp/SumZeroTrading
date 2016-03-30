@@ -220,6 +220,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
             }
             if (event.getOrderStatus().getStatus() == OrderStatus.Status.FILLED
                     || event.getOrderStatus().getStatus() == OrderStatus.Status.CANCELED) {
+                order.setOrderFilledTime(getZoneDateTime());
                 completedOrderMap.put(order.getOrderId(), order);
                 orderMap.remove(order.getOrderId());
             }
@@ -327,6 +328,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     }
 
     public void placeOrder(TradeOrder order) {
+        order.setOrderEntryTime(getZoneDateTime());
         if (order.getTicker().getInstrumentType() == InstrumentType.FOREX) {
             //IDEALPro is closed from 14:00-14:15 PST, and does not 
             //accept orders from 14:00-14:05, queue orders that are placed
@@ -573,6 +575,8 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     public void cancelAndReplaceOrder(String originalOrderId, TradeOrder newOrder) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
 
     protected static class IbOrderAndContract {
 

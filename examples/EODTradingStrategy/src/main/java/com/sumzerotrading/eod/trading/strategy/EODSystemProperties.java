@@ -33,7 +33,9 @@ public class EODSystemProperties {
     protected int tradeSizeDollars;
     protected Map<String,String> longShortTickerMap = new HashMap<>();
     protected String strategyDirectory;
-    protected TradeOrder.Type orderType;
+    protected TradeOrder.Type entryOrderType;
+    protected int exitSeconds = 0;
+    protected TradeOrder.Type exitOrderType;
     
     
     //For Unit tests
@@ -85,9 +87,19 @@ public class EODSystemProperties {
         return strategyDirectory;
     }
 
-    public TradeOrder.Type getOrderType() {
-        return orderType;
+    public TradeOrder.Type getEntryOrderType() {
+        return entryOrderType;
     }
+
+    public Type getExitOrderType() {
+        return exitOrderType;
+    }
+
+    public int getExitSeconds() {
+        return exitSeconds;
+    }
+    
+    
 
 
     protected void parseProps( Properties props ) {
@@ -98,8 +110,10 @@ public class EODSystemProperties {
         startTime = LocalTime.parse(props.getProperty("start.time"));
         marketCloseTime = LocalTime.parse(props.getProperty("market.close.time"));
         strategyDirectory = props.getProperty("strategy.directory");
-        orderType = getOrderType(props.getProperty("order.type", "MOC"));
+        entryOrderType = getOrderType(props.getProperty("entry.order.type", "MOC"));
         longShortTickerMap = getLongShortTickers(props);
+        exitOrderType = getOrderType(props.getProperty("exit.order.type", "MOO"));
+        exitSeconds = Integer.parseInt(props.getProperty("exit.seconds", "0"));
     }
     
     protected TradeOrder.Type getOrderType( String orderType ) {
@@ -107,6 +121,8 @@ public class EODSystemProperties {
             return Type.MARKET;
         } else if( "MOC".equalsIgnoreCase(orderType) ) {
             return Type.MARKET_ON_CLOSE;
+        } else if( "MOO".equalsIgnoreCase(orderType) ) {
+            return Type.MARKET_ON_OPEN;
         } else {
             throw new IllegalStateException( "Unknown order.type: " + orderType );
         }
@@ -128,16 +144,18 @@ public class EODSystemProperties {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + Objects.hashCode(this.startTime);
-        hash = 29 * hash + Objects.hashCode(this.marketCloseTime);
-        hash = 29 * hash + Objects.hashCode(this.twsHost);
-        hash = 29 * hash + this.twsPort;
-        hash = 29 * hash + this.twsClientId;
-        hash = 29 * hash + this.tradeSizeDollars;
-        hash = 29 * hash + Objects.hashCode(this.longShortTickerMap);
-        hash = 29 * hash + Objects.hashCode(this.strategyDirectory);
-        hash = 29 * hash + Objects.hashCode(this.orderType);
+        int hash = 7;
+        hash = 83 * hash + Objects.hashCode(this.startTime);
+        hash = 83 * hash + Objects.hashCode(this.marketCloseTime);
+        hash = 83 * hash + Objects.hashCode(this.twsHost);
+        hash = 83 * hash + this.twsPort;
+        hash = 83 * hash + this.twsClientId;
+        hash = 83 * hash + this.tradeSizeDollars;
+        hash = 83 * hash + Objects.hashCode(this.longShortTickerMap);
+        hash = 83 * hash + Objects.hashCode(this.strategyDirectory);
+        hash = 83 * hash + Objects.hashCode(this.entryOrderType);
+        hash = 83 * hash + this.exitSeconds;
+        hash = 83 * hash + Objects.hashCode(this.exitOrderType);
         return hash;
     }
 
@@ -162,6 +180,9 @@ public class EODSystemProperties {
         if (this.tradeSizeDollars != other.tradeSizeDollars) {
             return false;
         }
+        if (this.exitSeconds != other.exitSeconds) {
+            return false;
+        }
         if (!Objects.equals(this.twsHost, other.twsHost)) {
             return false;
         }
@@ -177,7 +198,10 @@ public class EODSystemProperties {
         if (!Objects.equals(this.longShortTickerMap, other.longShortTickerMap)) {
             return false;
         }
-        if (this.orderType != other.orderType) {
+        if (this.entryOrderType != other.entryOrderType) {
+            return false;
+        }
+        if (this.exitOrderType != other.exitOrderType) {
             return false;
         }
         return true;
@@ -185,11 +209,10 @@ public class EODSystemProperties {
 
     @Override
     public String toString() {
-        return "EODSystemProperties{" + "startTime=" + startTime + ", marketCloseTime=" + marketCloseTime + ", twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", longShortTickerMap=" + longShortTickerMap + ", strategyDirectory=" + strategyDirectory + ", orderType=" + orderType + '}';
+        return "EODSystemProperties{" + "startTime=" + startTime + ", marketCloseTime=" + marketCloseTime + ", twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", longShortTickerMap=" + longShortTickerMap + ", strategyDirectory=" + strategyDirectory + ", entryOrderType=" + entryOrderType + ", exitSeconds=" + exitSeconds + ", exitOrderType=" + exitOrderType + '}';
     }
 
-
-
-        
+    
+    
     
 }

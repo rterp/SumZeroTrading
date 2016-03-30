@@ -126,11 +126,11 @@ public class RoundTripTest {
         
         TradeOrder longEntryOrder = new TradeOrder("123", ticker, 100,TradeDirection.BUY);
         longEntryOrder.setFilledPrice(50.43);
-        longEntryOrder.setOrderEntryTime(entryDate);
+        longEntryOrder.setOrderFilledTime(entryDate);
         
         TradeOrder longExitOrder = new TradeOrder("234", ticker, 100, TradeDirection.SELL);
         longExitOrder.setFilledPrice(51.46);
-        longExitOrder.setOrderEntryTime(exitDate);
+        longExitOrder.setOrderFilledTime(exitDate);
         
         TradeOrder shortEntryOrder = new TradeOrder( "345", shortTicker, 50, TradeDirection.SELL);
         shortEntryOrder.setFilledPrice(1.23);

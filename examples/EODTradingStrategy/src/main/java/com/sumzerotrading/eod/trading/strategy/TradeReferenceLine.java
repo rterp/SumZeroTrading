@@ -17,6 +17,8 @@ import lombok.Getter;
 public class TradeReferenceLine {
     //longExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
     
+    public static long serialVersionUID = 1L;
+    
     public enum Direction {LONG, SHORT};
     public enum Side {ENTRY, EXIT};
     

@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.*;
+import java.util.Objects;
 
 public class TradeOrder implements Serializable {
 
@@ -61,6 +62,7 @@ public class TradeOrder implements Serializable {
     protected boolean submitted = false;
     protected boolean submitChildOrdersFirst = false;
     protected ZonedDateTime orderEntryTime;
+    protected ZonedDateTime orderFilledTime;
     protected double orderTimeInForceMinutes = 0;
     
     protected double filledSize = 0;
@@ -289,32 +291,50 @@ public class TradeOrder implements Serializable {
         this.currentStatus = currentStatus;
     }
 
+    public ZonedDateTime getOrderFilledTime() {
+        return orderFilledTime;
+    }
+
+    public void setOrderFilledTime(ZonedDateTime orderFilledTime) {
+        this.orderFilledTime = orderFilledTime;
+    }
+
+    public double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(double commission) {
+        this.commission = commission;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 97 * hash + (this.ticker != null ? this.ticker.hashCode() : 0);
-        hash = 97 * hash + (this.direction != null ? this.direction.hashCode() : 0);
-        hash = 97 * hash + (this.type != null ? this.type.hashCode() : 0);
-        hash = 97 * hash + (this.goodAfterTime != null ? this.goodAfterTime.hashCode() : 0);
-        hash = 97 * hash + (this.goodUntilTime != null ? this.goodUntilTime.hashCode() : 0);
-        hash = 97 * hash + (this.limitPrice != null ? this.limitPrice.hashCode() : 0);
-        hash = 97 * hash + (this.stopPrice != null ? this.stopPrice.hashCode() : 0);
-        hash = 97 * hash + (this.duration != null ? this.duration.hashCode() : 0);
-        hash = 97 * hash + this.size;
-        hash = 97 * hash + (this.orderId != null ? this.orderId.hashCode() : 0);
-        hash = 97 * hash + (this.parentOrderId != null ? this.parentOrderId.hashCode() : 0);
-        hash = 97 * hash + (this.ocaGroup != null ? this.ocaGroup.hashCode() : 0);
-        hash = 97 * hash + (this.positionId != null ? this.positionId.hashCode() : 0);
-        hash = 97 * hash + (this.childOrders != null ? this.childOrders.hashCode() : 0);
-        hash = 97 * hash + (this.comboOrder != null ? this.comboOrder.hashCode() : 0);
-        hash = 97 * hash + (this.reference != null ? this.reference.hashCode() : 0);
-        hash = 97 * hash + (this.submitted ? 1 : 0);
-        hash = 97 * hash + (this.submitChildOrdersFirst ? 1 : 0);
-        hash = 97 * hash + (this.orderEntryTime != null ? this.orderEntryTime.hashCode() : 0);
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.orderTimeInForceMinutes) ^ (Double.doubleToLongBits(this.orderTimeInForceMinutes) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.filledSize) ^ (Double.doubleToLongBits(this.filledSize) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.filledPrice) ^ (Double.doubleToLongBits(this.filledPrice) >>> 32));
-        hash = 97 * hash + (this.currentStatus != null ? this.currentStatus.hashCode() : 0);
+        hash = 71 * hash + Objects.hashCode(this.ticker);
+        hash = 71 * hash + Objects.hashCode(this.direction);
+        hash = 71 * hash + Objects.hashCode(this.type);
+        hash = 71 * hash + Objects.hashCode(this.goodAfterTime);
+        hash = 71 * hash + Objects.hashCode(this.goodUntilTime);
+        hash = 71 * hash + Objects.hashCode(this.limitPrice);
+        hash = 71 * hash + Objects.hashCode(this.stopPrice);
+        hash = 71 * hash + Objects.hashCode(this.duration);
+        hash = 71 * hash + this.size;
+        hash = 71 * hash + Objects.hashCode(this.orderId);
+        hash = 71 * hash + Objects.hashCode(this.parentOrderId);
+        hash = 71 * hash + Objects.hashCode(this.ocaGroup);
+        hash = 71 * hash + Objects.hashCode(this.positionId);
+        hash = 71 * hash + Objects.hashCode(this.childOrders);
+        hash = 71 * hash + Objects.hashCode(this.comboOrder);
+        hash = 71 * hash + Objects.hashCode(this.reference);
+        hash = 71 * hash + (this.submitted ? 1 : 0);
+        hash = 71 * hash + (this.submitChildOrdersFirst ? 1 : 0);
+        hash = 71 * hash + Objects.hashCode(this.orderEntryTime);
+        hash = 71 * hash + Objects.hashCode(this.orderFilledTime);
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.orderTimeInForceMinutes) ^ (Double.doubleToLongBits(this.orderTimeInForceMinutes) >>> 32));
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.filledSize) ^ (Double.doubleToLongBits(this.filledSize) >>> 32));
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.filledPrice) ^ (Double.doubleToLongBits(this.filledPrice) >>> 32));
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.commission) ^ (Double.doubleToLongBits(this.commission) >>> 32));
+        hash = 71 * hash + Objects.hashCode(this.currentStatus);
         return hash;
     }
 
@@ -348,22 +368,25 @@ public class TradeOrder implements Serializable {
         if (Double.doubleToLongBits(this.filledPrice) != Double.doubleToLongBits(other.filledPrice)) {
             return false;
         }
-        if ((this.orderId == null) ? (other.orderId != null) : !this.orderId.equals(other.orderId)) {
+        if (Double.doubleToLongBits(this.commission) != Double.doubleToLongBits(other.commission)) {
             return false;
         }
-        if ((this.parentOrderId == null) ? (other.parentOrderId != null) : !this.parentOrderId.equals(other.parentOrderId)) {
+        if (!Objects.equals(this.orderId, other.orderId)) {
             return false;
         }
-        if ((this.ocaGroup == null) ? (other.ocaGroup != null) : !this.ocaGroup.equals(other.ocaGroup)) {
+        if (!Objects.equals(this.parentOrderId, other.parentOrderId)) {
             return false;
         }
-        if ((this.positionId == null) ? (other.positionId != null) : !this.positionId.equals(other.positionId)) {
+        if (!Objects.equals(this.ocaGroup, other.ocaGroup)) {
             return false;
         }
-        if ((this.reference == null) ? (other.reference != null) : !this.reference.equals(other.reference)) {
+        if (!Objects.equals(this.positionId, other.positionId)) {
             return false;
         }
-        if (this.ticker != other.ticker && (this.ticker == null || !this.ticker.equals(other.ticker))) {
+        if (!Objects.equals(this.reference, other.reference)) {
+            return false;
+        }
+        if (!Objects.equals(this.ticker, other.ticker)) {
             return false;
         }
         if (this.direction != other.direction) {
@@ -372,28 +395,31 @@ public class TradeOrder implements Serializable {
         if (this.type != other.type) {
             return false;
         }
-        if (this.goodAfterTime != other.goodAfterTime && (this.goodAfterTime == null || !this.goodAfterTime.equals(other.goodAfterTime))) {
+        if (!Objects.equals(this.goodAfterTime, other.goodAfterTime)) {
             return false;
         }
-        if (this.goodUntilTime != other.goodUntilTime && (this.goodUntilTime == null || !this.goodUntilTime.equals(other.goodUntilTime))) {
+        if (!Objects.equals(this.goodUntilTime, other.goodUntilTime)) {
             return false;
         }
-        if (this.limitPrice != other.limitPrice && (this.limitPrice == null || !this.limitPrice.equals(other.limitPrice))) {
+        if (!Objects.equals(this.limitPrice, other.limitPrice)) {
             return false;
         }
-        if (this.stopPrice != other.stopPrice && (this.stopPrice == null || !this.stopPrice.equals(other.stopPrice))) {
+        if (!Objects.equals(this.stopPrice, other.stopPrice)) {
             return false;
         }
         if (this.duration != other.duration) {
             return false;
         }
-        if (this.childOrders != other.childOrders && (this.childOrders == null || !this.childOrders.equals(other.childOrders))) {
+        if (!Objects.equals(this.childOrders, other.childOrders)) {
             return false;
         }
-        if (this.comboOrder != other.comboOrder && (this.comboOrder == null || !this.comboOrder.equals(other.comboOrder))) {
+        if (!Objects.equals(this.comboOrder, other.comboOrder)) {
             return false;
         }
-        if (this.orderEntryTime != other.orderEntryTime && (this.orderEntryTime == null || !this.orderEntryTime.equals(other.orderEntryTime))) {
+        if (!Objects.equals(this.orderEntryTime, other.orderEntryTime)) {
+            return false;
+        }
+        if (!Objects.equals(this.orderFilledTime, other.orderFilledTime)) {
             return false;
         }
         if (this.currentStatus != other.currentStatus) {
@@ -404,10 +430,11 @@ public class TradeOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "TradeOrder{" + "ticker=" + ticker + ", direction=" + direction + ", type=" + type + ", goodAfterTime=" + goodAfterTime + ", goodUntilTime=" + goodUntilTime + ", limitPrice=" + limitPrice + ", stopPrice=" + stopPrice + ", duration=" + duration + ", size=" + size + ", orderId=" + orderId + ", parentOrderId=" + parentOrderId + ", ocaGroup=" + ocaGroup + ", positionId=" + positionId + ", childOrders=" + childOrders + ", comboOrder=" + comboOrder + ", reference=" + reference + ", submitted=" + submitted + ", submitChildOrdersFirst=" + submitChildOrdersFirst + ", orderEntryTime=" + orderEntryTime + ", orderTimeInForceMinutes=" + orderTimeInForceMinutes + ", filledSize=" + filledSize + ", filledPrice=" + filledPrice + ", currentStatus=" + currentStatus + '}';
+        return "TradeOrder{" + "ticker=" + ticker + ", direction=" + direction + ", type=" + type + ", goodAfterTime=" + goodAfterTime + ", goodUntilTime=" + goodUntilTime + ", limitPrice=" + limitPrice + ", stopPrice=" + stopPrice + ", duration=" + duration + ", size=" + size + ", orderId=" + orderId + ", parentOrderId=" + parentOrderId + ", ocaGroup=" + ocaGroup + ", positionId=" + positionId + ", childOrders=" + childOrders + ", comboOrder=" + comboOrder + ", reference=" + reference + ", submitted=" + submitted + ", submitChildOrdersFirst=" + submitChildOrdersFirst + ", orderEntryTime=" + orderEntryTime + ", orderFilledTime=" + orderFilledTime + ", orderTimeInForceMinutes=" + orderTimeInForceMinutes + ", filledSize=" + filledSize + ", filledPrice=" + filledPrice + ", commission=" + commission + ", currentStatus=" + currentStatus + '}';
     }
-
     
+    
+
     
     
 }

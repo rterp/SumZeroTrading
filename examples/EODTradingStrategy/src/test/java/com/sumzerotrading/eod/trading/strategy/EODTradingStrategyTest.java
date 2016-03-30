@@ -79,7 +79,9 @@ public class EODTradingStrategyTest {
         strategy.ibHost = ibHost;
         strategy.ibPort = ibPort;
         strategy.ibClientId = ibClientId;
-        strategy.orderType = TradeOrder.Type.MARKET_ON_CLOSE;
+        strategy.entryOrderType = TradeOrder.Type.MARKET_ON_CLOSE;
+        strategy.exitOrderType = TradeOrder.Type.MARKET_ON_OPEN;
+        strategy.exitSeconds = 0;
         propFile = Paths.get( getClass().getResource("/eod.test.properties").toURI()).toString();
         doReturn(mockReportGenerator).when(strategy).getReportGenerator(any(String.class));
     }
@@ -287,6 +289,15 @@ public class EODTradingStrategyTest {
         verify(strategy).setAllPricesInitialized();
         verify(strategy).placeMOCOrders(longTicker, shortTicker, zdt);
     }
+    
+    @Test
+    public void testGetNextBusinessDay_ExitSecondsSet() {
+        ZonedDateTime ldt = ZonedDateTime.of(2016, 2, 25, 6, 45, 55, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016, 2, 25, 6, 46, 55, 0, ZoneId.systemDefault());
+        strategy.exitSeconds = 60;
+        
+        assertEquals(expectedDatetime, strategy.getNextBusinessDay(ldt));
+    }    
 
     @Test
     public void testGetNextBusinessDay_Thursday() {
@@ -326,7 +337,9 @@ public class EODTradingStrategyTest {
         assertEquals(new StockTicker("SPY"), strategy.longShortPairMap.get(new StockTicker("QQQ")));
         assertEquals(new StockTicker("IWM"), strategy.longShortPairMap.get(new StockTicker("DIA")));
         assertEquals("/some/test/dir/", strategy.strategyDirectory);
-        assertEquals(TradeOrder.Type.MARKET_ON_CLOSE, strategy.orderType);
+        assertEquals(TradeOrder.Type.MARKET_ON_CLOSE, strategy.entryOrderType);
+        assertEquals(TradeOrder.Type.MARKET, strategy.exitOrderType);
+        assertEquals(3, strategy.exitSeconds);
     }
     
     @Test

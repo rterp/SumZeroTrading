@@ -5,10 +5,7 @@
  */
 package com.sumzerotrading.eod.trading.strategy;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sumzerotrading.broker.order.OrderEvent;
-import com.sumzerotrading.broker.order.OrderEventListener;
 import com.sumzerotrading.broker.order.OrderStatus.Status;
 import com.sumzerotrading.broker.order.TradeOrder;
 import java.io.File;
@@ -22,7 +19,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
