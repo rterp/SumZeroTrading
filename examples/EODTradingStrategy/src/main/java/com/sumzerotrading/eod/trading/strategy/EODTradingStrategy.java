@@ -261,8 +261,8 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     
     
     public static void main(String[] args) {
-        //String propFile = args[0];
-        String propFile = "/Users/RobTerpilowski/Downloads/ZoiData/EodTest/eod.props";
+        String propFile = args[0];
+        //String propFile = "/Users/RobTerpilowski/Downloads/ZoiData/EodTest/eod.props";
         EODTradingStrategy strategy = new EODTradingStrategy();
         strategy.start(propFile);
     }
