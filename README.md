@@ -11,4 +11,13 @@ Java API for developing automated trading applications which includes support fo
 
 
 
+Author:<br>
+Rob Terpilowski - Links:<br>
+twitter: [@RobTerpilowski](http://www.twitter.com/RobTerpilowski)<br>
+twitter: [@SumZeroTrading](http://www.twitter.com/SumZeroTrading)<br>
+LinkedIn: [Rob Terpilowski](http://www.linkedin.com/RobTerpilowski)<br>
+GitHub: [Rob Terpilowski](http://www.github.com/rterp)<br>
+
+
+
 
