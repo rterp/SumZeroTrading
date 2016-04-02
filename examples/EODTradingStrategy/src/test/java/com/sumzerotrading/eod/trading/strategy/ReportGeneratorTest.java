@@ -249,19 +249,19 @@ public class ReportGeneratorTest {
 
         TradeOrder longEntry = new TradeOrder("123", longTicker, longSize, TradeDirection.BUY);
         longEntry.setFilledPrice(longEntryFillPrice);
-        longEntry.setOrderEntryTime(entryTime);
+        longEntry.setOrderFilledTime(entryTime);
 
         TradeOrder longExit = new TradeOrder("123", longTicker, longSize, TradeDirection.SELL);
         longExit.setFilledPrice(longExitFillPrice);
-        longExit.setOrderEntryTime(exitTime);
+        longExit.setOrderFilledTime(exitTime);
 
         TradeOrder shortEntry = new TradeOrder("123", shortTicker, shortSize, TradeDirection.SELL);
         shortEntry.setFilledPrice(shortEntryFillPrice);
-        shortEntry.setOrderEntryTime(entryTime);
+        shortEntry.setOrderFilledTime(entryTime);
 
         TradeOrder shortExit = new TradeOrder("123", shortTicker, shortSize, TradeDirection.BUY);
         shortExit.setFilledPrice(shortExitFillPrice);
-        shortExit.setOrderEntryTime(exitTime);
+        shortExit.setOrderFilledTime(exitTime);
 
         RoundTrip roundTrip = new RoundTrip();
         roundTrip.longEntry = longEntry;
@@ -302,13 +302,13 @@ public class ReportGeneratorTest {
         longEntryOrder.setFilledPrice(100.00);
         longEntryOrder.setReference("EOD-Pair-Strategy:guid-123:Entry:Long*");
         longEntryOrder.setCurrentStatus(OrderStatus.Status.FILLED);
-        longEntryOrder.setOrderEntryTime(entryOrderTime);
+        longEntryOrder.setOrderFilledTime(entryOrderTime);
 
         TradeOrder shortEntryOrder = new TradeOrder("234", shortTicker, 50, TradeDirection.SELL);
         shortEntryOrder.setFilledPrice(50.00);
         shortEntryOrder.setReference("EOD-Pair-Strategy:guid-123:Entry:Short*");
         shortEntryOrder.setCurrentStatus(OrderStatus.Status.FILLED);
-        shortEntryOrder.setOrderEntryTime(entryOrderTime);
+        shortEntryOrder.setOrderFilledTime(entryOrderTime);
 
         generator.orderEvent(new OrderEvent(longEntryOrder, null));
         assertFalse(Files.exists(reportPath));
@@ -320,13 +320,13 @@ public class ReportGeneratorTest {
         longExitOrder.setFilledPrice(105.00);
         longExitOrder.setReference("EOD-Pair-Strategy:guid-123:Exit:Long*");
         longExitOrder.setCurrentStatus(OrderStatus.Status.FILLED);
-        longExitOrder.setOrderEntryTime(exitOrderTime);
+        longExitOrder.setOrderFilledTime(exitOrderTime);
 
         TradeOrder shortExitOrder = new TradeOrder("2345", shortTicker, 50, TradeDirection.BUY);
         shortExitOrder.setFilledPrice(40.00);
         shortExitOrder.setReference("EOD-Pair-Strategy:guid-123:Exit:Short*");
         shortExitOrder.setCurrentStatus(OrderStatus.Status.FILLED);
-        shortExitOrder.setOrderEntryTime(exitOrderTime);
+        shortExitOrder.setOrderFilledTime(exitOrderTime);
 
         generator.orderEvent(new OrderEvent(longExitOrder, null));
         assertFalse(Files.exists(reportPath));
