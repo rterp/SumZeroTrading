@@ -59,7 +59,7 @@ public class TradingExampleWithOrderStatusListener implements OrderEventListener
         futuresTicker.setExpiryYear(2016);
         futuresTicker.setExchange(Exchange.NYMEX);
         ZonedDateTime date = ZonedDateTime.now();
-        date = date.plusMinutes(1);
+        date = date.plusMinutes(2);
 
         String orderId = ibClient.getNextOrderId();
         int contracts = 1;
