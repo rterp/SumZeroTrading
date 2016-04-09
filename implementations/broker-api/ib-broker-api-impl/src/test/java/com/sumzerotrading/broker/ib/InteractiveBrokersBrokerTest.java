@@ -10,6 +10,7 @@ import com.sumzerotrading.broker.order.OrderEvent;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.StockTicker;
+import com.sumzerotrading.data.SumZeroException;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
@@ -78,6 +79,19 @@ public class InteractiveBrokersBrokerTest {
     
     @After
     public void tearDown() {
+    }
+    
+    
+    @Test
+    public void testConstructor() {
+        try {
+            InteractiveBrokersBroker broker = new InteractiveBrokersBroker(mockIbSocket);
+        } catch( SumZeroException ex ) {
+            ex.getCause().printStackTrace();
+            fail();
+            
+        }
+        
     }
 
     

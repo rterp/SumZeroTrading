@@ -6,6 +6,7 @@
 package com.sumzerotrading.interactive.brokers.client;
 
 import com.sumzerotrading.broker.BrokerErrorListener;
+import com.sumzerotrading.broker.Position;
 import com.sumzerotrading.broker.order.OrderEventListener;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.BarData;
@@ -54,4 +55,6 @@ public interface InteractiveBrokersClientInterface {
     List<TradeOrder> getOpenOrders();
     
     void useDelayedData( boolean useDelayedData );
+    
+    List<Position> getOpenPositions();
 }

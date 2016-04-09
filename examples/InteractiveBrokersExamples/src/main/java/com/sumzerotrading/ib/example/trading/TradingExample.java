@@ -63,18 +63,19 @@ public class TradingExample {
         order.setLimitPrice(32.50);
         ibClient.placeOrder(order);
     }
-
+ 
     public void placeEquityOrder() {
         InteractiveBrokersClientInterface ibClient = InteractiveBrokersClient.getInstance("localhost", 7999, 1);
         ibClient.connect();
 
-        StockTicker amazonTicker = new StockTicker("123");
+        StockTicker amazonTicker = new StockTicker("QQQ");
         String orderId = ibClient.getNextOrderId();
         int shares = 500;
 
         TradeOrder order = new TradeOrder(orderId, amazonTicker, shares, TradeDirection.SELL);
 
-        ibClient.placeOrder(order);
+        //ibClient.placeOrder(order);
+        ibClient.getOpenPositions();
     }
 
     public void placeCurrencyOrder() {

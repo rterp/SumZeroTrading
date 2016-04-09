@@ -22,6 +22,7 @@ package com.sumzerotrading.interactive.brokers.client;
 
 import com.sumzerotrading.broker.BrokerErrorListener;
 import com.sumzerotrading.broker.IBroker;
+import com.sumzerotrading.broker.Position;
 import com.sumzerotrading.broker.ib.InteractiveBrokersBroker;
 import com.sumzerotrading.broker.order.OrderEventListener;
 import com.sumzerotrading.broker.order.TradeOrder;
@@ -173,6 +174,13 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     public List<BarData> requestHistoricalData(Ticker ticker, int duration, BarData.LengthUnit lengthUnit, int barSize, BarData.LengthUnit barSizeUnit, IHistoricalDataProvider.ShowProperty showProperty ) {
         return historicalDataProvider.requestHistoricalData(ticker, duration, lengthUnit,  barSize, barSizeUnit, showProperty, true);
     }
+
+    @Override
+    public List<Position> getOpenPositions() {
+        return broker.getAllPositions();
+    }
+    
+    
     
     
     public static void setMockInteractiveBrokersClient(InteractiveBrokersClientInterface mockClient, String host, int port, int clientId) {

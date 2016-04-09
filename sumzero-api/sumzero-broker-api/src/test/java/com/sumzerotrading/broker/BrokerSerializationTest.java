@@ -71,19 +71,7 @@ public class BrokerSerializationTest {
         test( error );
     }
     
-    @Test
-    public void testPosition() throws Exception {
-        Transaction t1 = new Transaction();
-        t1.setTicker( new StockTicker("ABC"));
-        Transaction t2 = new Transaction();
-        t2.setTicker( new StockTicker("123"));
-        Position position = new Position();
-        position.setCloseTransaction(t2);
-        position.setOpenTransaction(t1);
-        position.setStatus(Position.Status.OPEN);
-        
-        test( position );
-    }
+
     
     @Test
     public void testTransaction() throws Exception {

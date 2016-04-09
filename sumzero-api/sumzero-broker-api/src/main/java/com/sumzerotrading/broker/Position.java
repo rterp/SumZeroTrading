@@ -20,53 +20,55 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.broker;
 
+import com.sumzerotrading.data.Ticker;
 import java.io.Serializable;
+import java.util.Objects;
 
+/**
+ * Defines a Position held at the broker.
+ * 
+ * @author RobTerpilowski
+ */
 public class Position implements Serializable {
+    
+    
+    protected Ticker ticker;
+    protected double size;
 
-    enum Status {
-
-        OPEN, CLOSED
-    };
-    protected Transaction openTransaction;
-    protected Transaction closeTransaction;
-    protected Status status;
-
-    public Transaction getOpenTransaction() {
-        return openTransaction;
+    /**
+     * The ticker and the position size.  Negative position sizes indicate a short position
+     * 
+     * @param ticker The ticker held.
+     * @param size The size of the position
+     */
+    public Position(Ticker ticker, double size) {
+        this.ticker = ticker;
+        this.size = size;
     }
 
-    public void setOpenTransaction(Transaction openTransaction) {
-        this.openTransaction = openTransaction;
+    
+    /**
+     * Get the ticker for this position
+     * @return The ticker for this position
+     */
+    public Ticker getTicker() {
+        return ticker;
     }
 
-    public Transaction getCloseTransaction() {
-        return closeTransaction;
-    }
-
-    public void setCloseTransaction(Transaction closeTransaction) {
-        this.closeTransaction = closeTransaction;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+    /**
+     * Gets the size of the position.  Negative sizes indicate short positions.
+     * @return The position size.
+     */
+    public double getSize() {
+        return size;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime
-                * result
-                + ((closeTransaction == null) ? 0 : closeTransaction.hashCode());
-        result = prime * result
-                + ((openTransaction == null) ? 0 : openTransaction.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        return result;
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.ticker);
+        hash = 47 * hash + (int) (Double.doubleToLongBits(this.size) ^ (Double.doubleToLongBits(this.size) >>> 32));
+        return hash;
     }
 
     @Override
@@ -77,31 +79,25 @@ public class Position implements Serializable {
         if (obj == null) {
             return false;
         }
-        if (!(obj instanceof Position)) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
-        Position other = (Position) obj;
-        if (closeTransaction == null) {
-            if (other.closeTransaction != null) {
-                return false;
-            }
-        } else if (!closeTransaction.equals(other.closeTransaction)) {
+        final Position other = (Position) obj;
+        if (Double.doubleToLongBits(this.size) != Double.doubleToLongBits(other.size)) {
             return false;
         }
-        if (openTransaction == null) {
-            if (other.openTransaction != null) {
-                return false;
-            }
-        } else if (!openTransaction.equals(other.openTransaction)) {
-            return false;
-        }
-        if (status == null) {
-            if (other.status != null) {
-                return false;
-            }
-        } else if (!status.equals(other.status)) {
+        if (!Objects.equals(this.ticker, other.ticker)) {
             return false;
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Position{" + "ticker=" + ticker + ", size=" + size + '}';
+    }
+    
+
+    
+    
 }

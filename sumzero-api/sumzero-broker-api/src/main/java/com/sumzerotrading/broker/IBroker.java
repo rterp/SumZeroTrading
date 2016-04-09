@@ -191,5 +191,13 @@ public interface IBroker {
      * @param listener 
      */
     public void removeTimeUpdateListener( TimeUpdatedListener listener );
+    
+    
+    /**
+     * Request all open positions for this client.
+     *
+     * @return The open positions for this client.
+     */
+    public List<Position> getAllPositions();
 
 }

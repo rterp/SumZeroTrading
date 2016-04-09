@@ -30,24 +30,24 @@ import com.ib.client.OrderState;
 import com.sumzerotrading.broker.BrokerError;
 import com.sumzerotrading.broker.BrokerErrorListener;
 import com.sumzerotrading.broker.IBroker;
+import com.sumzerotrading.broker.Position;
 import com.sumzerotrading.broker.order.OrderEvent;
 import com.sumzerotrading.broker.order.OrderEventListener;
 import com.sumzerotrading.broker.order.OrderStatus;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.ComboTicker;
 import com.sumzerotrading.data.InstrumentType;
+import com.sumzerotrading.data.SumZeroException;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.ib.BaseIBConnectionDelegate;
 import com.sumzerotrading.ib.ContractBuilderFactory;
-import com.sumzerotrading.ib.IBConnection;
+import com.sumzerotrading.ib.ContractWrapper;
 import com.sumzerotrading.ib.IBConnectionInterface;
 import com.sumzerotrading.ib.IBSocket;
 import com.sumzerotrading.ib.IbUtils;
-import com.sumzerotrading.ib.OrderStatusListener;
-import com.sumzerotrading.ib.TimeListener;
-import com.sumzerotrading.ib.historical.ContractDetailsListener;
 import com.sumzerotrading.time.TimeUpdatedListener;
 import com.sumzerotrading.util.QuoteUtil;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -113,17 +113,18 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     }
 
     public InteractiveBrokersBroker(IBSocket ibSocket) {
+        this.ibSocket = ibSocket;
+
         try {
             loadOrderMaps();
         } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
+            throw new SumZeroException(ex);
         }
-        this.ibSocket = ibSocket;
-        
+
         orderEventMap = new PassiveExpiringMap<>(30, TimeUnit.SECONDS);
         callbackInterface = ibSocket.getConnection();
         callbackInterface.addIbConnectionDelegate(this);
-        
+
         ibConnection = ibSocket.getClientSocket();
         orderProcessor = new IBOrderEventProcessor(orderEventQueue, this);
         currencyOrderTimer = new Timer(true);
@@ -139,10 +140,6 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     public void removeTimeUpdateListener(TimeUpdatedListener listener) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    
-    
-
 
     @Override
     public boolean isConnected() {
@@ -171,7 +168,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     @Override
     public void execDetails(int orderId, Contract contract, Execution execution) {
-        logger.info( "Execution details: orderId: " + orderId + " contract: " + contract + " Execution: "+ execution);
+        logger.info("Execution details: orderId: " + orderId + " contract: " + contract + " Execution: " + execution);
         //not currently implemented
     }
 
@@ -185,7 +182,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     }
 
     public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
-        logger.info( "OpenOrder: " + orderId + " Contract: " + contract + " Order: " + order + " OrderState: " + orderState);
+        logger.info("OpenOrder: " + orderId + " Contract: " + contract + " Order: " + order + " OrderState: " + orderState);
     }
 
     public void timeReceived(ZonedDateTime time) {
@@ -197,7 +194,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     }
 
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
-        logger.info( "OrderStatus(): orderId: " + orderId + " Status: " + status + " filled: " + filled + " remaining: " + remaining + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId + " lastFillePrice: " + lastFillPrice + " clientId: " + clientId + " whyHeld: " + whyHeld);
+        logger.info("OrderStatus(): orderId: " + orderId + " Status: " + status + " filled: " + filled + " remaining: " + remaining + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId + " lastFillePrice: " + lastFillPrice + " clientId: " + clientId + " whyHeld: " + whyHeld);
         TradeOrder order = orderMap.get(Integer.toString(orderId));
 
         if (order == null) {
@@ -242,10 +239,6 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
         logger.info("CommssionReport(): " + commissionReport);
     }
 
-    
-    
-    
-    
     public void addOrderEventListener(OrderEventListener listener) {
         synchronized (orderEventListeners) {
             orderEventListeners.add(listener);
@@ -275,7 +268,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     protected void putOnErrorQueue(BrokerError error) {
         try {
-           // brokerErrorQueue.put(error);
+            // brokerErrorQueue.put(error);
         } catch (Exception ex) {
             //logger.error(ex, ex);
             ex.printStackTrace();
@@ -405,11 +398,29 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
         return new ArrayList<>(orderMap.values());
     }
 
+    @Override
+    public List<Position> getAllPositions() {
+        ibConnection.reqPositions();
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void position(String account, Contract contract, int pos, double avgCost) {
+        logger.info("Position - Account: " + account + " Contract: " + new ContractWrapper(contract) + " size: " + pos + " avgCost: " + avgCost );
+    }
+
+    @Override
+    public void positionEnd() {
+        logger.info( "Position END()");
+    }
+    
+    
+
     protected void saveOrderMaps() throws Exception {
         tradeFileSemaphore.acquire();
         try {
-            createDir();
-            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(getDirName() + "orders.ser"));
+            File file = new File(getDirName() + "orders.ser");
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
             output.writeObject(completedOrderMap);
             output.writeObject(orderMap);
             output.flush();
@@ -423,10 +434,14 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
         tradeFileSemaphore.acquire();
         try {
             createDir();
-            ObjectInputStream input = new ObjectInputStream(new FileInputStream(getDirName() + "orders.ser"));
-            completedOrderMap = (HashMap) input.readObject();
-            orderMap = (HashMap) input.readObject();
-            input.close();
+            File file = new File(getDirName() + "orders.ser");
+            if (file.exists()) {
+
+                ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
+                completedOrderMap = (HashMap) input.readObject();
+                orderMap = (HashMap) input.readObject();
+                input.close();
+            }
         } finally {
             tradeFileSemaphore.release();
         }
@@ -435,6 +450,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     protected void createDir() {
         try {
             Files.createDirectories(Paths.get(getDirName()));
+
         } catch (IOException ex) {
             logger.error(ex.getMessage(), ex);
         }
@@ -495,14 +511,13 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
         Contract contract = ContractBuilderFactory.getContractBuilder(order.getTicker()).buildContract(order.getTicker());
 
         Order ibOrder = new Order();
-        if( order.getType() == TradeOrder.Type.MARKET_ON_OPEN ) {
+        if (order.getType() == TradeOrder.Type.MARKET_ON_OPEN) {
             order.setDuration(TradeOrder.Duration.MARKET_ON_OPEN);
         }
 
         ibOrder.m_action = IbUtils.getAction(order.getTradeDirection());
         ibOrder.m_orderType = IbUtils.getOrderType(order.getType());
 
-        
         ibOrder.m_tif = IbUtils.getTif(order.getDuration());
         ibOrder.m_orderId = Integer.parseInt(order.getOrderId());
         ibOrder.m_totalQuantity = order.getSize();
@@ -575,8 +590,6 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     public void cancelAndReplaceOrder(String originalOrderId, TradeOrder newOrder) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 
     protected static class IbOrderAndContract {
 
