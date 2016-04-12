@@ -22,7 +22,9 @@ import com.sumzerotrading.marketdata.QuoteType;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +38,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author RobTerpilowski
  */
-public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventListener, BrokerErrorListener, RealtimeBarListener {
+public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorListener, RealtimeBarListener {
 
     protected static Logger logger = LoggerFactory.getLogger(IntradayTradingStrategy.class);
     enum Bias { LONG, SHORT, NONE };
@@ -45,22 +47,25 @@ public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventL
     protected InteractiveBrokersClientInterface ibClient;
     protected Ticker mainTicker;
     protected List<Ticker> tickersToTrade = new ArrayList<>();
-    protected Map<Ticker, Double> previousCloseMap = new HashMap<>();
     protected String ibHost;
     protected int ibPort;
     protected int ibClientId;
     protected String strategyDirectory;
-    protected int exitSeconds = 0;
 
     protected int orderSizeInDollars;
     protected Bias bias;
     protected double yesterdayClose;
     protected BarData firstBar;
-    protected LocalTime startTime;
+    protected LocalTime systemStartTime;
     protected boolean ordersPlaced = false;
     protected boolean allPricesInitialized = false;
-    protected LocalTime timeToPlaceOrders;
-    protected LocalTime marketCloseTime;
+    protected LocalTime shortStartTime;
+    protected LocalTime shortStopTime;
+    protected LocalTime shortCloseTime;
+    protected LocalTime longStartTime;
+    protected LocalTime longStopTime;
+    protected LocalTime longCloseTime;
+
     protected IntradaySystemProperties systemProperties;
     protected IReportGenerator reportGenerator;
     
@@ -81,11 +86,7 @@ public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventL
 
         ordersPlaced = checkOpenOrders(openOrders, tickersToTrade);
         logger.info("Checking if orders have already been placed today: " + ordersPlaced);
-        logger.info("Strategy will place orders after: " + timeToPlaceOrders.toString());
 
-        ibClient.subscribeLevel1(mainTicker, this);
-        logger.info("Subscribing to: " + mainTicker);
-        
         logger.info( "Requesting historical data for: " + mainTicker );
         
         List<BarData> data = ibClient.requestHistoricalData(mainTicker, 5, BarData.LengthUnit.DAY, 1, BarData.LengthUnit.DAY, IHistoricalDataProvider.ShowProperty.TRADES);
@@ -112,7 +113,8 @@ public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventL
     @Override
     public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
         logger.info( "Realtime bar received for ticker: " + ticker + " data: " + bar );
-        if( bar.getDateTime().toLocalTime() == startTime ) {
+        LocalTime barTime = bar.getDateTime().toLocalTime();
+        if( barTime == systemStartTime ) {
             firstBar = bar;
             logger.info( "System Start time, first bar is: " + firstBar );
         }
@@ -123,22 +125,26 @@ public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventL
         }
         
         if( bias == Bias.LONG ) {            
-            //only place long trades on the first bar
-            if( bar.getDateTime().toLocalTime() == startTime ) {
+            if( bar.getDateTime().toLocalTime() == systemStartTime ) {
                 if( bar.getClose() < yesterdayClose * 1.01 ) {
-                    //place long order
+                    placeOrder( ticker, TradeDirection.BUY, (int)Math.round(orderSizeInDollars/bar.getClose()), longCloseTime);
                 }
-                //&& b.Close < history[0].Close * (decimal)1.01 // vxx open below the Close
             }
         } else if( bias == Bias.SHORT ) {
-            
+            if( ! (barTime.isBefore(shortStartTime) || barTime.isAfter(shortStopTime)) ) {
+                if( firstBar.getClose() < yesterdayClose ) {
+                    if( bar.getClose() < firstBar.getClose() * 1.01 ) {
+                        placeOrder( ticker, TradeDirection.SELL, (int)Math.round(orderSizeInDollars/bar.getClose()), shortCloseTime);
+                    }
+                }
+            }
         }
     }
     
     
     
     
-    public synchronized void placeOrder( Ticker ticker, TradeDirection direction, int size, ZonedDateTime closeTime ) {
+    public synchronized void placeOrder( Ticker ticker, TradeDirection direction, int size, LocalTime closeTime ) {
         String correlationId = getUUID();
         TradeDirection exitDirection;
         if( direction == TradeDirection.BUY ) {
@@ -147,11 +153,13 @@ public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventL
             exitDirection = TradeDirection.BUY;
         }
         
+        ZonedDateTime zdt = ZonedDateTime.of(LocalDate.now(ZoneId.systemDefault()), closeTime, ZoneId.systemDefault());
+        
         TradeOrder entryOrder = new TradeOrder(ibClient.getNextOrderId(), ticker, size, direction);
         entryOrder.setReference("Intraday-Strategy-" + ticker.getSymbol() + ":" + correlationId + ":Entry:" + direction + "*" );
         TradeOrder exitOrder = new TradeOrder(ibClient.getNextOrderId(), ticker, size, exitDirection);
         exitOrder.setReference("Intraday-Strategy-" + ticker.getSymbol() + ":" + correlationId + ":Exit:" + direction + "*" );
-        exitOrder.setGoodAfterTime(closeTime);
+        exitOrder.setGoodAfterTime(zdt);
         entryOrder.addChildOrder(exitOrder);
         
         ibClient.placeOrder(entryOrder);
@@ -163,23 +171,6 @@ public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventL
     public void orderEvent(OrderEvent event) {
         logger.info("Received order event: " + event);
     }
-
-    @Override
-    public void quoteRecieved(ILevel1Quote quote) {
-        if (quote.getType() == QuoteType.CLOSE) {
-            previousCloseMap.put(quote.getTicker(), quote.getValue().doubleValue());
-            if (!allPricesInitialized) {
-                boolean init = true;
-                for (Ticker ticker : tickersToTrade) {
-                    if (previousCloseMap.containsKey(ticker)) {
-                        init = false;
-                    }
-                }
-                allPricesInitialized = true;
-            }
-        }
-    }
-
 
 
     @Override
@@ -198,10 +189,14 @@ public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventL
             ibPort = props.getTwsPort();
             ibClientId = props.getTwsClientId();
             orderSizeInDollars = props.getTradeSizeDollars();
-            timeToPlaceOrders = props.getStartTime();
-            marketCloseTime = props.getMarketCloseTime();
+            systemStartTime = props.getSystemStartTime();
+            longStartTime = props.getLongStartTime();
+            longStopTime = props.getLongStopTime();
+            longCloseTime = props.getLongExitTime();
+            shortStartTime = props.getShortStopTime();
+            shortStopTime = props.getShortStopTime();
+            shortCloseTime = props.getShortExitTime();
             strategyDirectory = props.getStrategyDirectory();
-            exitSeconds = props.getExitSeconds();
 
             logger.info("Loaded properties: " + props);
 
@@ -213,11 +208,6 @@ public class IntradayTradingStrategy implements Level1QuoteListener, OrderEventL
 
     protected String getUUID() {
         return UUID.randomUUID().toString();
-    }
-
-    protected int getOrderSize(Ticker ticker) {
-        double lastPrice = previousCloseMap.get(ticker);
-        return (int) Math.round(orderSizeInDollars / lastPrice);
     }
 
     protected boolean setAllPricesInitialized() {

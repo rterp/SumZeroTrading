@@ -25,14 +25,19 @@ import java.util.Properties;
 public class IntradaySystemProperties {
     
 
-    protected LocalTime startTime;
-    protected LocalTime marketCloseTime;
     protected String twsHost;
     protected int twsPort;
     protected int twsClientId;
     protected int tradeSizeDollars;
+    protected LocalTime systemStartTime;
+    protected LocalTime longStartTime;
+    protected LocalTime longStopTime;
+    protected LocalTime longExitTime;
+    protected LocalTime shortStartTime;
+    protected LocalTime shortStopTime;
+    protected LocalTime shortExitTime;
+    protected String ticker;
     protected String strategyDirectory;
-    protected int exitSeconds = 0;
     
     
     //For Unit tests
@@ -52,8 +57,23 @@ public class IntradaySystemProperties {
         parseProps(props);
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+
+
+    protected void parseProps( Properties props ) {
+        twsHost = props.getProperty("tws.host");
+        twsPort = Integer.parseInt(props.getProperty("tws.port"));
+        twsClientId = Integer.parseInt(props.getProperty("tws.client.id"));
+        tradeSizeDollars = Integer.parseInt(props.getProperty("trade.size.dollars"));
+        systemStartTime = LocalTime.parse(props.getProperty("start.time"));
+        ticker = props.getProperty("ticker");
+        longStartTime = LocalTime.parse(props.getProperty("long.start.time"));
+        longStopTime = LocalTime.parse(props.getProperty("long.stop.time"));
+        longExitTime = LocalTime.parse(props.getProperty("long.exit.time"));
+        shortStartTime = LocalTime.parse(props.getProperty("short.start.time"));
+        shortStopTime = LocalTime.parse(props.getProperty("short.stop.time"));
+        shortExitTime = LocalTime.parse(props.getProperty("short.exit.time"));
+        strategyDirectory = props.getProperty("strategy.dir");
+
     }
 
     public String getTwsHost() {
@@ -72,47 +92,58 @@ public class IntradaySystemProperties {
         return tradeSizeDollars;
     }
 
+    public LocalTime getSystemStartTime() {
+        return systemStartTime;
+    }
 
-    public LocalTime getMarketCloseTime() {
-        return marketCloseTime;
+    public LocalTime getLongStartTime() {
+        return longStartTime;
+    }
+
+    public LocalTime getLongStopTime() {
+        return longStopTime;
+    }
+
+    public LocalTime getLongExitTime() {
+        return longExitTime;
+    }
+
+    public LocalTime getShortStartTime() {
+        return shortStartTime;
+    }
+
+    public LocalTime getShortStopTime() {
+        return shortStopTime;
+    }
+
+    public LocalTime getShortExitTime() {
+        return shortExitTime;
+    }
+
+    public String getTicker() {
+        return ticker;
     }
 
     public String getStrategyDirectory() {
         return strategyDirectory;
     }
 
-
-    public int getExitSeconds() {
-        return exitSeconds;
-    }
-    
-    
-
-
-    protected void parseProps( Properties props ) {
-        twsHost = props.getProperty("tws.host");
-        twsPort = Integer.parseInt(props.getProperty("tws.port"));
-        twsClientId = Integer.parseInt(props.getProperty("tws.client.id"));
-        tradeSizeDollars = Integer.parseInt(props.getProperty("trade.size.dollars"));
-        startTime = LocalTime.parse(props.getProperty("start.time"));
-        marketCloseTime = LocalTime.parse(props.getProperty("market.close.time"));
-        strategyDirectory = props.getProperty("strategy.directory");
-        exitSeconds = Integer.parseInt(props.getProperty("exit.seconds", "0"));
-    }
-    
-
-    
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.startTime);
-        hash = 83 * hash + Objects.hashCode(this.marketCloseTime);
-        hash = 83 * hash + Objects.hashCode(this.twsHost);
-        hash = 83 * hash + this.twsPort;
-        hash = 83 * hash + this.twsClientId;
-        hash = 83 * hash + this.tradeSizeDollars;
-        hash = 83 * hash + Objects.hashCode(this.strategyDirectory);
-        hash = 83 * hash + this.exitSeconds;
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(this.twsHost);
+        hash = 41 * hash + this.twsPort;
+        hash = 41 * hash + this.twsClientId;
+        hash = 41 * hash + this.tradeSizeDollars;
+        hash = 41 * hash + Objects.hashCode(this.systemStartTime);
+        hash = 41 * hash + Objects.hashCode(this.longStartTime);
+        hash = 41 * hash + Objects.hashCode(this.longStopTime);
+        hash = 41 * hash + Objects.hashCode(this.longExitTime);
+        hash = 41 * hash + Objects.hashCode(this.shortStartTime);
+        hash = 41 * hash + Objects.hashCode(this.shortStopTime);
+        hash = 41 * hash + Objects.hashCode(this.shortExitTime);
+        hash = 41 * hash + Objects.hashCode(this.ticker);
+        hash = 41 * hash + Objects.hashCode(this.strategyDirectory);
         return hash;
     }
 
@@ -137,19 +168,34 @@ public class IntradaySystemProperties {
         if (this.tradeSizeDollars != other.tradeSizeDollars) {
             return false;
         }
-        if (this.exitSeconds != other.exitSeconds) {
+        if (!Objects.equals(this.twsHost, other.twsHost)) {
             return false;
         }
-        if (!Objects.equals(this.twsHost, other.twsHost)) {
+        if (!Objects.equals(this.ticker, other.ticker)) {
             return false;
         }
         if (!Objects.equals(this.strategyDirectory, other.strategyDirectory)) {
             return false;
         }
-        if (!Objects.equals(this.startTime, other.startTime)) {
+        if (!Objects.equals(this.systemStartTime, other.systemStartTime)) {
             return false;
         }
-        if (!Objects.equals(this.marketCloseTime, other.marketCloseTime)) {
+        if (!Objects.equals(this.longStartTime, other.longStartTime)) {
+            return false;
+        }
+        if (!Objects.equals(this.longStopTime, other.longStopTime)) {
+            return false;
+        }
+        if (!Objects.equals(this.longExitTime, other.longExitTime)) {
+            return false;
+        }
+        if (!Objects.equals(this.shortStartTime, other.shortStartTime)) {
+            return false;
+        }
+        if (!Objects.equals(this.shortStopTime, other.shortStopTime)) {
+            return false;
+        }
+        if (!Objects.equals(this.shortExitTime, other.shortExitTime)) {
             return false;
         }
         return true;
@@ -157,10 +203,9 @@ public class IntradaySystemProperties {
 
     @Override
     public String toString() {
-        return "IntradaySystemProperties{" + "startTime=" + startTime + ", marketCloseTime=" + marketCloseTime + ", twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", strategyDirectory=" + strategyDirectory + ", exitSeconds=" + exitSeconds + '}';
+        return "IntradaySystemProperties{" + "twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", systemStartTime=" + systemStartTime + ", longStartTime=" + longStartTime + ", longStopTime=" + longStopTime + ", longExitTime=" + longExitTime + ", shortStartTime=" + shortStartTime + ", shortStopTime=" + shortStopTime + ", shortExitTime=" + shortExitTime + ", ticker=" + ticker + ", strategyDirectory=" + strategyDirectory + '}';
     }
 
     
-    
-    
+
 }
