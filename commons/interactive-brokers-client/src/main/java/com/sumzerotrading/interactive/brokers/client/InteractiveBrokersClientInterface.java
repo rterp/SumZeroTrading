@@ -14,6 +14,8 @@ import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.Level2QuoteListener;
+import com.sumzerotrading.realtime.bar.RealtimeBarListener;
+import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import java.util.List;
 
 /**
@@ -57,4 +59,7 @@ public interface InteractiveBrokersClientInterface {
     void useDelayedData( boolean useDelayedData );
     
     List<Position> getOpenPositions();
+    
+    public void subscribeRealtimeBar(RealtimeBarRequest request, RealtimeBarListener listener );
+    
 }

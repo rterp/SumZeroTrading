@@ -36,6 +36,9 @@ import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.Level2QuoteListener;
 import com.sumzerotrading.marketdata.QuoteEngine;
 import com.sumzerotrading.marketdata.ib.IBQuoteEngine;
+import com.sumzerotrading.realtime.bar.IRealtimeBarEngine;
+import com.sumzerotrading.realtime.bar.RealtimeBarListener;
+import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +56,7 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     protected QuoteEngine quoteEngine;
     protected IBroker broker;
     protected IHistoricalDataProvider historicalDataProvider;
+    protected IRealtimeBarEngine realtimeBarProvider;
     protected static Map<String,InteractiveBrokersClientInterface> ibClientMap = new HashMap<>();
     
 
@@ -179,6 +183,13 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     public List<Position> getOpenPositions() {
         return broker.getAllPositions();
     }
+
+    @Override
+    public void subscribeRealtimeBar(RealtimeBarRequest request, RealtimeBarListener listener ) {
+        realtimeBarProvider.subscribeRealtimeBars(request, listener);
+    }
+    
+    
     
     
     

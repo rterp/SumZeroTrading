@@ -1,0 +1,7 @@
+        /**
+         * Test if order events get fired under the following conditions. - App
+         * disconnects from TWS, order is filled, app reconnects to TWS. - TWS
+         * shuts down, order is filled, tws starts back up, app reconnects to
+         * TWS. --If above test works, test how long TWS can be off for, before
+         * the app does --not receive the order event.
+         */
