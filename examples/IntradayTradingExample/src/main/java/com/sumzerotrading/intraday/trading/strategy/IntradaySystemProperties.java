@@ -64,7 +64,7 @@ public class IntradaySystemProperties {
         twsPort = Integer.parseInt(props.getProperty("tws.port"));
         twsClientId = Integer.parseInt(props.getProperty("tws.client.id"));
         tradeSizeDollars = Integer.parseInt(props.getProperty("trade.size.dollars"));
-        systemStartTime = LocalTime.parse(props.getProperty("start.time"));
+        systemStartTime = LocalTime.parse(props.getProperty("system.start.time"));
         ticker = props.getProperty("ticker");
         longStartTime = LocalTime.parse(props.getProperty("long.start.time"));
         longStopTime = LocalTime.parse(props.getProperty("long.stop.time"));

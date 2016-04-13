@@ -12,13 +12,11 @@ import com.sumzerotrading.broker.order.OrderEventListener;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.BarData;
+import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInterface;
-import com.sumzerotrading.marketdata.ILevel1Quote;
-import com.sumzerotrading.marketdata.Level1QuoteListener;
-import com.sumzerotrading.marketdata.QuoteType;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import java.io.IOException;
@@ -27,9 +25,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +68,7 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
     
 
     public void start(String propFile) {
+        logger.info( "Starting strategy with propfile at: " + propFile );
         initProps(propFile);
         ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
         logger.info("Connecting to IB client at:" + ibHost + ":" + ibPort + " with clientID: " + ibClientId);
@@ -197,6 +194,7 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
             shortStopTime = props.getShortStopTime();
             shortCloseTime = props.getShortExitTime();
             strategyDirectory = props.getStrategyDirectory();
+            mainTicker = new StockTicker( props.getTicker() );
 
             logger.info("Loaded properties: " + props);
 
@@ -236,7 +234,7 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
 
     public static void main(String[] args) {
         String propFile = args[0];
-        //String propFile = "/Users/RobTerpilowski/Downloads/ZoiData/EodTest/eod.props";
+        //String propFile = "/Users/RobTerpilowski/Downloads/ZoiData/EodTest/intraday.props";
         IntradayTradingStrategy strategy = new IntradayTradingStrategy();
         strategy.start(propFile);
     }

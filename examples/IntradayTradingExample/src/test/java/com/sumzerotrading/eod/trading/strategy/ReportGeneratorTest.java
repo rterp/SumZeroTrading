@@ -266,8 +266,8 @@ public class ReportGeneratorTest {
         shortExit.setOrderFilledTime(exitTime);
 
         RoundTrip roundTrip = new RoundTrip();
-        roundTrip.longEntry = longEntry;
-        roundTrip.longExit = longExit;
+        roundTrip.entry = longEntry;
+        roundTrip.exit = longExit;
         roundTrip.shortEntry = shortEntry;
         roundTrip.shortExit = shortExit;
 

@@ -6,6 +6,7 @@
 package com.sumzerotrading.intraday.trading.strategy;
 
 import com.sumzerotrading.broker.order.TradeOrder;
+import com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Side;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -18,26 +19,16 @@ public class RoundTrip implements Serializable {
 
     public static final long serialVersionUID = 1l;
     protected String correlationId;
-    protected TradeOrder longEntry;
-    protected TradeOrder longExit;
-    protected TradeOrder shortEntry;
-    protected TradeOrder shortExit;
+    protected TradeOrder entry;
+    protected TradeOrder exit;
     
     
     public void addTradeReference( TradeOrder order, TradeReferenceLine tradeReference ) {
         correlationId = tradeReference.getCorrelationId();
-        if( tradeReference.getDirection() == TradeReferenceLine.Direction.LONG ) {
-            if( tradeReference.getSide() == TradeReferenceLine.Side.ENTRY ) {
-                longEntry = order;
-            } else {
-                longExit = order;
-            }
+        if( tradeReference.getSide() == Side.ENTRY ) {
+            entry = order;
         } else {
-            if( tradeReference.getSide() == TradeReferenceLine.Side.ENTRY ) {
-                shortEntry = order;
-            } else {
-                shortExit = order;
-            }
+            exit = order;
         }
     }
     
@@ -49,27 +40,17 @@ public class RoundTrip implements Serializable {
         //shortExitPrice, shortExitCommissions
         //2016-03-20T12:40:00PST,QQQ,200,100.23,1.45,2016-03-21T12:40:00PST,
         StringBuilder sb = new StringBuilder();
-        sb.append(longEntry.getOrderFilledTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
-                .append("Long,")
-                .append(longEntry.getTicker().getSymbol()).append(",")
-                .append(longEntry.getSize()).append(",")
-                .append(longEntry.getFilledPrice()).append(",")
+        sb.append(entry.getOrderFilledTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
+                .append(entry.getTradeDirection()).append(",")
+                .append(entry.getTicker().getSymbol()).append(",")
+                .append(entry.getSize()).append(",")
+                .append(entry.getFilledPrice()).append(",")
                 //long entry commissions
                 .append(0).append(",")
-                .append(longExit.getOrderFilledTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
-                .append(longExit.getFilledPrice()).append(",")
+                .append(exit.getOrderFilledTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
+                .append(exit.getFilledPrice()).append(",")
                 //long exit commissions
-                .append(0).append(",")
-                .append("Short,")
-                .append(shortEntry.getTicker().getSymbol()).append(",")
-                .append(shortEntry.getSize()).append(",")
-                .append(shortEntry.getFilledPrice()).append(",")
-                //short entry commissions
-                .append(0).append(",")
-                .append(shortExit.getFilledPrice()).append(",")
-                //short exit commissions.
                 .append(0);
-        
         return sb.toString();
     }
     
@@ -77,10 +58,8 @@ public class RoundTrip implements Serializable {
     
     
     public boolean isComplete() {
-        return longEntry != null &&
-                longExit != null &&
-                shortEntry != null &&
-                shortExit != null;
+        return entry != null &&
+                exit != null;
     }
 
     public String getCorrelationId() {
@@ -94,10 +73,8 @@ public class RoundTrip implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 61 * hash + Objects.hashCode(this.correlationId);
-        hash = 61 * hash + Objects.hashCode(this.longEntry);
-        hash = 61 * hash + Objects.hashCode(this.longExit);
-        hash = 61 * hash + Objects.hashCode(this.shortEntry);
-        hash = 61 * hash + Objects.hashCode(this.shortExit);
+        hash = 61 * hash + Objects.hashCode(this.entry);
+        hash = 61 * hash + Objects.hashCode(this.exit);
         return hash;
     }
 
@@ -116,13 +93,10 @@ public class RoundTrip implements Serializable {
         if (!Objects.equals(this.correlationId, other.correlationId)) {
             return false;
         }
-        if (!Objects.equals(this.longEntry, other.longEntry)) {
+        if (!Objects.equals(this.entry, other.entry)) {
             return false;
         }
-        if (!Objects.equals(this.longExit, other.longExit)) {
-            return false;
-        }
-        if (!Objects.equals(this.shortEntry, other.shortEntry)) {
+        if (!Objects.equals(this.exit, other.exit)) {
             return false;
         }
         return true;
@@ -130,7 +104,7 @@ public class RoundTrip implements Serializable {
 
     @Override
     public String toString() {
-        return "RoundTrip{" + "correlationId=" + correlationId + ", longEntry=" + longEntry + ", longExit=" + longExit + ", shortEntry=" + shortEntry + ", shortExit=" + shortExit + '}';
+        return "RoundTrip{" + "correlationId=" + correlationId + ", Entry=" + entry + ", Exit=" + exit + '}';
     }
     
     
