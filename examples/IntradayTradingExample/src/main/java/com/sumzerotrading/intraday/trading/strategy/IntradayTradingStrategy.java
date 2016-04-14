@@ -102,7 +102,6 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
         
         logger.info( "Bias for today is: " + bias );
         
-        
         RealtimeBarRequest request = new RealtimeBarRequest(1, mainTicker, 1, BarData.LengthUnit.MINUTE);
         ibClient.subscribeRealtimeBar(request, this);
     }
@@ -111,7 +110,7 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
     public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
         logger.info( "Realtime bar received for ticker: " + ticker + " data: " + bar );
         LocalTime barTime = bar.getDateTime().toLocalTime();
-        if( barTime == systemStartTime ) {
+        if( barTime.equals(systemStartTime) ) {
             firstBar = bar;
             logger.info( "System Start time, first bar is: " + firstBar );
         }
@@ -122,18 +121,28 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
         }
         
         if( bias == Bias.LONG ) {            
-            if( bar.getDateTime().toLocalTime() == systemStartTime ) {
+            if( ! (barTime.isBefore(longStartTime) || barTime.isAfter(longStopTime)) ) {
                 if( bar.getClose() < yesterdayClose * 1.01 ) {
                     placeOrder( ticker, TradeDirection.BUY, (int)Math.round(orderSizeInDollars/bar.getClose()), longCloseTime);
+                } else {
+                    logger.info ("Long Bias, within start/stop time, the bar close NOT less than yesterdayClose * 1.01");
                 }
+            } else {
+                logger.info("Long Bias, not within long start/stop time");
             }
         } else if( bias == Bias.SHORT ) {
             if( ! (barTime.isBefore(shortStartTime) || barTime.isAfter(shortStopTime)) ) {
                 if( firstBar.getClose() < yesterdayClose ) {
                     if( bar.getClose() < firstBar.getClose() * 1.01 ) {
                         placeOrder( ticker, TradeDirection.SELL, (int)Math.round(orderSizeInDollars/bar.getClose()), shortCloseTime);
+                    } else {
+                        logger.info("Short Bias, within short time, First bar < yeseterdayClose, this bar NOT less than firstBar Close * 1.01");
                     }
+                } else {
+                    logger.info( "Short Bias, within short time, first Bar NOT greater than yesterday close");
                 }
+            } else {
+                logger.info( "Short Bias: Outside Short start/end time");
             }
         }
     }

@@ -24,7 +24,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>com.sumzerotrading.eod.trading.strategy.EODTradingStrategy</mainClass>
+              <mainClass>com.sumzerotrading.intraday.trading.strategy.IntradayTradingStrategy</mainClass>
             </manifest>
           </archive>
         </configuration>

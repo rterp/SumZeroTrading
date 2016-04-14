@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sumzerotrading.eod.trading.strategy;
+package com.sumzerotrading.intraday.trading.strategy;
 
-import com.sumzerotrading.intraday.trading.strategy.RoundTrip;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.StockTicker;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Direction.LONG;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Direction.SHORT;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side.ENTRY;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side.EXIT;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Direction.LONG;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Direction.SHORT;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Side.ENTRY;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Side.EXIT;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.junit.After;
@@ -66,8 +65,8 @@ public class RoundTripTest {
         assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.entry);
         assertNull(roundTrip.exit);
-        assertNull(roundTrip.shortEntry);
-        assertNull(roundTrip.shortExit);
+//        assertNull(roundTrip.shortEntry);
+//        assertNull(roundTrip.shortExit);
 
     }
 
@@ -80,8 +79,8 @@ public class RoundTripTest {
         assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.exit);
         assertNull(roundTrip.entry);
-        assertNull(roundTrip.shortEntry);
-        assertNull(roundTrip.shortExit);
+//        assertNull(roundTrip.shortEntry);
+//        assertNull(roundTrip.shortExit);
 
     }
 
@@ -92,10 +91,10 @@ public class RoundTripTest {
         roundTrip.addTradeReference(order, referenceLine);
 
         assertEquals("999", roundTrip.getCorrelationId());
-        assertEquals(order, roundTrip.shortEntry);
+        //assertEquals(order, roundTrip.shortEntry);
         assertNull(roundTrip.entry);
         assertNull(roundTrip.exit);
-        assertNull(roundTrip.shortExit);
+        //assertNull(roundTrip.shortExit);
 
     }
 
@@ -106,10 +105,10 @@ public class RoundTripTest {
         roundTrip.addTradeReference(order, referenceLine);
 
         assertEquals("999", roundTrip.getCorrelationId());
-        assertEquals(order, roundTrip.shortExit);
+        //assertEquals(order, roundTrip.shortExit);
         assertNull(roundTrip.entry);
         assertNull(roundTrip.exit);
-        assertNull(roundTrip.shortEntry);
+        //assertNull(roundTrip.shortEntry);
 
     }
     
@@ -140,9 +139,9 @@ public class RoundTripTest {
         shortExitOrder.setFilledPrice(2.34);
         
         roundTrip.entry = longEntryOrder;
-        roundTrip.shortEntry = shortEntryOrder;
+        //roundTrip.shortEntry = shortEntryOrder;
         roundTrip.exit = longExitOrder;
-        roundTrip.shortExit = shortExitOrder;
+        //roundTrip.shortExit = shortExitOrder;
         
         
         assertEquals(expected, roundTrip.getResults());
@@ -156,9 +155,9 @@ public class RoundTripTest {
         assertFalse(roundTrip.isComplete());
         
         roundTrip.entry = order;
-        roundTrip.shortEntry = order;
+       // roundTrip.shortEntry = order;
         roundTrip.exit = order;
-        roundTrip.shortExit = order;
+        //roundTrip.shortExit = order;
         
         assertTrue(roundTrip.isComplete());
         roundTrip.entry = null;
@@ -166,18 +165,18 @@ public class RoundTripTest {
         assertFalse(roundTrip.isComplete());
         
         roundTrip.entry = order;
-        roundTrip.shortEntry = null;
+       // roundTrip.shortEntry = null;
         assertFalse(roundTrip.isComplete());
         
-        roundTrip.shortEntry = order;
+      //  roundTrip.shortEntry = order;
         roundTrip.exit = null;
         assertFalse(roundTrip.isComplete());
         
         roundTrip.exit = order;
-        roundTrip.shortExit = null;
+       // roundTrip.shortExit = null;
         assertFalse(roundTrip.isComplete());
         
-        roundTrip.shortExit = order;
+      //  roundTrip.shortExit = order;
         assertTrue(roundTrip.isComplete());
     }
 }

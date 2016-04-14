@@ -20,6 +20,9 @@ import com.sumzerotrading.marketdata.ILevel2Quote;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.Level2QuoteListener;
 import com.sumzerotrading.marketdata.QuoteEngine;
+import com.sumzerotrading.realtime.bar.IRealtimeBarEngine;
+import com.sumzerotrading.realtime.bar.RealtimeBarListener;
+import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
@@ -45,6 +48,7 @@ public class InteractiveBrokersClientTest {
     protected IBroker mockBroker;
     protected IHistoricalDataProvider mockHistoricalDataProvider;
     protected static IBConnectionUtil mockIbConnectionUtil;
+    protected IRealtimeBarEngine mockRealtimeBarEngine;
 
     protected String host = "myHost";
     protected int port = 123;
@@ -68,18 +72,19 @@ public class InteractiveBrokersClientTest {
         mockBroker = mock(IBroker.class);
         mockHistoricalDataProvider = mock(IHistoricalDataProvider.class);
         mockIbConnectionUtil = mock(IBConnectionUtil.class);
+        mockRealtimeBarEngine = mock(IRealtimeBarEngine.class);
         client = new InteractiveBrokersClient(host, port, clientId);
         client.broker = mockBroker;
         client.historicalDataProvider = mockHistoricalDataProvider;
         client.ibSocket = mockIbSocket;
         client.quoteEngine = mockQuoteEngine;
+        client.realtimeBarProvider = mockRealtimeBarEngine;
     }
 
     @After
     public void tearDown() {
     }
 
-    
     @Test
     public void testConnect_WithMock() {
         InteractiveBrokersClientInterface mockClient = mock(InteractiveBrokersClientInterface.class);
@@ -87,10 +92,10 @@ public class InteractiveBrokersClientTest {
         int port = 9999;
         int clientId = 123;
         InteractiveBrokersClient.setMockInteractiveBrokersClient(mockClient, host, port, clientId);
-        
+
         assertEquals(mockClient, InteractiveBrokersClient.getInstance(host, port, clientId));
     }
-    
+
     @Test
     public void testConnect_NoMock() {
         InteractiveBrokersClientInterface mockClient = mock(InteractiveBrokersClientInterface.class);
@@ -98,14 +103,14 @@ public class InteractiveBrokersClientTest {
         int port = 9999;
         int clientId = 123;
         InteractiveBrokersClient.setMockInteractiveBrokersClient(mockClient, host, port, clientId);
-        
+
         InteractiveBrokersClientInterface actual = InteractiveBrokersClient.getInstance(host, 9998, clientId);
-        
+
         assertNotEquals(mockClient, actual);
         assertEquals(actual, InteractiveBrokersClient.getInstance(host, 9998, clientId));
-        
+
     }
-    
+
     @Test
     public void testConnect() {
         client.connect();
@@ -144,8 +149,7 @@ public class InteractiveBrokersClientTest {
         verify(mockQuoteEngine).unsubscribeMarketDepth(ticker, listener);
 
     }
-    
- 
+
     @Test
     public void testPlaceOrder() {
         TradeOrder order = new TradeOrder("123", new StockTicker("ABC"), 10, TradeDirection.SELL);
@@ -159,36 +163,45 @@ public class InteractiveBrokersClientTest {
         client.addOrderStatusListener(listener);
         verify(mockBroker).addOrderEventListener(listener);
     }
-    
+
     @Test
     public void testGetNextOrderId() {
         when(mockBroker.getNextOrderId()).thenReturn("123");
         assertEquals("123", client.getNextOrderId());
     }
-    
+
     @Test
     public void testGetOpenOrders() {
         List<TradeOrder> list = new ArrayList<>();
-        list.add( new TradeOrder("123", new StockTicker("ABC"), 123, TradeDirection.SELL));
+        list.add(new TradeOrder("123", new StockTicker("ABC"), 123, TradeDirection.SELL));
         when(mockBroker.getOpenOrders()).thenReturn(list);
         assertEquals(list, mockBroker.getOpenOrders());
     }
-    
+
     @Test
     public void testRequestGetHistoricalData() {
         List<BarData> barData = new ArrayList<>();
-        barData.add( new BarData());
+        barData.add(new BarData());
         Ticker ticker = new StockTicker("ABC");
         int duration = 1;
         BarData.LengthUnit unit = BarData.LengthUnit.DAY;
         int barSize = 1;
         BarData.LengthUnit sizeUnit = BarData.LengthUnit.HOUR;
         IHistoricalDataProvider.ShowProperty showProperty = IHistoricalDataProvider.ShowProperty.TRADES;
-        
+
         when(mockHistoricalDataProvider.requestHistoricalData(ticker, duration, unit, barSize, sizeUnit, showProperty, true)).thenReturn(barData);
         assertEquals(barData, client.requestHistoricalData(ticker, duration, unit, barSize, sizeUnit, showProperty));
     }
     
     
-    
+    @Test
+    public void testSubscribeRealtimeBar() {
+        RealtimeBarRequest request = new RealtimeBarRequest(1, new StockTicker("ABC"), clientId, BarData.LengthUnit.MINUTE);
+        RealtimeBarListener listener = (int requestId, Ticker ticker, BarData bar) -> {
+        };
+        
+        client.subscribeRealtimeBar(request, listener);
+        verify(mockRealtimeBarEngine).subscribeRealtimeBars(request, listener);
+    }
+
 }

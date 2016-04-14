@@ -3,22 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sumzerotrading.eod.trading.strategy;
+package com.sumzerotrading.intraday.trading.strategy;
 
-import com.sumzerotrading.intraday.trading.strategy.ReportGenerator;
-import com.sumzerotrading.intraday.trading.strategy.RoundTrip;
 import com.sumzerotrading.broker.order.OrderEvent;
 import com.sumzerotrading.broker.order.OrderStatus;
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.data.Ticker;
-import com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Direction;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Direction.LONG;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Direction.SHORT;
-import com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side.ENTRY;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side.EXIT;
+import com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Direction;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Direction.LONG;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Direction.SHORT;
+import com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Side;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Side.ENTRY;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Side.EXIT;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,7 +31,6 @@ import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -268,8 +265,6 @@ public class ReportGeneratorTest {
         RoundTrip roundTrip = new RoundTrip();
         roundTrip.entry = longEntry;
         roundTrip.exit = longExit;
-        roundTrip.shortEntry = shortEntry;
-        roundTrip.shortExit = shortExit;
 
         System.out.println("Writing out to file: " + path);
 

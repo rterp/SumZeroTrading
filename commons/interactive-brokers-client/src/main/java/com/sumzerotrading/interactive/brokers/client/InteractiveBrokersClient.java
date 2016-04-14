@@ -39,6 +39,7 @@ import com.sumzerotrading.marketdata.ib.IBQuoteEngine;
 import com.sumzerotrading.realtime.bar.IRealtimeBarEngine;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
+import com.sumzerotrading.realtime.bar.ib.IBRealTimeBarEngine;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,7 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
         quoteEngine = new IBQuoteEngine(ibSocket);
         broker = new InteractiveBrokersBroker(ibSocket);
         historicalDataProvider = new IBHistoricalDataProvider(ibSocket);
+        realtimeBarProvider = new IBRealTimeBarEngine(quoteEngine, historicalDataProvider);
     }
 
 

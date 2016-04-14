@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sumzerotrading.eod.trading.strategy;
+package com.sumzerotrading.intraday.trading.strategy;
 
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Direction.LONG;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Direction.SHORT;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side.ENTRY;
-import static com.sumzerotrading.eod.trading.strategy.TradeReferenceLine.Side.EXIT;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Direction.LONG;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Direction.SHORT;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Side.ENTRY;
+import static com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Side.EXIT;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
