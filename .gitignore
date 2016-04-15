@@ -22,3 +22,4 @@ nb-configuration.xml
 /implementations/broker-api/ib-broker-api-impl/nbproject/
 /commons/interactive-brokers-client/nbproject/
 /commons/interactive-brokers-integration-tests/nbproject/
+/examples/IntradayTradingExample/nbproject/

@@ -199,7 +199,7 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
             longStartTime = props.getLongStartTime();
             longStopTime = props.getLongStopTime();
             longCloseTime = props.getLongExitTime();
-            shortStartTime = props.getShortStopTime();
+            shortStartTime = props.getShortStartTime();
             shortStopTime = props.getShortStopTime();
             shortCloseTime = props.getShortExitTime();
             strategyDirectory = props.getStrategyDirectory();

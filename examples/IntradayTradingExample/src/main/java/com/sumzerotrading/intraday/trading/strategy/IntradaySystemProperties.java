@@ -1,14 +1,10 @@
 package com.sumzerotrading.intraday.trading.strategy;
 
 
-import com.sumzerotrading.broker.order.TradeOrder;
-import com.sumzerotrading.broker.order.TradeOrder.Type;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
