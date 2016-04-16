@@ -50,10 +50,10 @@ public class TradeReferenceLineTest {
 
     @Test
     public void testParse() {
-     String e = "EOD-Pair-Strategy:123:Exit:Long*";
+     String e = "Intraday-Strategy:123:Exit:Long*";
      TradeReferenceLine expected = new TradeReferenceLine();
      expected.correlationId = "123";
-     expected.strategy = "EOD-Pair-Strategy";
+     expected.strategy = "Intraday-Strategy";
      expected.side = EXIT;
      expected.direction = LONG;
      

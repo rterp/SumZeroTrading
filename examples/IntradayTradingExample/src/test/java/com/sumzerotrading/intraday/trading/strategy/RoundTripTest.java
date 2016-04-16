@@ -91,11 +91,8 @@ public class RoundTripTest {
         roundTrip.addTradeReference(order, referenceLine);
 
         assertEquals("999", roundTrip.getCorrelationId());
-        //assertEquals(order, roundTrip.shortEntry);
-        assertNull(roundTrip.entry);
+        assertEquals(order, roundTrip.entry);
         assertNull(roundTrip.exit);
-        //assertNull(roundTrip.shortExit);
-
     }
 
     @Test
@@ -105,10 +102,7 @@ public class RoundTripTest {
         roundTrip.addTradeReference(order, referenceLine);
 
         assertEquals("999", roundTrip.getCorrelationId());
-        //assertEquals(order, roundTrip.shortExit);
-        assertNull(roundTrip.entry);
-        assertNull(roundTrip.exit);
-        //assertNull(roundTrip.shortEntry);
+        assertEquals(order, roundTrip.exit);
 
     }
     
@@ -118,8 +112,7 @@ public class RoundTripTest {
         //shortExitPrice, shortExitCommissions
     @Test
     public void testGetResults() {
-        StockTicker shortTicker = new StockTicker("SPY");
-        String expected = "2016-03-03T05:30:45,Long,QQQ,100,50.43,0,2016-03-04T12:45:00,51.46,0,Short,SPY,50,1.23,0,2.34,0";
+        String expected = "2016-03-03T05:30:45,LONG,QQQ,100,50.43,0,2016-03-04T12:45:00,51.46,0";
         ZonedDateTime entryDate = ZonedDateTime.of(2016, 3, 3, 5, 30, 45, 0, ZoneId.systemDefault());
         ZonedDateTime exitDate =ZonedDateTime.of(2016, 3, 4, 12, 45, 00, 0, ZoneId.systemDefault());
         
@@ -132,16 +125,18 @@ public class RoundTripTest {
         longExitOrder.setFilledPrice(51.46);
         longExitOrder.setOrderFilledTime(exitDate);
         
-        TradeOrder shortEntryOrder = new TradeOrder( "345", shortTicker, 50, TradeDirection.SELL);
-        shortEntryOrder.setFilledPrice(1.23);
+        TradeReferenceLine entry = new TradeReferenceLine();
+        entry.correlationId ="123";
+        entry.direction = TradeReferenceLine.Direction.LONG;
+        entry.side = ENTRY;
         
-        TradeOrder shortExitOrder = new TradeOrder( "456", shortTicker, 50, TradeDirection.BUY);
-        shortExitOrder.setFilledPrice(2.34);
+        TradeReferenceLine exit = new TradeReferenceLine();
+        exit.correlationId = "234";
+        exit.direction = LONG;
+        exit.side = EXIT;
         
-        roundTrip.entry = longEntryOrder;
-        //roundTrip.shortEntry = shortEntryOrder;
-        roundTrip.exit = longExitOrder;
-        //roundTrip.shortExit = shortExitOrder;
+        roundTrip.addTradeReference(longEntryOrder, entry);
+        roundTrip.addTradeReference(longExitOrder, exit);
         
         
         assertEquals(expected, roundTrip.getResults());
@@ -165,18 +160,12 @@ public class RoundTripTest {
         assertFalse(roundTrip.isComplete());
         
         roundTrip.entry = order;
-       // roundTrip.shortEntry = null;
-        assertFalse(roundTrip.isComplete());
+        assertTrue(roundTrip.isComplete());
         
-      //  roundTrip.shortEntry = order;
         roundTrip.exit = null;
         assertFalse(roundTrip.isComplete());
         
         roundTrip.exit = order;
-       // roundTrip.shortExit = null;
-        assertFalse(roundTrip.isComplete());
-        
-      //  roundTrip.shortExit = order;
         assertTrue(roundTrip.isComplete());
     }
 }

@@ -15,7 +15,6 @@ import lombok.Getter;
  */
 @EqualsAndHashCode
 public class TradeReferenceLine {
-    //longExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
     
     public static long serialVersionUID = 1L;
     

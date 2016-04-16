@@ -21,11 +21,14 @@ public class RoundTrip implements Serializable {
     protected String correlationId;
     protected TradeOrder entry;
     protected TradeOrder exit;
+    protected TradeReferenceLine.Direction direction;
+    
     
     
     public void addTradeReference( TradeOrder order, TradeReferenceLine tradeReference ) {
         correlationId = tradeReference.getCorrelationId();
         if( tradeReference.getSide() == Side.ENTRY ) {
+            direction = tradeReference.getDirection();
             entry = order;
         } else {
             exit = order;
@@ -41,7 +44,7 @@ public class RoundTrip implements Serializable {
         //2016-03-20T12:40:00PST,QQQ,200,100.23,1.45,2016-03-21T12:40:00PST,
         StringBuilder sb = new StringBuilder();
         sb.append(entry.getOrderFilledTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append(",")
-                .append(entry.getTradeDirection()).append(",")
+                .append(direction).append(",")
                 .append(entry.getTicker().getSymbol()).append(",")
                 .append(entry.getSize()).append(",")
                 .append(entry.getFilledPrice()).append(",")
