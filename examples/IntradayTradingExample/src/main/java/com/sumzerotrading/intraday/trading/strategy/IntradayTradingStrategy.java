@@ -17,6 +17,7 @@ import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClient;
 import com.sumzerotrading.interactive.brokers.client.InteractiveBrokersClientInterface;
+import com.sumzerotrading.intraday.trading.strategy.TradeReferenceLine.Direction;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import java.io.IOException;
@@ -37,8 +38,10 @@ import org.slf4j.LoggerFactory;
 public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorListener, RealtimeBarListener {
 
     protected static Logger logger = LoggerFactory.getLogger(IntradayTradingStrategy.class);
-    enum Bias { LONG, SHORT, NONE };
-    
+
+    enum Bias {
+        LONG, SHORT, NONE
+    };
 
     protected InteractiveBrokersClientInterface ibClient;
     protected Ticker mainTicker;
@@ -64,11 +67,9 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
 
     protected IntradaySystemProperties systemProperties;
     protected IReportGenerator reportGenerator;
-    
-    
 
     public void start(String propFile) {
-        logger.info( "Starting strategy with propfile at: " + propFile );
+        logger.info("Starting strategy with propfile at: " + propFile);
         initProps(propFile);
         ibClient = InteractiveBrokersClient.getInstance(ibHost, ibPort, ibClientId);
         logger.info("Connecting to IB client at:" + ibHost + ":" + ibPort + " with clientID: " + ibClientId);
@@ -81,103 +82,96 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
         List<TradeOrder> openOrders = ibClient.getOpenOrders();
         logger.debug("Found " + openOrders.size() + " open orders");
 
-        ordersPlaced = checkOpenOrders(openOrders, tickersToTrade);
-        logger.info("Checking if orders have already been placed today: " + ordersPlaced);
+        logger.info("Requesting historical data for: " + mainTicker);
 
-        logger.info( "Requesting historical data for: " + mainTicker );
-        
         List<BarData> data = ibClient.requestHistoricalData(mainTicker, 5, BarData.LengthUnit.DAY, 1, BarData.LengthUnit.DAY, IHistoricalDataProvider.ShowProperty.TRADES);
-        for( BarData bar : data ) {
-            logger.info( "Historical Data: " + bar );
+        for (BarData bar : data) {
+            logger.info("Historical Data: " + bar);
         }
-        
-        yesterdayClose = data.get(data.size()-1).getClose();
-        if( yesterdayClose > data.get(data.size()-2).getClose() ) {
+
+        yesterdayClose = data.get(data.size() - 1).getClose();
+        if (yesterdayClose > data.get(data.size() - 2).getClose()) {
             bias = Bias.LONG;
-        } else if (yesterdayClose < data.get(data.size()-2).getClose() ) {
+        } else if (yesterdayClose < data.get(data.size() - 2).getClose()) {
             bias = Bias.SHORT;
         } else {
             bias = Bias.NONE;
         }
-        
-        logger.info( "Bias for today is: " + bias );
-        
+
+        logger.info("Bias for today is: " + bias);
+
         RealtimeBarRequest request = new RealtimeBarRequest(1, mainTicker, 1, BarData.LengthUnit.MINUTE);
         ibClient.subscribeRealtimeBar(request, this);
     }
 
     @Override
     public void realtimeBarReceived(int requestId, Ticker ticker, BarData bar) {
-        logger.info( "Realtime bar received for ticker: " + ticker + " data: " + bar );
+        logger.info("Realtime bar received for ticker: " + ticker + " data: " + bar);
         LocalTime barTime = bar.getDateTime().toLocalTime();
-        if( barTime.equals(systemStartTime) ) {
+        if (barTime.equals(systemStartTime)) {
             firstBar = bar;
-            logger.info( "System Start time, first bar is: " + firstBar );
+            logger.info("System Start time, first bar is: " + firstBar);
         }
-        
-        if( firstBar == null ) {
-            logger.info( "First bar has not yet been set, returning");
+
+        if (firstBar == null) {
+            logger.info("First bar has not yet been set, returning");
             return;
         }
-        
-        if( bias == Bias.LONG ) {            
-            if( ! (barTime.isBefore(longStartTime) || barTime.isAfter(longStopTime)) ) {
-                if( bar.getClose() < yesterdayClose * 1.01 ) {
-                    placeOrder( ticker, TradeDirection.BUY, (int)Math.round(orderSizeInDollars/bar.getClose()), longCloseTime);
+
+        if (bias == Bias.LONG) {
+            if (!(barTime.isBefore(longStartTime) || barTime.isAfter(longStopTime))) {
+                if (bar.getClose() < yesterdayClose * 1.01) {
+                    placeOrder(ticker, TradeDirection.BUY, (int) Math.round(orderSizeInDollars / bar.getClose()), longCloseTime);
                 } else {
-                    logger.info ("Long Bias, within start/stop time, the bar close NOT less than yesterdayClose * 1.01");
+                    logger.info("Long Bias, within start/stop time, the bar close NOT less than yesterdayClose * 1.01");
                 }
             } else {
                 logger.info("Long Bias, not within long start/stop time");
             }
-        } else if( bias == Bias.SHORT ) {
-            if( ! (barTime.isBefore(shortStartTime) || barTime.isAfter(shortStopTime)) ) {
-                if( firstBar.getClose() < yesterdayClose ) {
-                    if( bar.getClose() < firstBar.getClose() * 1.01 ) {
-                        placeOrder( ticker, TradeDirection.SELL, (int)Math.round(orderSizeInDollars/bar.getClose()), shortCloseTime);
+        } else if (bias == Bias.SHORT) {
+            if (firstBar.getClose() < yesterdayClose) {
+                if (!(barTime.isBefore(shortStartTime) || barTime.isAfter(shortStopTime))) {
+                    if (bar.getClose() < firstBar.getClose() * 1.01) {
+                        placeOrder(ticker, TradeDirection.SELL, (int) Math.round(orderSizeInDollars / bar.getClose()), shortCloseTime);
                     } else {
                         logger.info("Short Bias, within short time, First bar < yeseterdayClose, this bar NOT less than firstBar Close * 1.01");
                     }
                 } else {
-                    logger.info( "Short Bias, within short time, first Bar NOT greater than yesterday close");
+                    logger.info("Short Bias: Outside Short start/end time");
                 }
             } else {
-                logger.info( "Short Bias: Outside Short start/end time");
+                logger.info("Short Bias, first Bar NOT less than yesterday close");
             }
         }
     }
-    
-    
-    
-    
-    public synchronized void placeOrder( Ticker ticker, TradeDirection direction, int size, LocalTime closeTime ) {
+
+    public synchronized void placeOrder(Ticker ticker, TradeDirection direction, int size, LocalTime closeTime) {
         String correlationId = getUUID();
         TradeDirection exitDirection;
-        if( direction == TradeDirection.BUY ) {
+        TradeReferenceLine.Direction tradeReferenceDirection = Direction.LONG;
+        if (direction == TradeDirection.BUY) {
             exitDirection = TradeDirection.SELL;
         } else {
+            tradeReferenceDirection = Direction.SHORT;
             exitDirection = TradeDirection.BUY;
         }
-        
+
         ZonedDateTime zdt = ZonedDateTime.of(LocalDate.now(ZoneId.systemDefault()), closeTime, ZoneId.systemDefault());
-        
+
         TradeOrder entryOrder = new TradeOrder(ibClient.getNextOrderId(), ticker, size, direction);
-        entryOrder.setReference("Intraday-Strategy-" + ticker.getSymbol() + ":" + correlationId + ":Entry:" + direction + "*" );
+        entryOrder.setReference("Intraday-Strategy-" + ticker.getSymbol() + ":" + correlationId + ":Entry:" + tradeReferenceDirection + "*");
         TradeOrder exitOrder = new TradeOrder(ibClient.getNextOrderId(), ticker, size, exitDirection);
-        exitOrder.setReference("Intraday-Strategy-" + ticker.getSymbol() + ":" + correlationId + ":Exit:" + direction + "*" );
+        exitOrder.setReference("Intraday-Strategy-" + ticker.getSymbol() + ":" + correlationId + ":Exit:" + tradeReferenceDirection + "*");
         exitOrder.setGoodAfterTime(zdt);
         entryOrder.addChildOrder(exitOrder);
-        
+
         ibClient.placeOrder(entryOrder);
     }
-
-    
 
     @Override
     public void orderEvent(OrderEvent event) {
         logger.info("Received order event: " + event);
     }
-
 
     @Override
     public void brokerErrorFired(BrokerError error) {
@@ -203,7 +197,7 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
             shortStopTime = props.getShortStopTime();
             shortCloseTime = props.getShortExitTime();
             strategyDirectory = props.getStrategyDirectory();
-            mainTicker = new StockTicker( props.getTicker() );
+            mainTicker = new StockTicker(props.getTicker());
 
             logger.info("Loaded properties: " + props);
 
@@ -215,30 +209,6 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
 
     protected String getUUID() {
         return UUID.randomUUID().toString();
-    }
-
-    protected boolean setAllPricesInitialized() {
-        if (allPricesInitialized) {
-            return true;
-        }
-
-        return true;
-    }
-
-    protected boolean checkOpenOrders(List<TradeOrder> orders, List<Ticker> tickers) {
-        if (orders.isEmpty()) {
-            return false;
-        }
-        for (TradeOrder order : orders) {
-            if (order.getType() == TradeOrder.Type.MARKET_ON_CLOSE) {
-                for (Ticker ticker : tickers) {
-                    if (order.getTicker().equals(ticker)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     public static void main(String[] args) {

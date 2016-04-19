@@ -127,19 +127,19 @@ public class IntradaySystemProperties {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 41 * hash + Objects.hashCode(this.twsHost);
-        hash = 41 * hash + this.twsPort;
-        hash = 41 * hash + this.twsClientId;
-        hash = 41 * hash + this.tradeSizeDollars;
-        hash = 41 * hash + Objects.hashCode(this.systemStartTime);
-        hash = 41 * hash + Objects.hashCode(this.longStartTime);
-        hash = 41 * hash + Objects.hashCode(this.longStopTime);
-        hash = 41 * hash + Objects.hashCode(this.longExitTime);
-        hash = 41 * hash + Objects.hashCode(this.shortStartTime);
-        hash = 41 * hash + Objects.hashCode(this.shortStopTime);
-        hash = 41 * hash + Objects.hashCode(this.shortExitTime);
-        hash = 41 * hash + Objects.hashCode(this.ticker);
-        hash = 41 * hash + Objects.hashCode(this.strategyDirectory);
+        hash = 37 * hash + Objects.hashCode(this.twsHost);
+        hash = 37 * hash + this.twsPort;
+        hash = 37 * hash + this.twsClientId;
+        hash = 37 * hash + this.tradeSizeDollars;
+        hash = 37 * hash + Objects.hashCode(this.systemStartTime);
+        hash = 37 * hash + Objects.hashCode(this.longStartTime);
+        hash = 37 * hash + Objects.hashCode(this.longStopTime);
+        hash = 37 * hash + Objects.hashCode(this.longExitTime);
+        hash = 37 * hash + Objects.hashCode(this.shortStartTime);
+        hash = 37 * hash + Objects.hashCode(this.shortStopTime);
+        hash = 37 * hash + Objects.hashCode(this.shortExitTime);
+        hash = 37 * hash + Objects.hashCode(this.ticker);
+        hash = 37 * hash + Objects.hashCode(this.strategyDirectory);
         return hash;
     }
 
@@ -197,11 +197,8 @@ public class IntradaySystemProperties {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "IntradaySystemProperties{" + "twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", systemStartTime=" + systemStartTime + ", longStartTime=" + longStartTime + ", longStopTime=" + longStopTime + ", longExitTime=" + longExitTime + ", shortStartTime=" + shortStartTime + ", shortStopTime=" + shortStopTime + ", shortExitTime=" + shortExitTime + ", ticker=" + ticker + ", strategyDirectory=" + strategyDirectory + '}';
-    }
 
-    
 
 }
+
+

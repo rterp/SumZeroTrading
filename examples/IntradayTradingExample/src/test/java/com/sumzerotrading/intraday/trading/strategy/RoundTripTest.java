@@ -65,9 +65,7 @@ public class RoundTripTest {
         assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.entry);
         assertNull(roundTrip.exit);
-//        assertNull(roundTrip.shortEntry);
-//        assertNull(roundTrip.shortExit);
-
+        assertEquals( LONG, roundTrip.direction );
     }
 
     @Test
@@ -79,9 +77,6 @@ public class RoundTripTest {
         assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.exit);
         assertNull(roundTrip.entry);
-//        assertNull(roundTrip.shortEntry);
-//        assertNull(roundTrip.shortExit);
-
     }
 
     @Test
@@ -92,6 +87,7 @@ public class RoundTripTest {
 
         assertEquals("999", roundTrip.getCorrelationId());
         assertEquals(order, roundTrip.entry);
+        assertEquals( SHORT, roundTrip.direction );
         assertNull(roundTrip.exit);
     }
 
