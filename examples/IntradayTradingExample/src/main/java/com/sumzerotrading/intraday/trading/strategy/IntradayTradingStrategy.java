@@ -128,21 +128,15 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
             } else {
                 logger.info("Long Bias, not within long start/stop time");
             }
-        } else if (bias == Bias.SHORT) {
-            if (firstBar.getClose() < yesterdayClose) {
-                if (!(barTime.isBefore(shortStartTime) || barTime.isAfter(shortStopTime))) {
-                    if (bar.getClose() < firstBar.getClose() * 1.01) {
-                        placeOrder(ticker, TradeDirection.SELL, (int) Math.round(orderSizeInDollars / bar.getClose()), shortCloseTime);
-                    } else {
-                        logger.info("Short Bias, within short time, First bar < yeseterdayClose, this bar NOT less than firstBar Close * 1.01");
-                    }
-                } else {
-                    logger.info("Short Bias: Outside Short start/end time");
-                }
-            } else {
-                logger.info("Short Bias, first Bar NOT less than yesterday close");
-            }
         }
+        
+
+        if (!(barTime.isBefore(shortStartTime) || barTime.isAfter(shortStopTime))) {
+            placeOrder(ticker, TradeDirection.SELL, (int) Math.round(orderSizeInDollars / bar.getClose()), shortCloseTime);
+        } else {
+            logger.info("Short Bias: Outside Short start/end time");
+        }
+
     }
 
     public synchronized void placeOrder(Ticker ticker, TradeDirection direction, int size, LocalTime closeTime) {
