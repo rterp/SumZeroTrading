@@ -302,7 +302,8 @@ public class EODTradingStrategyTest {
     @Test
     public void testGetNextBusinessDay_Thursday() {
         ZonedDateTime ldt = ZonedDateTime.of(2016, 2, 25, 6, 45, 55, 0, ZoneId.systemDefault());
-        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016, 2, 26, 5, 30, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016, 2, 26, 6, 30, 2, 0, ZoneId.systemDefault());
+        strategy.exitTime = LocalTime.of(6,30,2);
 
         assertEquals(expectedDatetime, strategy.getNextBusinessDay(ldt));
     }
@@ -310,7 +311,8 @@ public class EODTradingStrategyTest {
     @Test
     public void testGetNextBusinessDay_Friday() {
         ZonedDateTime ldt = ZonedDateTime.of(2016, 2, 26, 6, 45, 55, 0, ZoneId.systemDefault());
-        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016, 2, 29, 5, 30, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016, 2, 29, 6, 30, 2, 0, ZoneId.systemDefault());
+        strategy.exitTime = LocalTime.of(6,30,2);
 
         assertEquals(expectedDatetime, strategy.getNextBusinessDay(ldt));
     }
@@ -318,7 +320,8 @@ public class EODTradingStrategyTest {
     @Test
     public void testGetNextBusinessDay_Satruday() {
         ZonedDateTime ldt = ZonedDateTime.of(2016, 2, 27, 6, 45, 55, 0, ZoneId.systemDefault());
-        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016, 2, 29, 5, 30, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedDatetime = ZonedDateTime.of(2016, 2, 29, 6, 30, 2, 0, ZoneId.systemDefault());
+        strategy.exitTime = LocalTime.of(6,30,2);
 
         assertEquals(expectedDatetime, strategy.getNextBusinessDay(ldt));
     }
@@ -333,6 +336,7 @@ public class EODTradingStrategyTest {
         assertEquals(1000, strategy.orderSizeInDollars);
         assertEquals(LocalTime.of(12, 40), strategy.timeToPlaceOrders);
         assertEquals(LocalTime.of(13,0), strategy.marketCloseTime);
+        assertEquals(LocalTime.of(6,30,2), strategy.exitTime);
         assertEquals(2, strategy.longShortPairMap.size());
         assertEquals(new StockTicker("SPY"), strategy.longShortPairMap.get(new StockTicker("QQQ")));
         assertEquals(new StockTicker("IWM"), strategy.longShortPairMap.get(new StockTicker("DIA")));

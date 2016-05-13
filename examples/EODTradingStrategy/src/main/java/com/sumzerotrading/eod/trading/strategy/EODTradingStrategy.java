@@ -54,6 +54,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
     protected boolean allPricesInitialized = false;
     protected LocalTime timeToPlaceOrders;
     protected LocalTime marketCloseTime;
+    protected LocalTime exitTime;
     protected EODSystemProperties systemProperties;
     protected IReportGenerator reportGenerator;
     
@@ -173,7 +174,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
                 date.getDayOfWeek() == DayOfWeek.SUNDAY) {
             date = date.plusDays(1);
         }
-        date = ZonedDateTime.of(date.getYear(),date.getMonthValue(),date.getDayOfMonth(), 5, 30, 0, 0, ZoneId.systemDefault());
+        date = ZonedDateTime.of(date.getYear(),date.getMonthValue(),date.getDayOfMonth(), exitTime.getHour(), exitTime.getMinute(), exitTime.getSecond(), 0, ZoneId.systemDefault());
         return date;
     }
 
@@ -197,6 +198,7 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
             orderSizeInDollars = props.getTradeSizeDollars();
             timeToPlaceOrders = props.getStartTime();
             marketCloseTime = props.getMarketCloseTime();
+            exitTime = props.getExitTime();
             Map<String,String> tickers = props.getLongShortTickerMap();
             strategyDirectory = props.getStrategyDirectory();
             tickers.keySet().stream().forEach((ticker) -> {

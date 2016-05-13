@@ -98,6 +98,7 @@ public class EODSystemPropertiesTest {
         props.setProperty("tws.client.id", "13");
         props.setProperty("trade.size.dollars", "999");
         props.setProperty("start.time", "05:32:44");
+        props.setProperty("exit.time", "06:30:02");
         props.setProperty("market.close.time", "13:00:00");
         props.setProperty("pair.1", "QQQ:SPY");
         props.setProperty("foo", "bar");
@@ -115,6 +116,7 @@ public class EODSystemPropertiesTest {
         assertEquals(999, systemProps.getTradeSizeDollars());
         assertEquals("/my/dir", systemProps.getStrategyDirectory());
         assertEquals(LocalTime.of(5, 32, 44), systemProps.getStartTime());
+        assertEquals(LocalTime.of(6, 30, 02), systemProps.getExitTime());
         assertEquals(LocalTime.of(13,0), systemProps.getMarketCloseTime());
         assertEquals(TradeOrder.Type.MARKET_ON_CLOSE, systemProps.getEntryOrderType());
         assertEquals(expectedMap, systemProps.getLongShortTickerMap());
@@ -146,6 +148,7 @@ public class EODSystemPropertiesTest {
         props.twsClientId = 1;
         props.tradeSizeDollars = 1000;
         props.startTime = LocalTime.of(12, 40);
+        props.exitTime = LocalTime.of(6,30,2);
         props.marketCloseTime = LocalTime.of(13,0);
         props.longShortTickerMap.put("QQQ", "SPY");
         props.longShortTickerMap.put("DIA", "IWM");

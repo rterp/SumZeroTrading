@@ -27,6 +27,7 @@ public class EODSystemProperties {
 
     protected LocalTime startTime;
     protected LocalTime marketCloseTime;
+    protected LocalTime exitTime;
     protected String twsHost;
     protected int twsPort;
     protected int twsClientId;
@@ -98,6 +99,12 @@ public class EODSystemProperties {
     public int getExitSeconds() {
         return exitSeconds;
     }
+
+    public LocalTime getExitTime() {
+        return exitTime;
+    }
+    
+    
     
     
 
@@ -108,6 +115,7 @@ public class EODSystemProperties {
         twsClientId = Integer.parseInt(props.getProperty("tws.client.id"));
         tradeSizeDollars = Integer.parseInt(props.getProperty("trade.size.dollars"));
         startTime = LocalTime.parse(props.getProperty("start.time"));
+        exitTime = LocalTime.parse(props.getProperty("exit.time"));
         marketCloseTime = LocalTime.parse(props.getProperty("market.close.time"));
         strategyDirectory = props.getProperty("strategy.directory");
         entryOrderType = getOrderType(props.getProperty("entry.order.type", "MOC"));
@@ -144,18 +152,19 @@ public class EODSystemProperties {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.startTime);
-        hash = 83 * hash + Objects.hashCode(this.marketCloseTime);
-        hash = 83 * hash + Objects.hashCode(this.twsHost);
-        hash = 83 * hash + this.twsPort;
-        hash = 83 * hash + this.twsClientId;
-        hash = 83 * hash + this.tradeSizeDollars;
-        hash = 83 * hash + Objects.hashCode(this.longShortTickerMap);
-        hash = 83 * hash + Objects.hashCode(this.strategyDirectory);
-        hash = 83 * hash + Objects.hashCode(this.entryOrderType);
-        hash = 83 * hash + this.exitSeconds;
-        hash = 83 * hash + Objects.hashCode(this.exitOrderType);
+        int hash = 3;
+        hash = 47 * hash + Objects.hashCode(this.startTime);
+        hash = 47 * hash + Objects.hashCode(this.marketCloseTime);
+        hash = 47 * hash + Objects.hashCode(this.exitTime);
+        hash = 47 * hash + Objects.hashCode(this.twsHost);
+        hash = 47 * hash + this.twsPort;
+        hash = 47 * hash + this.twsClientId;
+        hash = 47 * hash + this.tradeSizeDollars;
+        hash = 47 * hash + Objects.hashCode(this.longShortTickerMap);
+        hash = 47 * hash + Objects.hashCode(this.strategyDirectory);
+        hash = 47 * hash + Objects.hashCode(this.entryOrderType);
+        hash = 47 * hash + this.exitSeconds;
+        hash = 47 * hash + Objects.hashCode(this.exitOrderType);
         return hash;
     }
 
@@ -195,6 +204,9 @@ public class EODSystemProperties {
         if (!Objects.equals(this.marketCloseTime, other.marketCloseTime)) {
             return false;
         }
+        if (!Objects.equals(this.exitTime, other.exitTime)) {
+            return false;
+        }
         if (!Objects.equals(this.longShortTickerMap, other.longShortTickerMap)) {
             return false;
         }
@@ -209,7 +221,7 @@ public class EODSystemProperties {
 
     @Override
     public String toString() {
-        return "EODSystemProperties{" + "startTime=" + startTime + ", marketCloseTime=" + marketCloseTime + ", twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", longShortTickerMap=" + longShortTickerMap + ", strategyDirectory=" + strategyDirectory + ", entryOrderType=" + entryOrderType + ", exitSeconds=" + exitSeconds + ", exitOrderType=" + exitOrderType + '}';
+        return "EODSystemProperties{" + "startTime=" + startTime + ", marketCloseTime=" + marketCloseTime + ", exitTime=" + exitTime + ", twsHost=" + twsHost + ", twsPort=" + twsPort + ", twsClientId=" + twsClientId + ", tradeSizeDollars=" + tradeSizeDollars + ", longShortTickerMap=" + longShortTickerMap + ", strategyDirectory=" + strategyDirectory + ", entryOrderType=" + entryOrderType + ", exitSeconds=" + exitSeconds + ", exitOrderType=" + exitOrderType + '}';
     }
 
     
