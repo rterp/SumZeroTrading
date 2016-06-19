@@ -1,0 +1,11 @@
+tws.host=localhost
+tws.port=6468
+tws.client.id=2
+trade.size.dollars=2000
+start.time=12:59:30
+market.close.time=13:00:00
+pair.1=TVIX:UVXY
+strategy.directory=C:/Users/robbob/Rob/Trading/Software/EODPairs/mkt-strategy/
+entry.order.type=MKT
+exit.order.type=MKT
+exit.time=06:30:02
