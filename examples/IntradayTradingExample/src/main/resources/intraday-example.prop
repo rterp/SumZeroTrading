@@ -1,0 +1,14 @@
+tws.host=localhost
+tws.port=6468
+tws.client.id=3
+trade.size.dollars=100
+system.start.time=06:31:00
+long.start.time=06:31:00
+long.stop.time=06:31:00
+long.exit.time=07:00:00
+short.start.time=11:30:00
+short.stop.time=11:30:00
+short.exit.time=12:59:00
+
+strategy.dir=C:/Users/robbob/Rob/Trading/Software/IntradayStrategy
+ticker=TVIX
