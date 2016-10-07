@@ -20,6 +20,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
+import com.sumzerotrading.data.CFDTicker;
 import com.sumzerotrading.data.ComboTicker;
 import com.sumzerotrading.data.CurrencyTicker;
 import com.sumzerotrading.data.FuturesTicker;
@@ -68,12 +69,14 @@ public class ContractBuilderFactoryTest {
         Ticker optionsTicker = new OptionTicker("ABC", 1, 2014);
         Ticker combTicker = new ComboTicker(futurTicker, stockTicker);
         Ticker indexTicker = new IndexTicker();
+        Ticker cfdTicker = new CFDTicker("XYZ");
         
         assertTrue( ContractBuilderFactory.getContractBuilder(stockTicker) instanceof StockContractBuilder );
         assertTrue( ContractBuilderFactory.getContractBuilder(currencyTicker) instanceof CurrencyContractBuilder );
         assertTrue( ContractBuilderFactory.getContractBuilder(futurTicker) instanceof FuturesContractBuilder );
         assertTrue( ContractBuilderFactory.getContractBuilder(combTicker) instanceof ComboContractBuilder );
         assertTrue( ContractBuilderFactory.getContractBuilder(indexTicker) instanceof IndexContractBuilder );
+        assertTrue( ContractBuilderFactory.getContractBuilder(cfdTicker) instanceof CFDContractBuilder );
         
     }
     

@@ -32,18 +32,23 @@ import java.util.Objects;
 public class Position implements Serializable {
     
     
+    public static final long serialVersionUID = 1L;
+    
     protected Ticker ticker;
-    protected double size;
+    protected int size;
+    protected double averageCost;
 
     /**
      * The ticker and the position size.  Negative position sizes indicate a short position
      * 
      * @param ticker The ticker held.
      * @param size The size of the position
+     * @param averageCost the average price the position was acquired at.
      */
-    public Position(Ticker ticker, double size) {
+    public Position(Ticker ticker, int size, double averageCost) {
         this.ticker = ticker;
         this.size = size;
+        this.averageCost = averageCost;
     }
 
     
@@ -59,15 +64,24 @@ public class Position implements Serializable {
      * Gets the size of the position.  Negative sizes indicate short positions.
      * @return The position size.
      */
-    public double getSize() {
+    public int getSize() {
         return size;
+    }
+
+    /**
+     * Gets the average price this position was acquired at.
+     * @return The average price the position was acquired at.
+     */
+    public double getAverageCost() {
+        return averageCost;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 47 * hash + Objects.hashCode(this.ticker);
-        hash = 47 * hash + (int) (Double.doubleToLongBits(this.size) ^ (Double.doubleToLongBits(this.size) >>> 32));
+        hash = 53 * hash + Objects.hashCode(this.ticker);
+        hash = 53 * hash + this.size;
+        hash = 53 * hash + (int) (Double.doubleToLongBits(this.averageCost) ^ (Double.doubleToLongBits(this.averageCost) >>> 32));
         return hash;
     }
 
@@ -83,7 +97,10 @@ public class Position implements Serializable {
             return false;
         }
         final Position other = (Position) obj;
-        if (Double.doubleToLongBits(this.size) != Double.doubleToLongBits(other.size)) {
+        if (this.size != other.size) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.averageCost) != Double.doubleToLongBits(other.averageCost)) {
             return false;
         }
         if (!Objects.equals(this.ticker, other.ticker)) {
@@ -92,12 +109,11 @@ public class Position implements Serializable {
         return true;
     }
 
+
+
     @Override
     public String toString() {
-        return "Position{" + "ticker=" + ticker + ", size=" + size + '}';
+        return "Position{" + "ticker=" + ticker + ", size=" + size + ", averageCost=" + averageCost + '}';
     }
-    
-
-    
     
 }

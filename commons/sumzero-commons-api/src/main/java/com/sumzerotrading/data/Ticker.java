@@ -35,7 +35,7 @@ public abstract class Ticker implements Serializable {
     
     
 
-    public static long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
     protected String symbol;
     protected Exchange exchange;
     protected Exchange primaryExchange;

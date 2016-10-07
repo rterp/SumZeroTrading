@@ -73,8 +73,16 @@ public interface IHistoricalDataProvider {
         public abstract List<BarData> requestHistoricalData(Ticker ticker, int duration, BarData.LengthUnit durationLengthUnit, int barSize, BarData.LengthUnit barSizeUnit, ShowProperty whatToShow, boolean useRTH);
         
         
+        /**
+         * Checks to see if the application is connected to the historical data provider
+         * @return true if connected to the provider
+         */
         public abstract boolean isConnected();
         
+        
+        /**
+         * Connects to the historical data provider.
+         */
         public abstract void connect();
         
 }

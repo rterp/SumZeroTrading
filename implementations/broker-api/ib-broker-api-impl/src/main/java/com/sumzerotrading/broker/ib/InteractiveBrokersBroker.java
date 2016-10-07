@@ -60,10 +60,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,6 +106,8 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     protected boolean started = false;
     protected String directory;
     protected Map<String, OrderEvent> orderEventMap;
+    protected CountDownLatch getPositionsCountdownLatch = null;
+    protected List<Position> positionsList = new ArrayList<>();
 
     /**
      * Used by Unit tests
@@ -181,8 +185,10 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
         }
     }
 
+    @Override
     public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
         logger.info("OpenOrder: " + orderId + " Contract: " + contract + " Order: " + order + " OrderState: " + orderState);
+        
     }
 
     public void timeReceived(ZonedDateTime time) {
@@ -193,6 +199,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
         }
     }
 
+    @Override
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
         logger.info("OrderStatus(): orderId: " + orderId + " Status: " + status + " filled: " + filled + " remaining: " + remaining + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId + " lastFillePrice: " + lastFillPrice + " clientId: " + clientId + " whyHeld: " + whyHeld);
         TradeOrder order = orderMap.get(Integer.toString(orderId));
@@ -355,6 +362,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
         return buildComboTicker(ticker1, 1, ticker2, 1);
     }
 
+    @Override
     public ComboTicker buildComboTicker(Ticker ticker1, int ratio1, Ticker ticker2, int ratio2) {
         ContractDetails details1 = getContractDetails(ticker1);
         ContractDetails details2 = getContractDetails(ticker2);
@@ -400,17 +408,26 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     @Override
     public List<Position> getAllPositions() {
+        getPositionsCountdownLatch = new CountDownLatch(1);
         ibConnection.reqPositions();
-        return new ArrayList<>();
+        try {
+            getPositionsCountdownLatch.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            throw new SumZeroException(ex);
+        }
+        return positionsList;
     }
 
     @Override
     public void position(String account, Contract contract, int pos, double avgCost) {
+        //IbUtils.
+        //positionsList.add(new Position(ticker, pos, avgCost));
         logger.info("Position - Account: " + account + " Contract: " + new ContractWrapper(contract) + " size: " + pos + " avgCost: " + avgCost );
     }
 
     @Override
     public void positionEnd() {
+        getPositionsCountdownLatch.countDown();
         logger.info( "Position END()");
     }
     

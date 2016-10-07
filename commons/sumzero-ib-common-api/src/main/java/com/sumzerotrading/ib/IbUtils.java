@@ -27,6 +27,7 @@ import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.data.InstrumentType;
+import com.sumzerotrading.data.SumZeroException;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.marketdata.QuoteType;
 import java.awt.Image;
@@ -103,20 +104,25 @@ public class IbUtils {
     }
 
     public static String getSecurityType(InstrumentType instrumentType) {
-        if (instrumentType == InstrumentType.STOCK) {
-            return "STK";
-        } else if (instrumentType == InstrumentType.FOREX) {
-            return "CASH";
-        } else if (instrumentType == InstrumentType.FUTURES) {
-            return "FUT";
-        } else if (instrumentType == InstrumentType.OPTION) {
-            return "OPT";
-        } else if (instrumentType == InstrumentType.INDEX) {
-            return "IND";
-        } else if( instrumentType == InstrumentType.COMBO ) {
-            return "BAG";
+        if (null != instrumentType) switch (instrumentType) {
+            case STOCK:
+                return "STK";
+            case FOREX:
+                return "CASH";
+            case FUTURES:
+                return "FUT";
+            case OPTION:
+                return "OPT";
+            case INDEX:
+                return "IND";
+            case COMBO:
+                return "BAG";
+            case CFD:
+                return "CFD";
+            default:
+                throw new IllegalStateException("Unknown instrument type: " + instrumentType);
         } else {
-            throw new IllegalStateException("Unknown instrument type: " + instrumentType);
+            throw new SumZeroException("Instrument type can't be null");
         }
     }
 

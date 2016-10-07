@@ -42,6 +42,8 @@ public class ContractBuilderFactory {
             return new ComboContractBuilder();
         } else if( ticker instanceof IndexTicker ) {
             return new IndexContractBuilder();
+        } else if( ticker instanceof CFDTicker ) {
+            return new CFDContractBuilder();
         } else {
             throw new IllegalStateException( "Unsupported ticker type: " + ticker.getClass() );
         }

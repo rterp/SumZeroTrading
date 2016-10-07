@@ -31,7 +31,8 @@ import java.util.Objects;
  */
 public class StockTicker extends Ticker {
 
-
+    public static final long serialVersionUID = 1L;
+    
     protected InstrumentType instrumentType = InstrumentType.STOCK;
 
     public StockTicker( String symbol ) {
