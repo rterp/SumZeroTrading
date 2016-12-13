@@ -85,7 +85,7 @@ public class CommodityTest {
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYBOT, c.getExchange());
         assertEquals(new BigDecimal(0.10), c.getMinimumTickSize());
-        assertEquals(new BigDecimal(100), c.getContractMultiplier());
+        assertEquals(new BigDecimal(50), c.getContractMultiplier());
     }
 
     @Test
