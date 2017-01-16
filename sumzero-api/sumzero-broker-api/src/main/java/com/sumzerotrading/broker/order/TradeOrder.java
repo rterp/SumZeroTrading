@@ -30,7 +30,7 @@ import java.util.Objects;
 
 public class TradeOrder implements Serializable {
 
-    public static long serialVersionUID = 1L;
+    public final static long serialVersionUID = 1L;
 
     public enum Type {
 
