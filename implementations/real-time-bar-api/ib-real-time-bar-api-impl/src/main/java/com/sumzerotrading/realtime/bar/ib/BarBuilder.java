@@ -14,6 +14,7 @@ import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import com.sumzerotrading.realtime.bar.ib.util.RealtimeBarUtil;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 //import org.apache.log4j.Logger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -26,6 +27,7 @@ import org.quartz.SchedulerFactory;
  */
 public class BarBuilder implements IBarBuilder {
 
+    protected Logger logger = Logger.getLogger(BarBuilder.class);
     protected double open = -1;
     protected double high = -1;
     protected double low = -1;
@@ -204,7 +206,11 @@ public class BarBuilder implements IBarBuilder {
     protected void fireEvent(BarData bar) {
         synchronized (listenerList) {
             for (RealtimeBarListener listener : listenerList) {
-                listener.realtimeBarReceived(realtimeBarRequest.getRequestId(), realtimeBarRequest.getTicker(), bar);
+                try {
+                    listener.realtimeBarReceived(realtimeBarRequest.getRequestId(), realtimeBarRequest.getTicker(), bar);
+                } catch( Exception ex ) {
+                    logger.error(ex.getMessage(), ex);
+                }
             }
         }
     }

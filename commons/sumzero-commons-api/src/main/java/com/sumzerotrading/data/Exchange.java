@@ -28,7 +28,7 @@ import java.io.Serializable;
  */
 public class Exchange implements Serializable {
 
-    public static long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
     
     
     public static final Exchange ARCA = new Exchange("ARCA");
@@ -44,6 +44,9 @@ public class Exchange implements Serializable {
     public static final Exchange NASDAQ = new Exchange("NASDAQ");
     public static final Exchange TSEJ = new Exchange("TSEJ");
     public static final Exchange SEHKNTL = new Exchange("SEHKNTL");
+    public static final Exchange HKFE = new Exchange("HKFE");
+    public static final Exchange OSE = new Exchange("OSE.JPN");
+    public static final Exchange SGX = new Exchange("SGX");
     
     
     protected String exchangeName;
