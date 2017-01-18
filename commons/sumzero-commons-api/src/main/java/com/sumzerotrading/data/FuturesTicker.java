@@ -31,7 +31,7 @@ import java.util.Objects;
  */
 public class FuturesTicker extends Ticker {
 
-    public static long serialVersionUID = 1L;
+    public final static long serialVersionUID = 1L;
 
  
 
