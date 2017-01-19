@@ -32,7 +32,7 @@ import java.util.Objects;
  */
 public class Commodity implements Serializable {
     
-    public static long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
     
     public static final DecimalFormat NO_DECIMALS = new DecimalFormat("#####0");
     public static final DecimalFormat ONE_DECIMAL = new DecimalFormat("#####0.0");
