@@ -352,6 +352,19 @@ public class CommodityTest {
         assertEquals(Exchange.ECBOT, c.getExchange());
         assertEquals(new BigDecimal(0.25), c.getMinimumTickSize());
     }          
+    
+    
+    @Test
+    public void testGetVix() {
+        Commodity c = Commodity.VIX_FUTURES_CBOE;
+        
+        assertEquals("VIX", c.getExchangeSymbol() );
+        assertEquals(new BigDecimal(1000), c.getContractMultiplier());
+        assertEquals("USD", c.getCurrency());
+        assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
+        assertEquals(Exchange.CFE, c.getExchange());
+        assertEquals(new BigDecimal(0.10), c.getMinimumTickSize());
+    }
 
     
     @Test

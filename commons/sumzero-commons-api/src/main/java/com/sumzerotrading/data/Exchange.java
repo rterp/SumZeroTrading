@@ -37,6 +37,7 @@ public class Exchange implements Serializable {
     public static final Exchange CBOE = new Exchange("CBOE");
     public static final Exchange ECBOT = new Exchange("ECBOT");
     public static final Exchange NYBOT = new Exchange("NYBOT");
+    public static final Exchange CFE = new Exchange("CFE");
     public static final Exchange NYSE_LIFFE = new Exchange("NYSELIFFE");
     public static final Exchange IDEALPRO = new Exchange("IDEALPRO");
     public static final Exchange PSE = new Exchange( "PSE" );
