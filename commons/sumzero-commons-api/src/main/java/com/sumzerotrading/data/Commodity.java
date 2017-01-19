@@ -47,6 +47,7 @@ public class Commodity implements Serializable {
     public static final Commodity NASDAQ100_INDEX_MINI_GLOBEX = new Commodity( "NQ", Exchange.GLOBEX, TWO_DECIMALS, new BigDecimal(0.20), new BigDecimal(20));
     public static final Commodity RUSSELL_2000_INDEX_MINI_NYBOT = new Commodity( "TF", Exchange.NYBOT, TWO_DECIMALS, new BigDecimal(0.10), new BigDecimal(50));
     public static final Commodity DOW_INDEX_MINI_ECBOT = new Commodity( "YM", Exchange.ECBOT, NO_DECIMALS, new BigDecimal(1), new BigDecimal(5));
+    public static final Commodity VIX_FUTURES_CBOE = new Commodity( "VIX", Exchange.CBOE,TWO_DECIMALS, new BigDecimal(2), new BigDecimal(1000));
     public static final Commodity BOND_30_YEAR_ECBOT = new Commodity( "ZB", Exchange.ECBOT, FIVE_DECIMALS, new BigDecimal(0.03125), new BigDecimal(1000));
     public static final Commodity BOND_10_YEAR_ECBOT = new Commodity( "ZN", Exchange.ECBOT, FIVE_DECIMALS, new BigDecimal(0.03125), new BigDecimal(1000));
     public static final Commodity EURO_GLOBEX = new Commodity( "6E", Exchange.GLOBEX, FOUR_DECIMALS, new BigDecimal(0.0001), new BigDecimal(125000));
