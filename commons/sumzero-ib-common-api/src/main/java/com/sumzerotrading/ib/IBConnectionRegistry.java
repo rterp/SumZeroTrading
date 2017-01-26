@@ -54,4 +54,9 @@ public class IBConnectionRegistry {
         }
 
     }
+    
+    
+    public static void setTestIBSocket(IBConnectionInfo connectionInfo, IBSocket ibSocket) {
+        connectionMap.put(connectionInfo, ibSocket);
+    }
 }
