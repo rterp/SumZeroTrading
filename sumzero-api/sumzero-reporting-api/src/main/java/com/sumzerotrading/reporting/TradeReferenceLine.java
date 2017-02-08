@@ -29,6 +29,15 @@ public class TradeReferenceLine {
     protected Side side;
 
     
+    public static TradeReferenceLine create( String strategy, Direction direction, Side side ) {
+        TradeReferenceLine line = new TradeReferenceLine();
+        line.setStrategy(strategy).setDirection(direction).setSide(side);
+        
+        
+        return line;
+    }
+    
+    
     public void parse( String referenceLine ) {
         String[] mainTokens = referenceLine.split("\\*");
         String[] tokens = mainTokens[0].split(":");
@@ -64,32 +73,36 @@ public class TradeReferenceLine {
         return strategy;
     }
 
-    public void setStrategy(String strategy) {
+    public TradeReferenceLine setStrategy(String strategy) {
         this.strategy = strategy;
+        return this;
     }
 
     public String getCorrelationId() {
         return correlationId;
     }
 
-    public void setCorrelationId(String correlationId) {
+    public TradeReferenceLine setCorrelationId(String correlationId) {
         this.correlationId = correlationId;
+        return this;
     }
 
     public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
+    public TradeReferenceLine setDirection(Direction direction) {
         this.direction = direction;
+        return this;
     }
 
     public Side getSide() {
         return side;
     }
 
-    public void setSide(Side side) {
+    public TradeReferenceLine setSide(Side side) {
         this.side = side;
+        return this;
     }
 
     @Override
@@ -129,9 +142,12 @@ public class TradeReferenceLine {
         return true;
     }
 
+    //longExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
     @Override
     public String toString() {
-        return "TradeReferenceLine{" + "strategy=" + strategy + ", correlationId=" + correlationId + ", direction=" + direction + ", side=" + side + '}';
+      StringBuilder sb = new StringBuilder();
+      sb.append(strategy).append(":").append(correlationId).append(":").append(side).append(":").append(direction).append("*");
+      return sb.toString();
     }
     
     
