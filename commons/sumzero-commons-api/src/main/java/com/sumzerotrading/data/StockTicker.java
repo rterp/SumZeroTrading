@@ -51,7 +51,7 @@ public class StockTicker extends Ticker {
 
     @Override
     public int hashCode() {
-        int hash = 3;
+        int hash = super.hashCode();
         hash = 11 * hash + Objects.hashCode(this.instrumentType);
         return hash;
     }

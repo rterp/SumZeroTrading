@@ -72,6 +72,8 @@ public class FuturesTickerTest {
         expected.setCommodity(CANADIAN_DOLLAR_GLOBEX);
         
         assertEquals( expected, FuturesTicker.getInstance("6C") );
+        System.out.println("Expected: " + expected);
+        System.out.println("Actual: " + FuturesTicker.getInstance("6C"));
     }
     
     
