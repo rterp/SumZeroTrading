@@ -8,6 +8,7 @@ package com.sumzerotrading.reporting.csv;
 import com.sumzerotrading.broker.order.OrderEvent;
 import com.sumzerotrading.broker.order.OrderStatus.Status;
 import com.sumzerotrading.broker.order.TradeOrder;
+import com.sumzerotrading.reporting.IReportGenerator;
 import com.sumzerotrading.reporting.IRoundTrip;
 import com.sumzerotrading.reporting.TradeReferenceLine;
 import java.io.File;
