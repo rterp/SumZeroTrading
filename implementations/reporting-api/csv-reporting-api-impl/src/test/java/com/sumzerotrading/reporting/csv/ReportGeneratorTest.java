@@ -29,25 +29,21 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import org.mockito.Matchers;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
@@ -66,6 +62,7 @@ public class ReportGeneratorTest {
     protected TradeOrder order;
     protected String tmpDir;
     protected String partialDir;
+    protected String strategy = "MyStrategy";
 
     public ReportGeneratorTest() {
     }
@@ -82,6 +79,7 @@ public class ReportGeneratorTest {
     public void setUp() throws Exception {
         pairRoundtripBuilder = new PairTradeRoundTripBuilder();
         reportGenerator.roundTripBuilder = pairRoundtripBuilder;
+        reportGenerator.strategyName = strategy;
         order = new TradeOrder("123", new StockTicker("QQQ"), 100, TradeDirection.BUY);
         String systemTmpDir = System.getProperty("java.io.tmpdir");
         if (!systemTmpDir.endsWith("/")) {
@@ -100,7 +98,7 @@ public class ReportGeneratorTest {
 
     @Test
     public void testConstructor_NoSlashInPath() {
-        MockGenerator generator = new MockGenerator(tmpDir, pairRoundtripBuilder);
+        MockGenerator generator = new MockGenerator(strategy, tmpDir, pairRoundtripBuilder);
         assertEquals(tmpDir + "report.csv", generator.outputFile);
         assertEquals(tmpDir, generator.outputDir);
         assertEquals(tmpDir + "partial/", generator.partialDir);
@@ -112,7 +110,7 @@ public class ReportGeneratorTest {
 
     @Test
     public void testLoadSaveDeletePartial() throws Exception {
-        ReportGenerator generator = new ReportGenerator(tmpDir, pairRoundtripBuilder);
+        ReportGenerator generator = new ReportGenerator(strategy, tmpDir, pairRoundtripBuilder);
 
         PairTradeRoundTrip roundTrip = new PairTradeRoundTrip();
         TradeReferenceLine tradeReferenceLine = buildReferenceLine("123", LONG, ENTRY);
@@ -150,18 +148,40 @@ public class ReportGeneratorTest {
     }
 
     @Test
-    public void testOrderEvent_NotFilled() {
+    public void testOrderEvent_NotFilled() throws Exception{
         order.setCurrentStatus(OrderStatus.Status.NEW);
         OrderEvent orderEvent = new OrderEvent(order, new OrderStatus(OrderStatus.Status.NEW, "", "", new StockTicker("QQQ"), ZonedDateTime.now()));
         reportGenerator.orderEvent(orderEvent);
 
         verify(reportGenerator, never()).writeRoundTripToFile(any(PairTradeRoundTrip.class));
+        verify(reportGenerator, never()).savePartial(Matchers.anyString(), anyObject());
     }
+    
+    @Test
+    public void testOrderEvent_NotStrategy() throws Exception{
+        order.setCurrentStatus(OrderStatus.Status.FILLED);
+        OrderEvent orderEvent = new OrderEvent(order, new OrderStatus(OrderStatus.Status.NEW, "", "", new StockTicker("QQQ"), ZonedDateTime.now()));
+        
+        TradeReferenceLine tradeReferenceLine = new TradeReferenceLine();
+        tradeReferenceLine.setCorrelationId("123")
+                .setStrategy("Other Strategy")
+                .setDirection(LONG)
+                .setSide(EXIT);
+        order.setCurrentStatus(OrderStatus.Status.FILLED);
+
+        doReturn(tradeReferenceLine).when(reportGenerator).getTradeReferenceLine(any(String.class));
+        
+        reportGenerator.orderEvent(orderEvent);
+        
+        verify(reportGenerator, never()).writeRoundTripToFile(any(PairTradeRoundTrip.class));
+        verify(reportGenerator, never()).savePartial(Matchers.anyString(), anyObject());
+    }    
 
     @Test
     public void testOrderEvent_FirstRoundTrip() throws Exception {
         TradeReferenceLine tradeReferenceLine = new TradeReferenceLine();
         tradeReferenceLine.setCorrelationId("123");
+        tradeReferenceLine.setStrategy(strategy);
         order.setCurrentStatus(OrderStatus.Status.FILLED);
         OrderEvent orderEvent = new OrderEvent(order, new OrderStatus(OrderStatus.Status.NEW, "", "", new StockTicker("QQQ"), ZonedDateTime.now()));
 
@@ -298,7 +318,7 @@ public class ReportGeneratorTest {
         Path reportPath = Paths.get(directory + "report.csv");
         Files.deleteIfExists(reportPath);
         System.out.println("Creating directory at: " + directory);
-        ReportGenerator generator = new ReportGenerator(directory,pairRoundtripBuilder);
+        ReportGenerator generator = new ReportGenerator("EOD-Pair-Strategy", directory,pairRoundtripBuilder);
 
         TradeOrder longEntryOrder = new TradeOrder("123", longTicker, 100, TradeDirection.BUY);
         longEntryOrder.setFilledPrice(100.00);
@@ -359,7 +379,8 @@ public class ReportGeneratorTest {
         TradeReferenceLine line = new TradeReferenceLine();
         line.setCorrelationId(id)
                 .setDirection(direction)
-                .setSide(side);
+                .setSide(side)
+                .setStrategy(strategy);
 
         return line;
     }
@@ -368,8 +389,8 @@ public class ReportGeneratorTest {
 
         boolean loadPartialCalled;
 
-        public MockGenerator(String dir, IRoundTripBuilder roundTripBuilder) {
-            super(dir, roundTripBuilder);
+        public MockGenerator(String strategyName, String dir, IRoundTripBuilder roundTripBuilder) {
+            super(strategyName, dir, roundTripBuilder);
         }
 
 
