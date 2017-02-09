@@ -43,6 +43,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <module>sumzero-historical-data-api</module>
     <module>sumzero-real-time-bar-api</module>
     <module>sumzero-strategy-api</module>
+    <module>sumzero-reporting-api</module>
   </modules>
   
 </project>

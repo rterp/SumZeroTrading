@@ -14,7 +14,7 @@ import java.util.Objects;
  *    
  * @author RobTerpilowski
  */
-public class RoundTrip implements Serializable {
+public class RoundTrip implements IRoundTrip {
 
     public static final long serialVersionUID = 1l;
     protected String correlationId;
@@ -24,6 +24,7 @@ public class RoundTrip implements Serializable {
     protected TradeOrder shortExit;
     
     
+    @Override
     public void addTradeReference( TradeOrder order, TradeReferenceLine tradeReference ) {
         correlationId = tradeReference.getCorrelationId();
         if( tradeReference.getDirection() == TradeReferenceLine.Direction.LONG ) {
@@ -43,6 +44,7 @@ public class RoundTrip implements Serializable {
     
     
     
+    @Override
     public String getResults() {
         // Long-entry-date, longTicker, LongShares, Long Entry price, Long Entry Commission, 
         //LongExitDate, Long Exit Price, shortTicker, shortShares, shortEntryPrice, shortEntryCommissions,
@@ -76,6 +78,7 @@ public class RoundTrip implements Serializable {
     
     
     
+    @Override
     public boolean isComplete() {
         return longEntry != null &&
                 longExit != null &&
@@ -83,6 +86,7 @@ public class RoundTrip implements Serializable {
                 shortExit != null;
     }
 
+    @Override
     public String getCorrelationId() {
         return correlationId;
     }
