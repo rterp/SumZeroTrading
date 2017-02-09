@@ -5,6 +5,8 @@
  */
 package com.sumzerotrading.reporting;
 
+import static com.sumzerotrading.reporting.TradeReferenceLine.Side.ENTRY;
+import static com.sumzerotrading.reporting.TradeReferenceLine.Side.EXIT;
 import java.util.Objects;
 
 
@@ -27,13 +29,48 @@ public class TradeReferenceLine {
     protected Direction direction;
     
     protected Side side;
+    
+    protected String additionalInfo = "";
 
     
-    public static TradeReferenceLine create( String strategy, Direction direction, Side side ) {
+    
+   public static TradeReferenceLine create( String strategy, Direction direction, Side side ) {
+       return create(strategy, direction, side, "");
+   }
+    
+    public static TradeReferenceLine createEntryLine( String strategy, Direction direction ) {
+        return createEntryLine(strategy, direction, "");
+    }
+    
+    public static TradeReferenceLine createExitLine( String strategy, Direction direction, String correlationId) {
         TradeReferenceLine line = new TradeReferenceLine();
-        line.setStrategy(strategy).setDirection(direction).setSide(side);
+        line.setStrategy(strategy)
+                .setDirection(direction)
+                .setCorrelationId(correlationId)
+                .setSide(EXIT);
         
+        return line;
+                
+    }
+    
+    public static TradeReferenceLine createEntryLine( String strategy, Direction direction, String additionalInfo ) {
+        return create(strategy, direction, ENTRY, additionalInfo);
+    }    
+    
+    public static TradeReferenceLine create( String strategy, Direction direction, Side side, String additionalInfo ) {
+        TradeReferenceLine line = new TradeReferenceLine();
+        line.setStrategy(strategy)
+                .setDirection(direction)
+                .setSide(side)
+                .setCorrelationId(TradeUIDProvider.getInstance().getUID())
+                .setAdditionalInfo(additionalInfo);
         
+        return line;        
+    }
+    
+    public static TradeReferenceLine parseLine( String referenceLine ) {
+        TradeReferenceLine line = new TradeReferenceLine();
+        line.parse(referenceLine);
         return line;
     }
     
@@ -45,6 +82,9 @@ public class TradeReferenceLine {
         correlationId = tokens[1];
         side = parseSide(tokens[2]);
         direction = parseDirection(tokens[3]);
+        if(mainTokens.length > 1 ) {
+            additionalInfo = mainTokens[1];
+        }
         
     }
     
@@ -105,13 +145,22 @@ public class TradeReferenceLine {
         return this;
     }
 
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 17 * hash + Objects.hashCode(this.strategy);
-        hash = 17 * hash + Objects.hashCode(this.correlationId);
-        hash = 17 * hash + Objects.hashCode(this.direction);
-        hash = 17 * hash + Objects.hashCode(this.side);
+        hash = 11 * hash + Objects.hashCode(this.strategy);
+        hash = 11 * hash + Objects.hashCode(this.correlationId);
+        hash = 11 * hash + Objects.hashCode(this.direction);
+        hash = 11 * hash + Objects.hashCode(this.side);
+        hash = 11 * hash + Objects.hashCode(this.additionalInfo);
         return hash;
     }
 
@@ -133,6 +182,9 @@ public class TradeReferenceLine {
         if (!Objects.equals(this.correlationId, other.correlationId)) {
             return false;
         }
+        if (!Objects.equals(this.additionalInfo, other.additionalInfo)) {
+            return false;
+        }
         if (this.direction != other.direction) {
             return false;
         }
@@ -141,12 +193,14 @@ public class TradeReferenceLine {
         }
         return true;
     }
+    
+    
 
     //longExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
     @Override
     public String toString() {
       StringBuilder sb = new StringBuilder();
-      sb.append(strategy).append(":").append(correlationId).append(":").append(side).append(":").append(direction).append("*");
+      sb.append(strategy).append(":").append(correlationId).append(":").append(side).append(":").append(direction).append("*").append(additionalInfo);
       return sb.toString();
     }
     

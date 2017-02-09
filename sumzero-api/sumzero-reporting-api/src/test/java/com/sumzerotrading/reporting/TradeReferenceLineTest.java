@@ -19,7 +19,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -28,6 +30,8 @@ import static org.mockito.Mockito.spy;
 public class TradeReferenceLineTest {
     
     protected TradeReferenceLine testLine;
+    
+    protected TradeUIDProvider mockUIDProvider;
     
     public TradeReferenceLineTest() {
     }
@@ -43,6 +47,8 @@ public class TradeReferenceLineTest {
     @Before
     public void setUp() {
         testLine = spy(TradeReferenceLine.class);
+        mockUIDProvider = mock(TradeUIDProvider.class);
+        TradeUIDProvider.setMockTradeUIDProvider(mockUIDProvider);
     }
     
     @After
@@ -52,12 +58,13 @@ public class TradeReferenceLineTest {
 
     @Test
     public void testParse() {
-     String e = "EOD-Pair-Strategy:123:Exit:Long*";
+     String e = "EOD-Pair-Strategy:123:Exit:Long*MyAdditionalInfo";
      TradeReferenceLine expected = new TradeReferenceLine();
      expected.correlationId = "123";
      expected.strategy = "EOD-Pair-Strategy";
      expected.side = EXIT;
      expected.direction = LONG;
+     expected.additionalInfo = "MyAdditionalInfo";
      
      
      doReturn(LONG).when(testLine).parseDirection("Long");
@@ -65,9 +72,46 @@ public class TradeReferenceLineTest {
      
      testLine.parse(e);
      
-     assertEquals(expected,testLine);
+     assertEquals(expected.toString(),testLine.toString());
      
     }
+    
+    @Test
+    public void testParse_NoAdditionalInfo() {
+     String e = "EOD-Pair-Strategy:123:Exit:Long*";
+     TradeReferenceLine expected = new TradeReferenceLine();
+     expected.correlationId = "123";
+     expected.strategy = "EOD-Pair-Strategy";
+     expected.side = EXIT;
+     expected.direction = LONG;
+     expected.additionalInfo = "";
+     
+     
+     doReturn(LONG).when(testLine).parseDirection("Long");
+     doReturn(EXIT).when(testLine).parseSide("Exit");
+     
+     testLine.parse(e);
+     
+     assertEquals(expected.toString(),testLine.toString());
+     
+    }    
+    
+    @Test
+    public void testStaticParse() {
+     String e = "EOD-Pair-Strategy:123:Exit:Long*MyAdditionalInfo";
+     TradeReferenceLine expected = new TradeReferenceLine();
+     expected.correlationId = "123";
+     expected.strategy = "EOD-Pair-Strategy";
+     expected.side = EXIT;
+     expected.direction = LONG;
+     expected.additionalInfo = "MyAdditionalInfo";
+     
+     
+     TradeReferenceLine actualLine = TradeReferenceLine.parseLine(e);
+     
+     assertEquals(expected.toString(),actualLine.toString());
+     
+    }    
     
     
     @Test
@@ -102,11 +146,32 @@ public class TradeReferenceLineTest {
         line.setStrategy("MyStrategy")
                 .setCorrelationId("MyCorrId")
                 .setDirection(TradeReferenceLine.Direction.LONG)
-                .setSide(EXIT);
+                .setSide(EXIT)
+                .setAdditionalInfo("MyAdditionalInfo");
         
-        String expectedString = "MyStrategy:MyCorrId:EXIT:LONG*";
+        String expectedString = "MyStrategy:MyCorrId:EXIT:LONG*MyAdditionalInfo";
         
         assertEquals(expectedString, line.toString());
                 
     }
+    
+    @Test
+    public void testCreateEntryLine_NoAdditionalInfo() {
+        when(mockUIDProvider.getUID()).thenReturn("MyUID");
+        TradeReferenceLine line = TradeReferenceLine.createEntryLine("MyStrategy", LONG);
+        String expectedString = "MyStrategy:MyUID:ENTRY:LONG*";
+        
+        assertEquals(expectedString, line.toString());
+        
+    }
+    
+    @Test
+    public void testCreateEntryLine_WithAdditionalInfo() {
+        when(mockUIDProvider.getUID()).thenReturn("MyUID");
+        TradeReferenceLine line = TradeReferenceLine.createEntryLine("MyStrategy", SHORT, "Additional");
+        String expectedString = "MyStrategy:MyUID:ENTRY:SHORT*Additional";
+        
+        assertEquals(expectedString, line.toString());
+        
+    }    
 }

@@ -5,6 +5,10 @@
  */
 package com.sumzerotrading.reporting;
 
+import com.sumzerotrading.data.SumZeroException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 /**
  *
  * @author RobTerpilowski
@@ -23,8 +27,18 @@ public class TradeUIDProvider {
     
     
     public String getUID() {
-        
-        return "";
+        try {
+            SecureRandom prng = SecureRandom.getInstance("SHA1PRNG");
+            //generate a random number
+            return new Integer(Math.abs(prng.nextInt())).toString();
+        } catch (NoSuchAlgorithmException ex) {
+            throw new SumZeroException(ex);
+        }
+    }
+    
+    
+    public static void setMockTradeUIDProvider( TradeUIDProvider mockProvider ) {
+        provider = mockProvider;
     }
     
 }
