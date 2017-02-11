@@ -165,7 +165,9 @@ public class IbUtilsTest {
         assertEquals("JPY", IbUtils.translateToIbFuturesSymbol("6J"));
         assertEquals("CHF", IbUtils.translateToIbFuturesSymbol("6S"));
         assertEquals("GBP", IbUtils.translateToIbFuturesSymbol("6B"));
+        assertEquals("VIX", IbUtils.translateToIbFuturesSymbol("VX"));
         assertEquals("GBP", IbUtils.translateToIbFuturesSymbol("GBP"));
+        
     }
 
     @Test

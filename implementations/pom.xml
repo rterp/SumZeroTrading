@@ -42,6 +42,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <module>market-data-api</module>
     <module>real-time-bar-api</module>
     <module>strategy-api</module>
+    <module>reporting-api</module>
   </modules>
   
 </project>

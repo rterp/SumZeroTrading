@@ -75,6 +75,7 @@ public class FuturesContractBuilderTest {
         expected.m_secType = "FUT";
         expected.m_symbol = "HG";
         expected.m_expiry = "201506";
+        expected.m_localSymbol = "HGM5";
         
         assertEquals(expected, builder.buildContract(ticker) );
     }
@@ -84,18 +85,19 @@ public class FuturesContractBuilderTest {
     public void testBuildContract_NoMultiplier_Grains() {
         FuturesTicker ticker = new FuturesTicker();
         ticker.setCurrency("USD");
-        ticker.setExchange(Exchange.GLOBEX);
+        ticker.setExchange(Exchange.ECBOT);
         ticker.setSymbol("ZW");
         ticker.setExpiryMonth(6);
         ticker.setExpiryYear(2015);
 
         Contract expected = new Contract();
         expected.m_currency = "USD";
-        expected.m_exchange = Exchange.GLOBEX.getExchangeName();
+        expected.m_exchange = Exchange.ECBOT.getExchangeName();
         expected.m_secType = "FUT";
         expected.m_symbol = "ZW";
         expected.m_expiry = "201506";
         expected.m_multiplier = "5000";
+        expected.m_localSymbol = "ZW   JUN 15";
         
         assertEquals(expected, builder.buildContract(ticker) );
     }
@@ -105,7 +107,7 @@ public class FuturesContractBuilderTest {
     public void testBuildContract_WithMultiplier() {
         FuturesTicker ticker = new FuturesTicker();
         ticker.setCurrency("USD");
-        ticker.setExchange(Exchange.GLOBEX);
+        ticker.setExchange(Exchange.ECBOT);
         ticker.setSymbol("ZW");
         ticker.setExpiryMonth(6);
         ticker.setExpiryYear(2015);
@@ -113,11 +115,12 @@ public class FuturesContractBuilderTest {
 
         Contract expected = new Contract();
         expected.m_currency = "USD";
-        expected.m_exchange = Exchange.GLOBEX.getExchangeName();
+        expected.m_exchange = Exchange.ECBOT.getExchangeName();
         expected.m_secType = "FUT";
         expected.m_symbol = "ZW";
         expected.m_expiry = "201506";
         expected.m_multiplier = "5000";
+        expected.m_localSymbol = "ZW   JUN 15";
         
         assertEquals(expected, builder.buildContract(ticker) );
     }

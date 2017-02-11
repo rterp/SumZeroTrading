@@ -56,6 +56,8 @@ public class IbUtils {
                 return "CHF";
             case "6B":
                 return "GBP";
+            case "VX":
+                return "VIX";
             default:
                 return symbol;
         }

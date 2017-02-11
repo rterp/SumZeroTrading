@@ -21,8 +21,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.data;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 /**
@@ -33,8 +31,6 @@ public class FuturesTicker extends Ticker {
 
     public final static long serialVersionUID = 1L;
 
- 
-
     protected int expiryMonth = 0;
     protected int expiryYear = 0;
     protected Commodity commodity;
@@ -44,8 +40,9 @@ public class FuturesTicker extends Ticker {
         return commodity;
     }
 
-    public void setCommodity(Commodity commodity) {
+    public FuturesTicker setCommodity(Commodity commodity) {
         this.commodity = commodity;
+        return this;
     }
 
     @Override
@@ -57,16 +54,18 @@ public class FuturesTicker extends Ticker {
         return expiryMonth;
     }
 
-    public void setExpiryMonth(int expiryMonth) {
+    public FuturesTicker setExpiryMonth(int expiryMonth) {
         this.expiryMonth = expiryMonth;
+        return this;
     }
 
     public int getExpiryYear() {
         return expiryYear;
     }
 
-    public void setExpiryYear(int expiryYear) {
+    public FuturesTicker setExpiryYear(int expiryYear) {
         this.expiryYear = expiryYear;
+        return this;
     }
 
     @Override

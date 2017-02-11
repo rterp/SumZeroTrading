@@ -23,6 +23,9 @@ package com.sumzerotrading.ib;
 
 import com.ib.client.Contract;
 import com.sumzerotrading.data.FuturesTicker;
+import com.sumzerotrading.ib.symbol.ILocalSymbolBuilder;
+import com.sumzerotrading.ib.symbol.LocalSymbolBuilderFactory;
+import com.sumzerotrading.util.FuturesUtil;
 import java.math.BigDecimal;
 
 /**
@@ -38,6 +41,11 @@ public class FuturesContractBuilder implements IContractBuilder<FuturesTicker> {
         contract.m_secType = IbUtils.getSecurityType(ticker.getInstrumentType());
         contract.m_symbol = IbUtils.translateToIbFuturesSymbol( ticker.getSymbol() );
         contract.m_expiry = IbUtils.getExpiryString(ticker.getExpiryMonth(), ticker.getExpiryYear());
+        
+        ILocalSymbolBuilder localSymbolBuilder = LocalSymbolBuilderFactory.getLocalSymbolBuilder(ticker.getExchange());
+        
+        contract.m_localSymbol = localSymbolBuilder.buildLocalSymbol(ticker.getSymbol(), ticker.getExpiryMonth(), ticker.getExpiryYear());
+        
         BigDecimal multiplier = IbUtils.getIbMultiplier(ticker);
         if (multiplier != null) {
             contract.m_multiplier = multiplier.toString();
@@ -46,6 +54,9 @@ public class FuturesContractBuilder implements IContractBuilder<FuturesTicker> {
         return contract;
 
     }
+    
+    
+    
 
 
 }

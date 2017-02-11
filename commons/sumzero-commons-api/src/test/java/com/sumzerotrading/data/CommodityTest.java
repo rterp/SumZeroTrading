@@ -356,9 +356,9 @@ public class CommodityTest {
     
     @Test
     public void testGetVix() {
-        Commodity c = Commodity.VIX_FUTURES_CBOE;
+        Commodity c = Commodity.VIX_FUTURES_CFE;
         
-        assertEquals("VIX", c.getExchangeSymbol() );
+        assertEquals("VX", c.getExchangeSymbol() );
         assertEquals(new BigDecimal(1000), c.getContractMultiplier());
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());

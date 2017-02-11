@@ -19,6 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package com.sumzerotrading.util;
 
+import com.sumzerotrading.data.SumZeroException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -69,8 +70,55 @@ public class FuturesUtilTest {
         try {
             FuturesUtil.getContractMonthSymbol(0);
             fail();
-        } catch( IllegalStateException ex ) {
+        } catch( SumZeroException ex ) {
             //this should happen
         }
     }
+    
+    @Test
+    public void testGetMonthAbbreviation() {
+        assertEquals( "JAN", FuturesUtil.getMonthAbbreviation(1) );
+        assertEquals( "FEB", FuturesUtil.getMonthAbbreviation(2) );
+        assertEquals( "MAR", FuturesUtil.getMonthAbbreviation(3) );
+        assertEquals( "APR", FuturesUtil.getMonthAbbreviation(4) );
+        assertEquals( "MAY", FuturesUtil.getMonthAbbreviation(5) );
+        assertEquals( "JUN", FuturesUtil.getMonthAbbreviation(6) );
+        assertEquals( "JUL", FuturesUtil.getMonthAbbreviation(7) );
+        assertEquals( "AUG", FuturesUtil.getMonthAbbreviation(8) );
+        assertEquals( "SEP", FuturesUtil.getMonthAbbreviation(9) );
+        assertEquals( "OCT", FuturesUtil.getMonthAbbreviation(10) );
+        assertEquals( "NOV", FuturesUtil.getMonthAbbreviation(11) );
+        assertEquals( "DEC", FuturesUtil.getMonthAbbreviation(12) );
+        
+        try {
+            FuturesUtil.getContractMonthSymbol(0);
+            fail();
+        } catch( SumZeroException ex ) {
+            //this should happen
+        }
+    }    
+    
+    @Test
+    public void testGetOneDigitYearString() {
+        assertEquals("7", FuturesUtil.getOneDigitYearString(2017));
+        assertEquals("7", FuturesUtil.getOneDigitYearString(17));
+    }
+    
+    @Test
+    public void testGetTwoDigitYearString() {
+        assertEquals("17", FuturesUtil.getTwoDigitYearString(2017));
+        assertEquals("17", FuturesUtil.getTwoDigitYearString(17));
+    }    
+    
+    @Test
+    public void testGetFullFuturesSymbolWithOneDigitYear() {
+        assertEquals("HGM5", FuturesUtil.getFullFuturesSymbolWithOneDigitYear("HG", 6, 2015));
+    }
+    
+    @Test
+    public void testGetFullFuturesSymbolWithTwoDigitYear() {
+        assertEquals("HGM15", FuturesUtil.getFullFuturesSymbolWithTwoDigitYear("HG", 6, 2015));
+    }    
+    
+    
 }
