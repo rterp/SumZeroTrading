@@ -21,6 +21,8 @@ public class LocalSymbolBuilderFactory {
             return new HKFELocalSymbolBuilder();
         } else if( exchange == Exchange.ECBOT ) {
             return new CBOTLocalSymbolBuilder();
+        } else if( exchange == Exchange.OSE ) {
+            return new OSELocalSymbolBuilder();
         } else {
             return new DefaultLocalSymbolBuilder();
         }

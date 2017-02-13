@@ -19,7 +19,7 @@ public class TradeReferenceLine {
     
     public static final long serialVersionUID = 1L;
     
-    public enum Direction {LONG, SHORT};
+    public enum Direction {LONG, SHORT, NONE};
     public enum Side {ENTRY, EXIT};
     
     protected String strategy;

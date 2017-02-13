@@ -44,5 +44,6 @@ public class LocalSymbolBuilderFactoryTest {
         assertTrue( LocalSymbolBuilderFactory.getLocalSymbolBuilder(Exchange.HKFE) instanceof HKFELocalSymbolBuilder );
         assertTrue( LocalSymbolBuilderFactory.getLocalSymbolBuilder(Exchange.ECBOT) instanceof CBOTLocalSymbolBuilder );
         assertTrue( LocalSymbolBuilderFactory.getLocalSymbolBuilder(Exchange.GLOBEX) instanceof DefaultLocalSymbolBuilder );
+        assertTrue( LocalSymbolBuilderFactory.getLocalSymbolBuilder(Exchange.OSE) instanceof OSELocalSymbolBuilder );
     }
 }
