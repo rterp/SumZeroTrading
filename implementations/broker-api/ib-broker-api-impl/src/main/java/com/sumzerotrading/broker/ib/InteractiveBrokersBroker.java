@@ -65,10 +65,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Supported Order types are: Market, Stop and Limit Supported order parameters
@@ -81,7 +79,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     protected static int contractRequestId = 1;
     protected static int executionRequestId = 1;
-    protected static Logger logger = LoggerFactory.getLogger(InteractiveBrokersBroker.class);
+    protected static Logger logger = Logger.getLogger(InteractiveBrokersBroker.class);
     protected EClientSocket ibConnection;
     protected IBSocket ibSocket;
     protected IBConnectionInterface callbackInterface;
@@ -172,8 +170,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     @Override
     public void execDetails(int orderId, Contract contract, Execution execution) {
-        logger.info("Execution details: orderId: " + orderId + " contract: " + contract + " Execution: " + execution);
-        //not currently implemented
+        logger.debug("Execution details: orderId: " + orderId + " contract: " + contract + " Execution: " + execution);
     }
 
     @Override
@@ -187,7 +184,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     @Override
     public void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
-        logger.info("OpenOrder: " + orderId + " Contract: " + contract + " Order: " + order + " OrderState: " + orderState);
+        logger.debug("OpenOrder: " + orderId + " Contract: " + contract + " Order: " + order + " OrderState: " + orderState);
         
     }
 
@@ -201,7 +198,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     @Override
     public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {
-        logger.info("OrderStatus(): orderId: " + orderId + " Status: " + status + " filled: " + filled + " remaining: " + remaining + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId + " lastFillePrice: " + lastFillPrice + " clientId: " + clientId + " whyHeld: " + whyHeld);
+        logger.debug("OrderStatus(): orderId: " + orderId + " Status: " + status + " filled: " + filled + " remaining: " + remaining + " avgFillPrice: " + avgFillPrice + " permId: " + permId + " parentId: " + parentId + " lastFillePrice: " + lastFillPrice + " clientId: " + clientId + " whyHeld: " + whyHeld);
         TradeOrder order = orderMap.get(Integer.toString(orderId));
 
         if (order == null) {
@@ -219,7 +216,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
             OrderEvent cachedEvent = orderEventMap.get(order.getOrderId());
             if (cachedEvent != null && event.equals(cachedEvent)) {
                 orderEventMap.put(order.getOrderId(), event);
-                logger.info("Duplicate order status received....skipping");
+                logger.debug("Duplicate order status received....skipping");
                 return;
             }
             if (event.getOrderStatus().getStatus() == OrderStatus.Status.FILLED
@@ -243,7 +240,7 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     @Override
     public void commissionReport(CommissionReport commissionReport) {
-        logger.info("CommssionReport(): " + commissionReport);
+        logger.debug("CommssionReport(): " + commissionReport);
     }
 
     public void addOrderEventListener(OrderEventListener listener) {
@@ -275,10 +272,9 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
 
     protected void putOnErrorQueue(BrokerError error) {
         try {
-            // brokerErrorQueue.put(error);
+             brokerErrorQueue.put(error);
         } catch (Exception ex) {
-            //logger.error(ex, ex);
-            ex.printStackTrace();
+            logger.error(ex, ex);
         }
     }
 
@@ -422,13 +418,13 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     public void position(String account, Contract contract, int pos, double avgCost) {
         //IbUtils.
         //positionsList.add(new Position(ticker, pos, avgCost));
-        logger.info("Position - Account: " + account + " Contract: " + new ContractWrapper(contract) + " size: " + pos + " avgCost: " + avgCost );
+        logger.debug("Position - Account: " + account + " Contract: " + new ContractWrapper(contract) + " size: " + pos + " avgCost: " + avgCost );
     }
 
     @Override
     public void positionEnd() {
         getPositionsCountdownLatch.countDown();
-        logger.info( "Position END()");
+        logger.debug( "Position END()");
     }
     
     

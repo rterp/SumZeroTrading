@@ -19,6 +19,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
+import org.apache.log4j.Logger;
 import static org.jmock.Expectations.any;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,7 +35,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.slf4j.Logger;
 
 /**
  *
