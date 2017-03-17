@@ -41,7 +41,15 @@ public class Collective2Broker implements IBroker {
     protected Collective2Client c2Client;
     protected TradeSignalBuilder signalBuilder;
     protected String systemid;
+    protected String apiKey;
     
+    
+    public Collective2Broker(String apiKey, String systemid ) {
+        this.apiKey = apiKey;
+        this.systemid = systemid;
+        signalBuilder = new TradeSignalBuilder();
+        c2Client = new Collective2Client(apiKey);
+    }
 
     @Override
     public void cancelOrder(String id) {
@@ -68,24 +76,37 @@ public class Collective2Broker implements IBroker {
         return "";
     }
 
+    /**
+     * Currently does nothing
+     * @param listener 
+     */
     @Override
     public void addOrderEventListener(OrderEventListener listener) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Currently does nothing
+     * @param listener 
+     */
     @Override
     public void removeOrderEventListener(OrderEventListener listener) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Currently does nothing
+     * @param listener 
+     */
     @Override
     public void addBrokerErrorListener(BrokerErrorListener listener) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    
+    /**
+     * Currently does nothing
+     * @param listener 
+     */
     @Override
     public void removeBrokerErrorListener(BrokerErrorListener listener) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

@@ -29,6 +29,7 @@ public class TradeSignalBuilder {
         }
         
         SignalInfo signalInfo = new SignalInfo();
+        signalInfo.setTicker(symbol);
         signalInfo.setAction(C2Util.getTradeAction(order));
         signalInfo.setIsMarketOrder( order.getType() == TradeOrder.Type.MARKET );
         signalInfo.setSymbolType(C2Util.getSymbolType(order));

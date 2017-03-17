@@ -23,10 +23,17 @@ import com.sumzerotrading.util.FuturesUtil;
  */
 public class C2Util {
 
+    
+    public static final String ROOT_SYMBOL_RUSSEL2K = "@TFS";
+    public static final String ROOT_SYMBOL_NASDAQ_100 = "@NQ";
+    public static final String ROOT_SYMBOL_MINI_DOW = "@YM";
+    public static final String ROOT_SYMBOL_SP500 = "@ES";
+    public static final String ROOT_SYMBOL_CORN = "@C";
 
     public static String getFuturesSymbol(FuturesTicker ticker) {
-        String symbol = FuturesUtil.getFullFuturesSymbolWithTwoDigitYear(ticker.getSymbol(), ticker.getExpiryMonth(), ticker.getExpiryYear());
-        return "@" + symbol;
+        String c2Symbol = C2Util.getC2RootSymbol(ticker.getSymbol());
+        String symbol = FuturesUtil.getFullFuturesSymbolWithOneDigitYear(c2Symbol, ticker.getExpiryMonth(), ticker.getExpiryYear());
+        return symbol;
     }
     
     
@@ -68,4 +75,27 @@ public class C2Util {
             throw new SumZeroException("Unsupported order type: " + order.getType());
         }
     }
+    
+    
+    public static String getC2RootSymbol(String symbol) {
+        switch(symbol) {
+            case "NQ":
+                return ROOT_SYMBOL_NASDAQ_100;
+            case "ES":
+                return ROOT_SYMBOL_SP500;
+            case "TF":
+                return ROOT_SYMBOL_RUSSEL2K;
+            case "YM":
+                return ROOT_SYMBOL_MINI_DOW;
+            case "C":
+            case "ZC":
+                return ROOT_SYMBOL_CORN;
+            default:
+                throw new SumZeroException("Unsupported C2 symbol: " + symbol );
+        }
+    }
+    
+    
+    
+    
 }
