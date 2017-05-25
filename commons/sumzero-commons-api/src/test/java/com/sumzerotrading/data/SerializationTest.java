@@ -144,12 +144,14 @@ public class SerializationTest {
     
     
     public void test( Object object ) throws Exception {
+        int hashBefore = object.hashCode();
         byte[] serialized = serialize(object);
         assertTrue( serialized.length > 0 );
         
         Object object2 = deserialize(object.getClass(), serialized);
         
         assertEquals( object, object2 );
+        assertEquals( hashBefore, object2.hashCode());
     }
     
     

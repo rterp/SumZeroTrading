@@ -31,6 +31,7 @@ import com.sumzerotrading.j4c2.Collective2Client;
 import com.sumzerotrading.time.TimeUpdatedListener;
 import java.time.ZonedDateTime;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rob Terpilowski
@@ -42,6 +43,7 @@ public class Collective2Broker implements IBroker {
     protected TradeSignalBuilder signalBuilder;
     protected String systemid;
     protected String apiKey;
+    protected Logger logger = Logger.getLogger(Collective2Broker.class);
     
     
     public Collective2Broker(String apiKey, String systemid ) {
@@ -63,6 +65,7 @@ public class Collective2Broker implements IBroker {
 
     @Override
     public void placeOrder(TradeOrder order) {
+        logger.info("Submitting order to C2 Broker: " + order);
         c2Client.submitTradeSignal(signalBuilder.buildSignalRequest(systemid, order));
     }
 

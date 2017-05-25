@@ -324,22 +324,16 @@ public class InteractiveBrokersBroker extends BaseIBConnectionDelegate implement
     }
 
     public void placeOrder(TradeOrder order) {
+        logger.info("Order received: " + order);
         order.setOrderEntryTime(getZoneDateTime());
-        if (order.getTicker().getInstrumentType() == InstrumentType.FOREX) {
-            //IDEALPro is closed from 14:00-14:15 PST, and does not 
-            //accept orders from 14:00-14:05, queue orders that are placed
-            //during that time.
-            if (isIdealProClosed()) {
-                queueOrder(order);
-                return;
-            }
-        }
 
         List<IbOrderAndContract> orders = buildOrderAndContract(order);
+        logger.debug("Order converted to " + orders.size() + " IB Order(s)");
         orders.get(orders.size() - 1).getOrder().m_transmit = true;
         for (IbOrderAndContract ibOrder : orders) {
             ibConnection.placeOrder(ibOrder.getOrder().m_orderId, ibOrder.getContract(), ibOrder.getOrder());
         }
+        logger.debug("Orders placed at IB");
     }
 
     public void aquireLock() {

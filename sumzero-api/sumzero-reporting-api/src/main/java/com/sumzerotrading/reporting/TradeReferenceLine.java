@@ -196,17 +196,12 @@ public class TradeReferenceLine {
     
     
 
-    //longExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
     @Override
     public String toString() {
       StringBuilder sb = new StringBuilder();
       sb.append(strategy).append(":").append(correlationId).append(":").append(side).append(":").append(direction).append("*").append(additionalInfo);
       return sb.toString();
     }
-    
-    
-    
-    
     
     
 }
