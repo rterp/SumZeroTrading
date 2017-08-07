@@ -41,6 +41,6 @@ public class HKFELocalSymbolBuilderTest {
     @Test
     public void testBuildLocalSymbol() {
         HKFELocalSymbolBuilder builder = new HKFELocalSymbolBuilder();
-        assertEquals( "HSIH17", builder.buildLocalSymbol("HSI", 3, 2017) );
+        assertEquals( "HSIH7", builder.buildLocalSymbol("HSI", 3, 2017) );
     }
 }

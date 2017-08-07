@@ -15,7 +15,7 @@ public class HKFELocalSymbolBuilder implements ILocalSymbolBuilder {
 
     @Override
     public String buildLocalSymbol(String symbol, int expirationMonth, int expirationYear) {
-        return FuturesUtil.getFullFuturesSymbolWithTwoDigitYear(symbol, expirationMonth, expirationYear);
+        return FuturesUtil.getFullFuturesSymbolWithOneDigitYear(symbol, expirationMonth, expirationYear);
     }
     
 }

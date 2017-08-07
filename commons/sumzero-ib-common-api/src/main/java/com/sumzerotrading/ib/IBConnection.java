@@ -28,15 +28,9 @@ import com.ib.client.Execution;
 import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.ib.client.UnderComp;
-import com.sumzerotrading.ib.historical.ContractDetailsListener;
-import com.sumzerotrading.ib.historical.HistoricalDataListener;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -44,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IBConnection implements IBConnectionInterface {
 
-    protected Logger logger = LoggerFactory.getLogger(IBConnection.class);
+    protected Logger logger = Logger.getLogger(IBConnection.class);
     protected static IBConnection connection = null;
 
     protected EClientSocket eclientSocket;

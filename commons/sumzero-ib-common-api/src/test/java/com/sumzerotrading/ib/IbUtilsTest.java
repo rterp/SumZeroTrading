@@ -123,7 +123,9 @@ public class IbUtilsTest {
     public void testGetSecurityType() {
         InstrumentType[] values = InstrumentType.values();
         for (InstrumentType value : values) {
-            assertNotNull(IbUtils.getSecurityType(value));
+            if( value != InstrumentType.BITCOIN ) {
+                assertNotNull(IbUtils.getSecurityType(value));
+            }
         }
 
         assertEquals("STK", IbUtils.getSecurityType(InstrumentType.STOCK));
