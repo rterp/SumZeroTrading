@@ -53,7 +53,7 @@ public class Exchange implements Serializable {
     protected String exchangeName;
     
     
-    private Exchange( String exchangeName ) {
+    protected Exchange( String exchangeName ) {
         this.exchangeName = exchangeName;
     }
 

@@ -28,5 +28,5 @@ package com.sumzerotrading.data;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public enum InstrumentType {
-        STOCK, FUTURES, OPTION, FOREX, INDEX, COMBO, CFD;
+        STOCK, FUTURES, OPTION, FOREX, INDEX, COMBO, CFD, BITCOIN;
 }
