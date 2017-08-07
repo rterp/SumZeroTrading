@@ -34,5 +34,6 @@ public enum QuoteType {
         VOLUME,
 	MARKET_DEPTH_BID,
 	MARKET_DEPTH_ASK,
+        EXTENDED,
         UNKNOWN;
 }
