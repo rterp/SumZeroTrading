@@ -9,6 +9,10 @@ target/
 nbactions.xml
 nb-configuration.xml
 
+# Idea specific #
+.idea/
+*.iml
+
 # Class Files #
 *.class
 
@@ -16,7 +20,6 @@ nb-configuration.xml
 *.jar
 *.war
 *.ear
-/commons/sumzero-ib-common-api/nbproject/
 /commons/sumzero-ib-common-api/nbproject/
 /examples/EODTradingStrategy/nbproject/
 /implementations/broker-api/ib-broker-api-impl/nbproject/
