@@ -33,7 +33,7 @@ public class MarketDataOptionsExample {
         ibClient.connect();
 
         OptionTicker optionTicker = new OptionTicker("QQQ");
-        optionTicker.setExchange(Exchange.BOX);
+        optionTicker.setExchange(Exchange.INTERACTIVE_BROKERS_SMART);
         optionTicker.setExpiryDay(15);
         optionTicker.setExpiryMonth(9);
         optionTicker.setExpiryYear(2017);
