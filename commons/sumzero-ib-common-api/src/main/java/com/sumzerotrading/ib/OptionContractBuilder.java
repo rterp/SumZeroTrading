@@ -21,33 +21,34 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
-import com.sumzerotrading.data.*;
+import com.ib.client.Contract;
+import com.sumzerotrading.data.FuturesTicker;
+import com.sumzerotrading.data.OptionTicker;
+import com.sumzerotrading.ib.symbol.ILocalSymbolBuilder;
+import com.sumzerotrading.ib.symbol.LocalSymbolBuilderFactory;
+import java.math.BigDecimal;
 
 /**
  *
  * @author Rob Terpilowski
  */
-public class ContractBuilderFactory {
-    
-    
-    
-    public static IContractBuilder getContractBuilder( Ticker ticker ) {
-        if( ticker instanceof StockTicker ) {
-            return new StockContractBuilder();
-        } else if( ticker instanceof CurrencyTicker ) {
-            return new CurrencyContractBuilder();
-        } else if( ticker instanceof FuturesTicker ) {
-            return new FuturesContractBuilder();
-        } else if( ticker instanceof ComboTicker ) {
-            return new ComboContractBuilder();
-        } else if( ticker instanceof IndexTicker ) {
-            return new IndexContractBuilder();
-        } else if( ticker instanceof CFDTicker ) {
-            return new CFDContractBuilder();
-        } else if( ticker instanceof OptionTicker ) {
-            return new OptionContractBuilder();
-        } else {
-            throw new IllegalStateException( "Unsupported ticker type: " + ticker.getClass() );
-        }
+public class OptionContractBuilder implements IContractBuilder<OptionTicker> {
+
+    public Contract buildContract(OptionTicker ticker) {
+        Contract contract = new Contract();
+        contract.m_currency = ticker.getCurrency();
+        contract.m_exchange = ticker.getExchange().getExchangeName();
+        contract.m_secType = IbUtils.getSecurityType(ticker.getInstrumentType());
+        contract.m_symbol = ticker.getSymbol();
+        
+        contract.m_expiry = IbUtils.getExpiryString(ticker.getExpiryDay(), ticker.getExpiryMonth(), ticker.getExpiryYear());
+        contract.m_multiplier = ticker.getContractMultiplier().toString();
+        contract.m_right = IbUtils.getOptionRight(ticker.getRight());
+        contract.m_strike = ticker.getStrike().doubleValue();
+
+        return contract;
+
     }
+    
+
 }

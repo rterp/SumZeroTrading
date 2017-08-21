@@ -132,7 +132,7 @@ public class SerializationTest {
     
     @Test
     public void testOptionTicker() throws Exception {
-        OptionTicker ticker = new OptionTicker("ES", 1, 2015);
+        OptionTicker ticker = new OptionTicker("ES");
         ticker.setContractMultiplier(BigDecimal.ZERO);
         ticker.setCurrency("USD");
         ticker.setExchange(Exchange.ARCA);

@@ -66,7 +66,7 @@ public class ContractBuilderFactoryTest {
         Ticker stockTicker = new StockTicker("ABC");
         Ticker currencyTicker = new CurrencyTicker();
         Ticker futurTicker = new FuturesTicker();
-        Ticker optionsTicker = new OptionTicker("ABC", 1, 2014);
+        Ticker optionsTicker = new OptionTicker("QQQ");
         Ticker combTicker = new ComboTicker(futurTicker, stockTicker);
         Ticker indexTicker = new IndexTicker();
         Ticker cfdTicker = new CFDTicker("XYZ");
@@ -77,20 +77,9 @@ public class ContractBuilderFactoryTest {
         assertTrue( ContractBuilderFactory.getContractBuilder(combTicker) instanceof ComboContractBuilder );
         assertTrue( ContractBuilderFactory.getContractBuilder(indexTicker) instanceof IndexContractBuilder );
         assertTrue( ContractBuilderFactory.getContractBuilder(cfdTicker) instanceof CFDContractBuilder );
+        assertTrue( ContractBuilderFactory.getContractBuilder(optionsTicker) instanceof OptionContractBuilder );
         
     }
     
-   
-    
-    @Test
-    public void testGetContractBuilder_UnknownType() {
-        Ticker ticker = new OptionTicker("", 1, 1);
-        try {
-            ContractBuilderFactory.getContractBuilder(ticker);
-            fail();
-        } catch( IllegalStateException ex ) {
-            //this should happen.
-        }
-    }
 
 }

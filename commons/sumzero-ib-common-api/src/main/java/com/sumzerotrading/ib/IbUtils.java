@@ -27,6 +27,7 @@ import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.data.InstrumentType;
+import com.sumzerotrading.data.OptionTicker;
 import com.sumzerotrading.data.SumZeroException;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.marketdata.QuoteType;
@@ -197,6 +198,27 @@ public class IbUtils {
         }
         sb.append(expiryMonth);
         return sb.toString();
+    }
+    
+    
+    public static String getExpiryString(int expiryDay, int expiryMonth, int expiryYear) {
+        String dayString = Integer.toString(expiryDay);
+        if( expiryDay < 10 ) {
+            dayString = "0" + dayString;
+        }
+        
+        return getExpiryString(expiryMonth, expiryYear) + dayString;
+    }
+    
+    public static String getOptionRight( OptionTicker.Right right ) {
+        switch( right ) {
+            case Call:
+                return "C";
+            case Put:
+                return "P";
+            default:
+                throw new SumZeroException("Unknown option right: " + right);
+        }
     }
 
     public static Image getIconImage() {

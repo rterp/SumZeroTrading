@@ -48,6 +48,7 @@ public class Exchange implements Serializable {
     public static final Exchange HKFE = new Exchange("HKFE");
     public static final Exchange OSE = new Exchange("OSE.JPN");
     public static final Exchange SGX = new Exchange("SGX");
+    public static final Exchange BOX = new Exchange("BOX");
     
     
     protected String exchangeName;

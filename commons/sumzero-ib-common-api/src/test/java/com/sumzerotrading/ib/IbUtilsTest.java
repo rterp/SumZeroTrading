@@ -25,6 +25,7 @@ import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.data.InstrumentType;
+import com.sumzerotrading.data.OptionTicker;
 import com.sumzerotrading.marketdata.QuoteType;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -157,7 +158,24 @@ public class IbUtilsTest {
         assertEquals(OrderStatus.Status.FILLED, IbUtils.getOrderStatus("Filled"));
         assertEquals(OrderStatus.Status.CANCELED, IbUtils.getOrderStatus("Inactive"));
         assertEquals(OrderStatus.Status.UNKNOWN, IbUtils.getOrderStatus("foo"));
-
+    }
+    
+    @Test
+    public void testGetExpiryString_MonthYear() {
+        assertEquals( "201709", IbUtils.getExpiryString(9, 2017));
+        assertEquals( "201710", IbUtils.getExpiryString(10, 2017));
+    }
+    
+    @Test
+    public void testGetExpiryString_DayMonthYear() {
+        assertEquals( "20170908", IbUtils.getExpiryString(8, 9, 2017));
+        assertEquals( "20171110", IbUtils.getExpiryString(10, 11, 2017));
+    }    
+    
+    @Test
+    public void testGetOptionRight() {
+        assertEquals( "C", IbUtils.getOptionRight(OptionTicker.Right.Call));
+        assertEquals( "P", IbUtils.getOptionRight(OptionTicker.Right.Put));
     }
 
     @Test
