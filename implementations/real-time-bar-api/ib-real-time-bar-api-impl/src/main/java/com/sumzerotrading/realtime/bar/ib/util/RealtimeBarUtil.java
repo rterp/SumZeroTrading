@@ -55,7 +55,7 @@ public class RealtimeBarUtil {
     }        
 
     public static String getJobName(RealtimeBarRequest realtimeBarRequest) {
-        return "ticker: " + realtimeBarRequest.getTicker().getSymbol() + " barLength:" + realtimeBarRequest.getTimeInteval() + realtimeBarRequest.getTimeUnit();
+        return "ticker: " + realtimeBarRequest.getTicker().getSymbol() + " type: " + realtimeBarRequest.getTicker().getInstrumentType() + " barLength:" + realtimeBarRequest.getTimeInteval() + realtimeBarRequest.getTimeUnit();
     }
 
     

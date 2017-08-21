@@ -114,7 +114,7 @@ public class RealtimeBarUtilTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         int timeInterval = 1;
         RealtimeBarRequest realtimeBarRequest = new RealtimeBarRequest(requestId, ticker, timeInterval, LengthUnit.MINUTE);
-        String expected = "ticker: " + realtimeBarRequest.getTicker().getSymbol() + " barLength:" + realtimeBarRequest.getTimeInteval() + realtimeBarRequest.getTimeUnit();
+        String expected = "ticker: " + realtimeBarRequest.getTicker().getSymbol() + " type: " + realtimeBarRequest.getTicker().getInstrumentType()+ " barLength:" + realtimeBarRequest.getTimeInteval() + realtimeBarRequest.getTimeUnit();
 
         assertEquals(expected, RealtimeBarUtil.getJobName(realtimeBarRequest));
     }
