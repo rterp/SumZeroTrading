@@ -22,11 +22,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.sumzerotrading.ib;
 
 import com.ib.client.Contract;
-import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.data.OptionTicker;
-import com.sumzerotrading.ib.symbol.ILocalSymbolBuilder;
-import com.sumzerotrading.ib.symbol.LocalSymbolBuilderFactory;
-import java.math.BigDecimal;
 
 /**
  *
