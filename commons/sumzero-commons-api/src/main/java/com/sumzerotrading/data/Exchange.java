@@ -50,6 +50,9 @@ public class Exchange implements Serializable {
     public static final Exchange SGX = new Exchange("SGX");
     public static final Exchange BOX = new Exchange("BOX");
     
+    public static final Exchange[] ALL_EXCHANGES = { ARCA, GLOBEX, NYMEX, CBOE, ECBOT, NYBOT, CFE,
+        NYSE_LIFFE, IDEALPRO, PSE, INTERACTIVE_BROKERS_SMART, NASDAQ, TSEJ, SEHKNTL, HKFE, OSE, SGX, BOX };
+    
     
     protected String exchangeName;
     
@@ -60,6 +63,16 @@ public class Exchange implements Serializable {
 
     public String getExchangeName() {
         return exchangeName;
+    }
+    
+    public static Exchange getExchangeFromString(String exchangeString) {
+        for( Exchange exchange : ALL_EXCHANGES ) {
+            if( exchangeString.equals(exchange.getExchangeName())) {
+                return exchange;
+            }
+        }
+        
+        throw new SumZeroException("Unknown exchange " + exchangeString );
     }
 
     @Override

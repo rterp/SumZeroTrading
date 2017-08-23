@@ -5,6 +5,7 @@
  */
 package com.sumzerotrading.eod.trading.strategy;
 
+import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -13,7 +14,6 @@ import lombok.Getter;
  *
  * @author RobTerpilowski
  */
-@EqualsAndHashCode
 public class TradeReferenceLine {
     //longExitOrder.setReferenceString("EOD-Pair-Strategy:" + correlationId + ":Exit:LongSide*");
     
@@ -22,16 +22,12 @@ public class TradeReferenceLine {
     public enum Direction {LONG, SHORT};
     public enum Side {ENTRY, EXIT};
     
-    @Getter
     protected String strategy;
     
-    @Getter
     protected String correlationId;
     
-    @Getter
     protected Direction direction;
     
-    @Getter
     protected Side side;
 
     
@@ -65,6 +61,67 @@ public class TradeReferenceLine {
             throw new IllegalStateException( "Unknown Direction: " + dir );
         }
     }
+
+    public String getStrategy() {
+        return strategy;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.strategy);
+        hash = 29 * hash + Objects.hashCode(this.correlationId);
+        hash = 29 * hash + Objects.hashCode(this.direction);
+        hash = 29 * hash + Objects.hashCode(this.side);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TradeReferenceLine other = (TradeReferenceLine) obj;
+        if (!Objects.equals(this.strategy, other.strategy)) {
+            return false;
+        }
+        if (!Objects.equals(this.correlationId, other.correlationId)) {
+            return false;
+        }
+        if (this.direction != other.direction) {
+            return false;
+        }
+        if (this.side != other.side) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "TradeReferenceLine{" + "strategy=" + strategy + ", correlationId=" + correlationId + ", direction=" + direction + ", side=" + side + '}';
+    }
+    
+    
+    
     
     
 }

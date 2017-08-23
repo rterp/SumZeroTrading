@@ -72,10 +72,13 @@ public class Commodity implements Serializable {
     public static final Commodity SOYBEANS_ECBOT = new Commodity("ZS", Exchange.ECBOT, TWO_DECIMALS, new BigDecimal(0.25), new BigDecimal(50));
     public static final Commodity WHEAT_ECBOT = new Commodity("ZW", Exchange.ECBOT, TWO_DECIMALS, new BigDecimal(0.25), new BigDecimal(50));
     
+    public static final Commodity HANG_SENG_INDEX = new Commodity("HSI", Exchange.HKFE, NO_DECIMALS, BigDecimal.ONE, new BigDecimal(50), "HKD");
+    public static final Commodity HANG_SENG_MINI_INDEX = new Commodity("MHI", Exchange.HKFE, NO_DECIMALS, BigDecimal.ONE, new BigDecimal(10), "HKD");
+    
     public static final Commodity[] ALL = { SP500_INDEX_MINI_GLOBEX, NASDAQ100_INDEX_MINI_GLOBEX, RUSSELL_2000_INDEX_MINI_NYBOT, DOW_INDEX_MINI_ECBOT,
         BOND_10_YEAR_ECBOT, BOND_30_YEAR_ECBOT, EURO_GLOBEX, EURO_MINI_GLOBEX, CANADIAN_DOLLAR_GLOBEX, SWISS_FRANC_GLOBEX, JAPANESE_YEN_GLOBEX, JAPANESE_YEN_MINI_GLOBEX,
         GOLD_NYMEX, GOLD_MINI_NYSE_LIFFE, SILVER_NYMEX, SILVER_MINI_NYSE_LIFFE, COPPER_NYMEX, CRUDE_OIL_NYMEX, CRUDE_OIL_MINI_NYMEX, NATURAL_GAS_NYMEX,
-        NATURAL_GAS_MINI_NYMEX, HEATING_OIL_NYMEX, CORN_ECBOT, SOYBEANS_ECBOT, WHEAT_ECBOT };
+        NATURAL_GAS_MINI_NYMEX, HEATING_OIL_NYMEX, CORN_ECBOT, SOYBEANS_ECBOT, WHEAT_ECBOT, HANG_SENG_INDEX, HANG_SENG_MINI_INDEX };
     
     
     protected String exchangeSymbol;

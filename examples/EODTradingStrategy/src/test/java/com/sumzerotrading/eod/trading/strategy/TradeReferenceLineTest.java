@@ -63,7 +63,7 @@ public class TradeReferenceLineTest {
      
      testLine.parse(e);
      
-     assertEquals(expected,testLine);
+     assertEquals(expected.toString(),testLine.toString());
      
     }
     
