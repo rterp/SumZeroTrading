@@ -12,10 +12,13 @@ import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
+import com.sumzerotrading.historicaldata.IHistoricalDataProvider.ShowProperty;
 import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.Level2QuoteListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +44,8 @@ public interface InteractiveBrokersClientInterface {
     void placeOrder(TradeOrder order);
 
     List<BarData> requestHistoricalData(Ticker ticker, int duration, BarData.LengthUnit lengthUnit, int barSize, BarData.LengthUnit barSizeUnit, IHistoricalDataProvider.ShowProperty showProperty);
+    
+    List<BarData> requestHistoricalData( Ticker ticker, Date endDateTime, int duration, BarData.LengthUnit durationLengthUnit, int barSize, BarData.LengthUnit barSizeUnit, ShowProperty whatToShow, boolean useRTH  ) throws IOException;
 
     void subscribeLevel1(Ticker ticker, Level1QuoteListener listener);
 

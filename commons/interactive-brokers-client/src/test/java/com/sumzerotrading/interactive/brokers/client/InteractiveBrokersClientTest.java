@@ -23,7 +23,9 @@ import com.sumzerotrading.marketdata.QuoteEngine;
 import com.sumzerotrading.realtime.bar.IRealtimeBarEngine;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -192,6 +194,22 @@ public class InteractiveBrokersClientTest {
         when(mockHistoricalDataProvider.requestHistoricalData(ticker, duration, unit, barSize, sizeUnit, showProperty, true)).thenReturn(barData);
         assertEquals(barData, client.requestHistoricalData(ticker, duration, unit, barSize, sizeUnit, showProperty));
     }
+    
+    @Test
+    public void testRequestGetHistoricalData_OverloadedMethod() throws IOException {
+        List<BarData> barData = new ArrayList<>();
+        barData.add(new BarData());
+        Ticker ticker = new StockTicker("ABC");
+        int duration = 1;
+        BarData.LengthUnit unit = BarData.LengthUnit.DAY;
+        int barSize = 1;
+        BarData.LengthUnit sizeUnit = BarData.LengthUnit.HOUR;
+        IHistoricalDataProvider.ShowProperty showProperty = IHistoricalDataProvider.ShowProperty.TRADES;
+        Date startDate = new Date();
+
+        when(mockHistoricalDataProvider.requestHistoricalData(ticker, startDate, duration, unit, barSize, sizeUnit, showProperty, true)).thenReturn(barData);
+        assertEquals(barData, client.requestHistoricalData(ticker, startDate, duration, unit, barSize, sizeUnit, showProperty, true));
+    }    
     
     
     @Test

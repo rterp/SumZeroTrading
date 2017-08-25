@@ -40,6 +40,8 @@ import com.sumzerotrading.realtime.bar.IRealtimeBarEngine;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import com.sumzerotrading.realtime.bar.ib.IBRealTimeBarEngine;
+import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,6 +177,11 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     public List<TradeOrder> getOpenOrders() {
         return broker.getOpenOrders();
     }
+
+    @Override
+    public List<BarData> requestHistoricalData(Ticker ticker, Date endDateTime, int duration, BarData.LengthUnit durationLengthUnit, int barSize, BarData.LengthUnit barSizeUnit, IHistoricalDataProvider.ShowProperty whatToShow, boolean useRTH) throws IOException {
+        return historicalDataProvider.requestHistoricalData(ticker, endDateTime, duration, durationLengthUnit, barSize, barSizeUnit, whatToShow, useRTH);
+    }
     
     @Override
     public List<BarData> requestHistoricalData(Ticker ticker, int duration, BarData.LengthUnit lengthUnit, int barSize, BarData.LengthUnit barSizeUnit, IHistoricalDataProvider.ShowProperty showProperty ) {
@@ -192,7 +199,7 @@ public class InteractiveBrokersClient implements InteractiveBrokersClientInterfa
     }
     
     
-    
+
     
     
     
