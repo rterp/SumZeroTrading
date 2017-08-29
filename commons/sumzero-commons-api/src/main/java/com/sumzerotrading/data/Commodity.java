@@ -131,7 +131,6 @@ public class Commodity implements Serializable {
         int hash = 7;
         hash = 89 * hash + Objects.hashCode(this.exchangeSymbol);
         hash = 89 * hash + Objects.hashCode(this.exchange);
-        hash = 89 * hash + Objects.hashCode(this.decimalFormat);
         hash = 89 * hash + Objects.hashCode(this.minimumTickSize);
         hash = 89 * hash + Objects.hashCode(this.contractMultiplier);
         hash = 89 * hash + Objects.hashCode(this.currency);
@@ -151,9 +150,6 @@ public class Commodity implements Serializable {
             return false;
         }
         if (!Objects.equals(this.exchange, other.exchange)) {
-            return false;
-        }
-        if (!Objects.equals(this.decimalFormat, other.decimalFormat)) {
             return false;
         }
         if (!Objects.equals(this.minimumTickSize, other.minimumTickSize)) {

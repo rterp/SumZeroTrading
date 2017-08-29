@@ -137,6 +137,8 @@ public class FuturesTicker extends Ticker {
         ticker.setDecimalFormat(commodity.getDecimalFormat());
         ticker.setContractMultiplier(commodity.getContractMultiplier());
         ticker.setCommodity(commodity);
+        ticker.setCurrency(commodity.getCurrency());
+        
 
         return ticker;
     }
