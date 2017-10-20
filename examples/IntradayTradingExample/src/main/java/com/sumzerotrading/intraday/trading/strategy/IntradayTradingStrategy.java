@@ -89,10 +89,10 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
             logger.info("Historical Data: " + bar);
         }
 
-        yesterdayClose = data.get(data.size() - 1).getClose();
-        if (yesterdayClose > data.get(data.size() - 2).getClose()) {
+        yesterdayClose = data.get(data.size() - 1).getClose().doubleValue();
+        if (yesterdayClose > data.get(data.size() - 2).getClose().doubleValue()) {
             bias = Bias.LONG;
-        } else if (yesterdayClose < data.get(data.size() - 2).getClose()) {
+        } else if (yesterdayClose < data.get(data.size() - 2).getClose().doubleValue()) {
             bias = Bias.SHORT;
         } else {
             bias = Bias.NONE;
@@ -120,8 +120,8 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
 
         if (bias == Bias.LONG) {
             if (!(barTime.isBefore(longStartTime) || barTime.isAfter(longStopTime))) {
-                if (bar.getClose() < yesterdayClose * 1.01) {
-                    placeOrder(ticker, TradeDirection.BUY, (int) Math.round(orderSizeInDollars / bar.getClose()), longCloseTime);
+                if (bar.getClose().doubleValue() < yesterdayClose * 1.01) {
+                    placeOrder(ticker, TradeDirection.BUY, (int) Math.round(orderSizeInDollars / bar.getClose().doubleValue()), longCloseTime);
                 } else {
                     logger.info("Long Bias, within start/stop time, the bar close NOT less than yesterdayClose * 1.01");
                 }
@@ -132,7 +132,7 @@ public class IntradayTradingStrategy implements OrderEventListener, BrokerErrorL
         
 
         if (!(barTime.isBefore(shortStartTime) || barTime.isAfter(shortStopTime))) {
-            placeOrder(ticker, TradeDirection.SELL, (int) Math.round(orderSizeInDollars / bar.getClose()), shortCloseTime);
+            placeOrder(ticker, TradeDirection.SELL, (int) Math.round(orderSizeInDollars / bar.getClose().doubleValue()), shortCloseTime);
         } else {
             logger.info("Short Bias: Outside Short start/end time");
         }
