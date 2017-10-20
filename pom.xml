@@ -1,5 +1,5 @@
 <!--
- MIT License
+MIT License
 Copyright (c) 2015  Rob Terpilowski
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -12,46 +12,53 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- -->
+-->
 
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.sumzerotrading</groupId>
-  <artifactId>SumZeroTrading</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>SumZeroTrading</name>
+    <groupId>com.sumzerotrading</groupId>
+    <artifactId>SumZeroTrading</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>SumZeroTrading</name>
 
-  <modules>
-    <module>commons</module>
-    <module>examples</module>
-    <module>implementations</module>
-    <module>SumZeroParent</module>
-    <module>sumzero-api</module>
+    <modules>
+        <module>commons</module>
+        <module>examples</module>
+        <module>implementations</module>
+        <module>SumZeroParent</module>
+        <module>sumzero-api</module>
     
-  </modules>
-  <build>
-  <plugins>
-        <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>bundle-sources</id>
-            <phase>package</phase>
-            <goals>
-              <!-- produce source artifact for main project sources -->
-              <goal>jar-no-fork</goal>
+    </modules>
+    <distributionManagement>
+        <repository>
+            <id>bintray-rterp-maven</id>
+            <name>rterp-maven</name>
+            <url>https://api.bintray.com/maven/rterp/maven/SumZeroTrading/;publish=1</url>
+        </repository>
+    </distributionManagement>    
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>bundle-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <!-- produce source artifact for main project sources -->
+                            <goal>jar-no-fork</goal>
               
-              <!-- produce source artifact for project test sources -->
-              <goal>test-jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-                  <plugin>
+                            <!-- produce source artifact for project test sources -->
+                            <goal>test-jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.3</version>
@@ -61,19 +68,44 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     <aggregate>true</aggregate> 
                 </configuration>
 
-        <executions>
-          <execution>
-            <id>aggregate</id>
-            <goals>
-              <goal>aggregate</goal>
-            </goals>
-            <phase>site</phase>
-            <configuration>
-            </configuration>
-          </execution>
-        </executions>
+                <executions>
+                    <execution>
+                        <id>aggregate</id>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <phase>site</phase>
+                        <configuration>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
-  </plugins>
-  </build>
+                      
+        </plugins>
+    </build>
+    
+    <profiles>
+        <profile>
+            <id>release-build</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>  
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
   
- </project>
+</project>

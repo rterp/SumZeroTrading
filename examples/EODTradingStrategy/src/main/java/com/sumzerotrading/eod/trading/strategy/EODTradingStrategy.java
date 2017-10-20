@@ -137,8 +137,8 @@ public class EODTradingStrategy implements Level1QuoteListener, OrderEventListen
 
     @Override
     public void quoteRecieved(ILevel1Quote quote) {
-        if (quote.getType() == QuoteType.LAST) {
-            lastPriceMap.put(quote.getTicker(), quote.getValue().doubleValue());
+        if (quote.containsType(QuoteType.LAST)) {
+            lastPriceMap.put(quote.getTicker(), quote.getValue(QuoteType.LAST).doubleValue());
             if (!allPricesInitialized) {
                 allPricesInitialized = setAllPricesInitialized();
             }

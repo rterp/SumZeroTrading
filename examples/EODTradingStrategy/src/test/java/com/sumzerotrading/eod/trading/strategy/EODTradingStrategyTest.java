@@ -157,7 +157,7 @@ public class EODTradingStrategyTest {
     @Test
     public void testQuoteRecieved_NotLast() {
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
-        when(mockQuote.getType()).thenReturn(QuoteType.VOLUME);
+        when(mockQuote.containsType(QuoteType.VOLUME)).thenReturn(true);
         strategy.quoteRecieved(mockQuote);
 
         verify(strategy, never()).setAllPricesInitialized();
@@ -169,9 +169,9 @@ public class EODTradingStrategyTest {
         ZonedDateTime zdt = ZonedDateTime.of(2015, 6, 15, 15, 30, 0, 0, ZoneId.of("Z"));
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
         Ticker ticker = new StockTicker("ABC");
-        when(mockQuote.getType()).thenReturn(QuoteType.LAST);
+        when(mockQuote.containsType(QuoteType.LAST)).thenReturn(true);
         when(mockQuote.getTicker()).thenReturn(ticker);
-        when(mockQuote.getValue()).thenReturn(BigDecimal.ONE);
+        when(mockQuote.getValue(QuoteType.LAST)).thenReturn(BigDecimal.ONE);
         when(mockQuote.getTimeStamp()).thenReturn(zdt);
         doReturn(false).when(strategy).setAllPricesInitialized();
         strategy.ordersPlaced = false;
@@ -196,9 +196,9 @@ public class EODTradingStrategyTest {
 
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
         Ticker ticker = new StockTicker("ABC");
-        when(mockQuote.getType()).thenReturn(QuoteType.LAST);
+        when(mockQuote.containsType(QuoteType.LAST)).thenReturn(true);
         when(mockQuote.getTicker()).thenReturn(ticker);
-        when(mockQuote.getValue()).thenReturn(BigDecimal.ONE);
+        when(mockQuote.getValue(QuoteType.LAST)).thenReturn(BigDecimal.ONE);
         when(mockQuote.getTimeStamp()).thenReturn(zdt);
         doReturn(true).when(strategy).setAllPricesInitialized();
         strategy.ordersPlaced = false;
@@ -220,9 +220,9 @@ public class EODTradingStrategyTest {
         zdt = zdt.withHour(hour);
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
         Ticker ticker = new StockTicker("ABC");
-        when(mockQuote.getType()).thenReturn(QuoteType.LAST);
+        when(mockQuote.containsType(QuoteType.LAST)).thenReturn(true);
         when(mockQuote.getTicker()).thenReturn(ticker);
-        when(mockQuote.getValue()).thenReturn(BigDecimal.ONE);
+        when(mockQuote.getValue(QuoteType.LAST)).thenReturn(BigDecimal.ONE);
         when(mockQuote.getTimeStamp()).thenReturn(zdt);
         doReturn(true).when(strategy).setAllPricesInitialized();
         strategy.ordersPlaced = true;
@@ -247,9 +247,9 @@ public class EODTradingStrategyTest {
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
         strategy.longShortPairMap.put(longTicker, shortTicker);
 
-        when(mockQuote.getType()).thenReturn(QuoteType.LAST);
+        when(mockQuote.containsType(QuoteType.LAST)).thenReturn(true);
         when(mockQuote.getTicker()).thenReturn(longTicker);
-        when(mockQuote.getValue()).thenReturn(BigDecimal.ONE);
+        when(mockQuote.getValue(QuoteType.LAST)).thenReturn(BigDecimal.ONE);
         when(mockQuote.getTimeStamp()).thenReturn(zdt);
         doReturn(true).when(strategy).setAllPricesInitialized();
         doNothing().when(strategy).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));
@@ -275,9 +275,9 @@ public class EODTradingStrategyTest {
         ILevel1Quote mockQuote = mock(ILevel1Quote.class);
         strategy.longShortPairMap.put(longTicker, shortTicker);
 
-        when(mockQuote.getType()).thenReturn(QuoteType.LAST);
+        when(mockQuote.containsType(QuoteType.LAST)).thenReturn(true);
         when(mockQuote.getTicker()).thenReturn(longTicker);
-        when(mockQuote.getValue()).thenReturn(BigDecimal.ONE);
+        when(mockQuote.getValue(QuoteType.LAST)).thenReturn(BigDecimal.ONE);
         when(mockQuote.getTimeStamp()).thenReturn(zdt);
         doReturn(true).when(strategy).setAllPricesInitialized();
         doNothing().when(strategy).placeMOCOrders(any(Ticker.class), any(Ticker.class), any(ZonedDateTime.class));

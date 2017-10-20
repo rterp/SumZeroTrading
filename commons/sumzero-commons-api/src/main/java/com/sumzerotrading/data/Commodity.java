@@ -60,7 +60,7 @@ public class Commodity implements Serializable {
     public static final Commodity GOLD_MINI_NYSE_LIFFE = new Commodity( "YG", Exchange.NYSE_LIFFE, TWO_DECIMALS, new BigDecimal(0.10), new BigDecimal(32.15));
     public static final Commodity SILVER_NYMEX = new Commodity( "SI", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.005), new BigDecimal(5000));
     public static final Commodity SILVER_MINI_NYSE_LIFFE = new Commodity( "YI", Exchange.NYSE_LIFFE, THREE_DECIMALS, new BigDecimal(0.005), new BigDecimal(1000));
-    public static final Commodity COPPER_NYMEX = new Commodity( "HG", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.005), new BigDecimal(25000));
+    public static final Commodity COPPER_NYMEX = new Commodity( "HG", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.0005), new BigDecimal(25000));
     
     public static final Commodity CRUDE_OIL_NYMEX = new Commodity("CL", Exchange.NYMEX, TWO_DECIMALS, new BigDecimal(0.01), new BigDecimal(1000));
     public static final Commodity CRUDE_OIL_MINI_NYMEX = new Commodity("QM", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.025), new BigDecimal(500));

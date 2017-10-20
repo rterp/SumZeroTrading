@@ -83,7 +83,7 @@ public class SerializationTest {
     
     @Test
     public void testSerializeBar() throws Exception {
-        BarData bar = new BarData(LocalDateTime.now(), 1, 2, 3, 4, 5, 6);
+        BarData bar = new BarData(LocalDateTime.now(), new BigDecimal(1), new BigDecimal(2), new BigDecimal(3), new BigDecimal(4), new BigDecimal(5), 6);
         test( bar );
     }
     

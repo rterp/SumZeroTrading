@@ -559,7 +559,7 @@ public class IBQuoteEngineTest {
         ILevel1Quote quote = Mockito.mock(ILevel1Quote.class);
         Ticker ticker = new StockTicker("abc");
 
-        when(quote.getType()).thenReturn(QuoteType.CLOSE);
+        when(quote.containsType(QuoteType.CLOSE)).thenReturn(true);
         when(quote.getTicker()).thenReturn(ticker);
 
         ibQuoteEngine.fireLevel1Quote(quote);
@@ -573,7 +573,7 @@ public class IBQuoteEngineTest {
         ILevel1Quote quote = Mockito.mock(ILevel1Quote.class);
         Ticker ticker = new StockTicker("abc");
 
-        when(quote.getType()).thenReturn(QuoteType.OPEN);
+        when(quote.containsType(QuoteType.OPEN)).thenReturn(true);
         when(quote.getTicker()).thenReturn(ticker);
 
         ibQuoteEngine.fireLevel1Quote(quote);

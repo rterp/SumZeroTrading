@@ -252,7 +252,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.THREE_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.005), c.getMinimumTickSize());
+        assertEquals(new BigDecimal(0.0005), c.getMinimumTickSize());
         assertEquals(new BigDecimal(25000), c.getContractMultiplier());
     }        
     

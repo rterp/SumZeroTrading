@@ -39,8 +39,8 @@ public class MarketDataStocksExample {
         StockTicker stockTicker=  new StockTicker("QQQ");
         
         ibClient.subscribeLevel1(stockTicker, (ILevel1Quote quote) -> {
-            if( quote.getType().equals(QuoteType.LAST) ){
-                System.out.println("Received Quote: " + quote.getValue() );
+            if( quote.containsType(QuoteType.LAST) ){
+                System.out.println("Received Quote: " + quote.getValue(QuoteType.LAST));
             }
         });
         

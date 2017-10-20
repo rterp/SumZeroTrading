@@ -23,13 +23,14 @@ package com.sumzerotrading.marketdata;
 
 import com.sumzerotrading.data.Ticker;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 public class Level2Quote extends AbstractQuote implements ILevel2Quote {
 
 	protected IMarketDepthBook book;
 	
 	public Level2Quote( Ticker ticker, QuoteType type, ZonedDateTime timeStamp, IMarketDepthBook book ) {
-		super( ticker, type, timeStamp );
+		super( ticker, timeStamp );
 		this.book = book;
 	}
 	
@@ -37,37 +38,50 @@ public class Level2Quote extends AbstractQuote implements ILevel2Quote {
 		return book;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((book == null) ? 0 : book.hashCode());
-		return result;
-	}
+    @Override
+    public QuoteType[] getTypes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Level2Quote other = (Level2Quote) obj;
-		if (book == null) {
-			if (other.book != null)
-				return false;
-		} else if (!book.equals(other.book))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean containsType(QuoteType type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-	@Override
-	public String toString() {
-		return "Level2Quote [book=" + book + ", ticker=" + ticker
-				+ ", timeStamp=" + timeStamp + ", type=" + type + "]";
-	}
-	
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 59 * hash + Objects.hashCode(this.book);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Level2Quote other = (Level2Quote) obj;
+        if (!Objects.equals(this.book, other.book)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Level2Quote{" + "book=" + book + '}';
+    }
+        
+        
+        
+
+    
 	
 	
 	

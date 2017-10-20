@@ -12,6 +12,7 @@ import com.sumzerotrading.marketdata.QuoteType;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import com.sumzerotrading.realtime.bar.ib.util.RealtimeBarUtil;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -28,21 +29,20 @@ import org.quartz.SchedulerFactory;
 public class BarBuilder implements IBarBuilder {
 
     protected Logger logger = Logger.getLogger(BarBuilder.class);
-    protected double open = -1;
-    protected double high = -1;
-    protected double low = -1;
-    protected double close = -1;
-    protected int volume = 0;
+    protected BigDecimal open = null;
+    protected BigDecimal high = null;
+    protected BigDecimal low = null;
+    protected BigDecimal close = null;
+    protected BigDecimal volume = BigDecimal.ZERO;
     protected Scheduler scheduler;
     protected List<RealtimeBarListener> listenerList = new ArrayList<RealtimeBarListener>();
     protected RealtimeBarRequest realtimeBarRequest;
-  //  protected Logger logger = Logger.getLogger(BarBuilder.class);
     protected JobDetail job;
     protected boolean openInitialized = false;
     protected boolean highInitialized = false;
     protected boolean lowInitialized = false;
-    protected double lastBid;
-    protected double lastAsk;
+    protected BigDecimal lastBid;
+    protected BigDecimal lastAsk;
     protected boolean isCurrency = false;
     protected int timeInterval = 0;
 
@@ -72,7 +72,7 @@ public class BarBuilder implements IBarBuilder {
             setHigh(firstBar.getHigh());
             setLow(firstBar.getLow());
             setClose( firstBar.getClose() );
-            setVolume( (int) firstBar.getVolume() );
+            setVolume( firstBar.getVolume() );
             scheduler.scheduleJob(job, RealtimeBarUtil.getTrigger(jobName, timeInterval, lengthUnit));
             if( ! scheduler.isStarted() ) {
                 scheduler.start();
@@ -85,10 +85,12 @@ public class BarBuilder implements IBarBuilder {
     }
 
     public void quoteRecieved(ILevel1Quote quote) {
-        if (quote.getType() == QuoteType.VOLUME) {
-            setVolume( (int) quote.getValue().doubleValue() );
-        } else if( validQuote( quote ) ) {
-            double value = getValue( quote );
+        if( quote.containsType(QuoteType.VOLUME) ) {
+            setVolume(quote.getValue(QuoteType.VOLUME));
+        }
+
+        if( validQuote( quote ) ) {
+            BigDecimal value = getValue( quote );
             setHigh(value);
             setLow(value);
             setClose(value);
@@ -97,29 +99,29 @@ public class BarBuilder implements IBarBuilder {
     }
     
     
-    protected double getValue( ILevel1Quote quote ) {
+    protected BigDecimal getValue( ILevel1Quote quote ) {
         if( isCurrency ) {
-            if( quote.getType() == QuoteType.BID ) {
-                lastBid = quote.getValue().doubleValue();
-            } else if( quote.getType() == QuoteType.ASK ) {
-                lastAsk = quote.getValue().doubleValue();
+            if( quote.containsType(QuoteType.BID) ) {
+                lastBid = quote.getValue(QuoteType.BID);
+            } else if( quote.containsType(QuoteType.ASK ) ) {
+                lastAsk = quote.getValue(QuoteType.ASK);
             }
-            if( lastBid > 0 && lastAsk > 0 ) {
-                return lastAsk - ((lastAsk-lastBid)/2.0);
+            if( lastBid.doubleValue() > 0 && lastAsk.doubleValue() > 0 ) {
+                return new BigDecimal(lastAsk.doubleValue() - ((lastAsk.doubleValue()-lastBid.doubleValue())/2.0));
             } else {
-                return 0;
+                return BigDecimal.ZERO;
             }
         } else {
-            return quote.getValue().doubleValue();
+            return quote.getValue(QuoteType.LAST);
         }
     }
     
     protected boolean validQuote( ILevel1Quote quote ) {
         if( isCurrency ) {
-            return quote.getType() == QuoteType.BID ||
-                    quote.getType() == QuoteType.ASK;
+            return quote.containsType(QuoteType.BID) ||
+                    quote.containsType(QuoteType.ASK);
         } else {
-            return quote.getType() == QuoteType.LAST;
+            return quote.containsType(QuoteType.LAST);
         }
     }
 
@@ -137,32 +139,32 @@ public class BarBuilder implements IBarBuilder {
         }
     }
 
-    protected final void setHigh(double price) {
-        if( price == 0 ) {
+    protected final void setHigh(BigDecimal price) {
+        if( price.equals(BigDecimal.ZERO) ){
             return;
         }
         if (! highInitialized ) {
             high = price;
             highInitialized = true;
-        } else if (price > high) {
+        } else if (price.doubleValue() > high.doubleValue()) {
             high = price;
         }
     }
 
-    protected final void setLow(double price) {
-        if( price == 0 ) {
+    protected final void setLow(BigDecimal price) {
+        if( price.equals(BigDecimal.ZERO) ) {
             return;
         }
         if (! lowInitialized ) {
             low = price;
             lowInitialized = true;
-        } else if (price < low) {
+        } else if (price.doubleValue() < low.doubleValue()) {
             low = price;
         }
     }
 
-    protected final void setOpen(double price) {
-        if( price == 0 ) {
+    protected final void setOpen(BigDecimal price) {
+        if( price.equals(BigDecimal.ZERO) ) {
             return;
         }
         if (! openInitialized ) {
@@ -171,15 +173,15 @@ public class BarBuilder implements IBarBuilder {
         }
     }
 
-    protected final void setClose(double price) {
-        if( price == 0 ) {
+    protected final void setClose(BigDecimal price) {
+        if( price.equals(BigDecimal.ZERO ) ) {
             return;
         }
         close = price;
     }
 
-    protected final void setVolume(int volume) {
-        this.volume += volume;
+    protected final void setVolume(BigDecimal volume) {
+        this.volume = this.volume.add(volume);
     }
     
 
@@ -195,7 +197,7 @@ public class BarBuilder implements IBarBuilder {
         open = close;
         high = close;
         low = close;
-        volume = 0;
+        volume = BigDecimal.ZERO;
         openInitialized = false;
         highInitialized = false;
         lowInitialized = false;

@@ -24,6 +24,7 @@ package com.sumzerotrading.data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Represents one bar of market data.
@@ -47,15 +48,15 @@ public class BarData implements Serializable {
     };
 
     protected Ticker ticker;
-    protected double open;
+    protected BigDecimal open;
     protected BigDecimal formattedOpen;
-    protected double high;
+    protected BigDecimal high;
     protected BigDecimal formattedHigh;
-    protected double low;
+    protected BigDecimal low;
     protected BigDecimal formattedLow;
-    protected double close;
+    protected BigDecimal close;
     protected BigDecimal formattedClose;
-    protected long volume = 0;
+    protected BigDecimal volume = BigDecimal.ZERO;
     protected long openInterest = 0;
     protected int barLength = 1;
     protected LocalDateTime dateTime;
@@ -65,7 +66,7 @@ public class BarData implements Serializable {
     public BarData() {
     }
 
-    public BarData(Ticker ticker, LocalDateTime dateTime, double open, double high, double low, double close, long volume, int barLength, LengthUnit lengthUnit) {
+    public BarData(Ticker ticker, LocalDateTime dateTime, BigDecimal open, BigDecimal high, BigDecimal low, BigDecimal close, BigDecimal volume, int barLength, LengthUnit lengthUnit) {
         this.ticker = ticker;
         this.dateTime = dateTime;
         this.open = open;
@@ -85,7 +86,7 @@ public class BarData implements Serializable {
      * @param close The closing price.
      * @param volume The volume for the bar.
      */
-    public BarData(LocalDateTime dateTime, double open, double high, double low, double close, long volume) {
+    public BarData(LocalDateTime dateTime, BigDecimal open, BigDecimal high, BigDecimal low, BigDecimal close, BigDecimal volume) {
         this(null, dateTime, open, high, low, close, volume, 1, LengthUnit.DAY);
     }//constructor()
 
@@ -100,7 +101,7 @@ public class BarData implements Serializable {
      * @param volume The volume for the bar.
      * @param openInterest The open interest for the bar.
      */
-    public BarData(LocalDateTime dateTime, double open, double high, double low, double close, long volume, long openInterest) {
+    public BarData(LocalDateTime dateTime, BigDecimal open, BigDecimal high, BigDecimal low, BigDecimal close, BigDecimal volume, long openInterest) {
         this(dateTime, open, high, low, close, volume);
         this.openInterest = openInterest;
     }//constructor()
@@ -116,35 +117,35 @@ public class BarData implements Serializable {
     /**
      * @return the open price of this bar.
      */
-    public double getOpen() {
+    public BigDecimal getOpen() {
         return open;
     }
 
     /**
      * @return the High price of this bar.
      */
-    public double getHigh() {
+    public BigDecimal getHigh() {
         return high;
     }
 
     /*
      * @return the Low price of this BarData.
      */
-    public double getLow() {
+    public BigDecimal getLow() {
         return low;
     }
 
     /**
      * @return the close price for this bar.
      */
-    public double getClose() {
+    public BigDecimal getClose() {
         return close;
     }
 
     /**
      * @return the Volume for this bar.
      */
-    public long getVolume() {
+    public BigDecimal getVolume() {
         return volume;
     }
 
@@ -160,7 +161,7 @@ public class BarData implements Serializable {
      *
      * @param open The open price for this bar.
      */
-    public void setOpen(double open) {
+    public void setOpen(BigDecimal open) {
         this.open = open;
     }
 
@@ -169,7 +170,7 @@ public class BarData implements Serializable {
      *
      * @param high The high price for this bar.
      */
-    public void setHigh(double high) {
+    public void setHigh(BigDecimal high) {
         this.high = high;
     }
 
@@ -178,7 +179,7 @@ public class BarData implements Serializable {
      *
      * @param low The low price for this bar.
      */
-    public void setLow(double low) {
+    public void setLow(BigDecimal low) {
         this.low = low;
     }
 
@@ -187,7 +188,7 @@ public class BarData implements Serializable {
      *
      * @param close The closing price for this bar.
      */
-    public void setClose(double close) {
+    public void setClose(BigDecimal close) {
         this.close = close;
     }
 
@@ -196,7 +197,7 @@ public class BarData implements Serializable {
      *
      * @param volume Sets the volume for this bar.
      */
-    public void setVolume(long volume) {
+    public void setVolume(BigDecimal volume) {
         this.volume = volume;
     }
     
@@ -205,12 +206,12 @@ public class BarData implements Serializable {
      * Updates the last price, adjusting the high and low
      * @param close The last price
      */
-    public void update( double close ) {
-        if( close > high ) {
+    public void update( BigDecimal close ) {
+        if( close.doubleValue() > high.doubleValue() ) {
             high = close;
         }
         
-        if( close < low ) {
+        if( close.doubleValue() < low.doubleValue() ) {
             low = close;
         }
         this.close = close;
@@ -240,26 +241,29 @@ public class BarData implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 23 * hash + (this.ticker != null ? this.ticker.hashCode() : 0);
-        hash = 23 * hash + (int) (Double.doubleToLongBits(this.open) ^ (Double.doubleToLongBits(this.open) >>> 32));
-        hash = 23 * hash + (this.formattedOpen != null ? this.formattedOpen.hashCode() : 0);
-        hash = 23 * hash + (int) (Double.doubleToLongBits(this.high) ^ (Double.doubleToLongBits(this.high) >>> 32));
-        hash = 23 * hash + (this.formattedHigh != null ? this.formattedHigh.hashCode() : 0);
-        hash = 23 * hash + (int) (Double.doubleToLongBits(this.low) ^ (Double.doubleToLongBits(this.low) >>> 32));
-        hash = 23 * hash + (this.formattedLow != null ? this.formattedLow.hashCode() : 0);
-        hash = 23 * hash + (int) (Double.doubleToLongBits(this.close) ^ (Double.doubleToLongBits(this.close) >>> 32));
-        hash = 23 * hash + (this.formattedClose != null ? this.formattedClose.hashCode() : 0);
-        hash = 23 * hash + (int) (this.volume ^ (this.volume >>> 32));
-        hash = 23 * hash + (int) (this.openInterest ^ (this.openInterest >>> 32));
-        hash = 23 * hash + this.barLength;
-        hash = 23 * hash + (this.dateTime != null ? this.dateTime.hashCode() : 0);
-        hash = 23 * hash + (this.lengthUnit != null ? this.lengthUnit.hashCode() : 0);
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.ticker);
+        hash = 59 * hash + Objects.hashCode(this.open);
+        hash = 59 * hash + Objects.hashCode(this.formattedOpen);
+        hash = 59 * hash + Objects.hashCode(this.high);
+        hash = 59 * hash + Objects.hashCode(this.formattedHigh);
+        hash = 59 * hash + Objects.hashCode(this.low);
+        hash = 59 * hash + Objects.hashCode(this.formattedLow);
+        hash = 59 * hash + Objects.hashCode(this.close);
+        hash = 59 * hash + Objects.hashCode(this.formattedClose);
+        hash = 59 * hash + Objects.hashCode(this.volume);
+        hash = 59 * hash + (int) (this.openInterest ^ (this.openInterest >>> 32));
+        hash = 59 * hash + this.barLength;
+        hash = 59 * hash + Objects.hashCode(this.dateTime);
+        hash = 59 * hash + Objects.hashCode(this.lengthUnit);
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
@@ -267,43 +271,43 @@ public class BarData implements Serializable {
             return false;
         }
         final BarData other = (BarData) obj;
-        if (this.ticker != other.ticker && (this.ticker == null || !this.ticker.equals(other.ticker))) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.open) != Double.doubleToLongBits(other.open)) {
-            return false;
-        }
-        if (this.formattedOpen != other.formattedOpen && (this.formattedOpen == null || !this.formattedOpen.equals(other.formattedOpen))) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.high) != Double.doubleToLongBits(other.high)) {
-            return false;
-        }
-        if (this.formattedHigh != other.formattedHigh && (this.formattedHigh == null || !this.formattedHigh.equals(other.formattedHigh))) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.low) != Double.doubleToLongBits(other.low)) {
-            return false;
-        }
-        if (this.formattedLow != other.formattedLow && (this.formattedLow == null || !this.formattedLow.equals(other.formattedLow))) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.close) != Double.doubleToLongBits(other.close)) {
-            return false;
-        }
-        if (this.formattedClose != other.formattedClose && (this.formattedClose == null || !this.formattedClose.equals(other.formattedClose))) {
-            return false;
-        }
-        if (this.volume != other.volume) {
-            return false;
-        }
         if (this.openInterest != other.openInterest) {
             return false;
         }
         if (this.barLength != other.barLength) {
             return false;
         }
-        if (this.dateTime != other.dateTime && (this.dateTime == null || !this.dateTime.equals(other.dateTime))) {
+        if (!Objects.equals(this.ticker, other.ticker)) {
+            return false;
+        }
+        if (!Objects.equals(this.open, other.open)) {
+            return false;
+        }
+        if (!Objects.equals(this.formattedOpen, other.formattedOpen)) {
+            return false;
+        }
+        if (!Objects.equals(this.high, other.high)) {
+            return false;
+        }
+        if (!Objects.equals(this.formattedHigh, other.formattedHigh)) {
+            return false;
+        }
+        if (!Objects.equals(this.low, other.low)) {
+            return false;
+        }
+        if (!Objects.equals(this.formattedLow, other.formattedLow)) {
+            return false;
+        }
+        if (!Objects.equals(this.close, other.close)) {
+            return false;
+        }
+        if (!Objects.equals(this.formattedClose, other.formattedClose)) {
+            return false;
+        }
+        if (!Objects.equals(this.volume, other.volume)) {
+            return false;
+        }
+        if (!Objects.equals(this.dateTime, other.dateTime)) {
             return false;
         }
         if (this.lengthUnit != other.lengthUnit) {
@@ -312,6 +316,9 @@ public class BarData implements Serializable {
         return true;
     }
 
+
+    
+    
     @Override
     public String toString() {
         return "Bar{" + "ticker=" + ticker + ", open=" + open + ", formattedOpen=" + formattedOpen + ", high=" + high + ", formattedHigh=" + formattedHigh + ", low=" + low + ", formattedLow=" + formattedLow + ", close=" + close + ", formattedClose=" + formattedClose + ", volume=" + volume + ", openInterest=" + openInterest + ", barLength=" + barLength + ", dateTime=" + dateTime + ", lengthUnit=" + lengthUnit + '}';

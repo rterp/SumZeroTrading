@@ -88,7 +88,7 @@ public class MarketData {
         BarData[] bars = getBars();
         double[] d = new double[ bars.length ];
         for( int i = 0; i < bars.length; i++ ) {
-            d[i] = bars[i].getOpen();
+            d[i] = bars[i].getOpen().doubleValue();
         }//for
         
         return d;
@@ -103,7 +103,7 @@ public class MarketData {
         BarData[] bars = getBars();
         double[] d = new double[ bars.length ];
         for( int i = 0; i < bars.length; i++ ) {
-            d[i] = bars[i].getHigh();
+            d[i] = bars[i].getHigh().doubleValue();
         }//for
         
         return d;
@@ -119,7 +119,7 @@ public class MarketData {
         BarData[] bars = getBars();
         double[] d = new double[ bars.length ];
         for( int i = 0; i < bars.length; i++ ) {
-            d[i] = bars[i].getLow();
+            d[i] = bars[i].getLow().doubleValue();
         }//for
         
         return d;
@@ -135,7 +135,7 @@ public class MarketData {
         BarData[] bars = getBars();
         double[] d = new double[ bars.length ];
         for( int i = 0; i < bars.length; i++ ) {
-            d[i] = bars[i].getClose();
+            d[i] = bars[i].getClose().doubleValue();
         }//for
         
         return d;
@@ -151,7 +151,7 @@ public class MarketData {
         BarData[] bars = getBars();
         double[] d = new double[ bars.length ];
         for( int i = 0; i < bars.length; i++ ) {
-            d[i] = bars[i].getVolume();
+            d[i] = bars[i].getVolume().intValue();
         }//for
         
         return d;

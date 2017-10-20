@@ -258,9 +258,10 @@ public class IBQuoteEngine extends AbstractIBQuoteEngine {
     @Override
     public void fireLevel1Quote(ILevel1Quote quote) {
         super.fireLevel1Quote(quote); 
-        if (quote.getType() == QuoteType.CLOSE) {
+        if (quote.containsType(QuoteType.CLOSE) ) {
             closeQuoteMap.put(quote.getTicker(), quote);
-        } else if (quote.getType() == QuoteType.OPEN) {
+        }
+        if (quote.containsType(QuoteType.OPEN) ) {
             openQuoteMap.put(quote.getTicker(), quote);
         }
     }

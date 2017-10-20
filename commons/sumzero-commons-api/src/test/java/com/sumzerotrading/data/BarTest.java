@@ -21,10 +21,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -61,18 +61,18 @@ public class BarTest {
     public void testFirstConstructor() {
         LocalDateTime cal = LocalDateTime.now();
         String timeLabel = "time";
-        double open = 1;
-        double high = 2;
-        double low = 3;
-        double close = 4;
-        long volume = 5;
+        BigDecimal open = new BigDecimal(1);
+        BigDecimal high = new BigDecimal(2);
+        BigDecimal low = new BigDecimal(3);
+        BigDecimal close = new BigDecimal(4);
+        BigDecimal volume = new BigDecimal(5);
 
         BarData bar = new BarData(cal, open, high, low, close, volume);
         assertEquals(cal, bar.getDateTime());
-        assertEquals(open, bar.getOpen(), 0);
-        assertEquals(high, bar.getHigh(), 0);
-        assertEquals(low, bar.getLow(), 0);
-        assertEquals(close, bar.getClose(), 0);
+        assertEquals(open, bar.getOpen());
+        assertEquals(high, bar.getHigh());
+        assertEquals(low, bar.getLow());
+        assertEquals(close, bar.getClose());
         assertEquals(volume, bar.getVolume());
 
     }
@@ -80,19 +80,19 @@ public class BarTest {
     @Test
     public void testSecondConstructor() {
         LocalDateTime cal = LocalDateTime.now();
-        double open = 1;
-        double high = 2;
-        double low = 3;
-        double close = 4;
-        long volume = 5;
+        BigDecimal open = new BigDecimal(1);
+        BigDecimal high = new BigDecimal(2);
+        BigDecimal low = new BigDecimal(3);
+        BigDecimal close = new BigDecimal(4);
+        BigDecimal volume = new BigDecimal(5);
         long openInterest = 6;
 
         BarData bar = new BarData(cal, open, high, low, close, volume, openInterest);
         assertEquals(cal, bar.getDateTime());
-        assertEquals(open, bar.getOpen(), 0);
-        assertEquals(high, bar.getHigh(), 0);
-        assertEquals(low, bar.getLow(), 0);
-        assertEquals(close, bar.getClose(), 0);
+        assertEquals(open, bar.getOpen());
+        assertEquals(high, bar.getHigh());
+        assertEquals(low, bar.getLow());
+        assertEquals(close, bar.getClose());
         assertEquals(volume, bar.getVolume());
         assertEquals(openInterest, bar.getOpenInterest());
     }
@@ -119,10 +119,10 @@ public class BarTest {
     @Test
     public void testSetOpen() {
         System.out.println("setOpen");
-        double open = 1.0;
+        BigDecimal open = new BigDecimal(1.0);
         BarData instance = new BarData();
         instance.setOpen(open);
-        assertEquals(open, instance.getOpen(), 0.0);
+        assertEquals(open, instance.getOpen());
     }
 
     /**
@@ -130,10 +130,10 @@ public class BarTest {
      */
     @Test
     public void testSetHigh() {
-        double high = 1.0;
+        BigDecimal high = new BigDecimal(1.0);
         BarData instance = new BarData();
         instance.setHigh(high);
-        assertEquals(high, instance.getHigh(), 0.0);
+        assertEquals(high, instance.getHigh());
     }
 
     /**
@@ -141,10 +141,10 @@ public class BarTest {
      */
     @Test
     public void testSetLow() {
-        double low = 1.0;
+        BigDecimal low = new BigDecimal(1.0);
         BarData instance = new BarData();
         instance.setLow(low);
-        assertEquals(low, instance.getLow(), 0.0);
+        assertEquals(low, instance.getLow());
     }
 
     /**
@@ -152,10 +152,10 @@ public class BarTest {
      */
     @Test
     public void testSetClose() {
-        double close = 1.0;
+        BigDecimal close = new BigDecimal(1.0);
         BarData instance = new BarData();
         instance.setClose(close);
-        assertEquals(close, instance.getClose(), 0.0);
+        assertEquals(close, instance.getClose());
     }
 
     /**
@@ -163,7 +163,7 @@ public class BarTest {
      */
     @Test
     public void testSetVolume() {
-        long volume = 1L;
+        BigDecimal volume = new BigDecimal(1.0);
         BarData instance = new BarData();
         instance.setVolume(volume);
         assertEquals(volume, instance.getVolume());
@@ -204,35 +204,35 @@ public class BarTest {
     @Test
     public void testEquals_differentClose() {
         BarData[] bars = getEqualBars();
-        bars[0].setClose(0);
+        bars[0].setClose(BigDecimal.ZERO);
         assertFalse( bars[0].equals( bars[1] ) );
     }
     
     @Test
     public void testEquals_differentOpen() {
         BarData[] bars = getEqualBars();
-        bars[0].setOpen(0);
+        bars[0].setOpen(BigDecimal.ZERO);
         assertFalse( bars[0].equals( bars[1] ) );
     }    
     
     @Test
     public void testEquals_differentHigh() {
         BarData[] bars = getEqualBars();
-        bars[0].setHigh(0);
+        bars[0].setHigh(BigDecimal.ZERO);
         assertFalse( bars[0].equals( bars[1] ) );
     }       
     
     @Test
     public void testEquals_differentLow() {
         BarData[] bars = getEqualBars();
-        bars[0].setLow(0);
+        bars[0].setLow(BigDecimal.ZERO);
         assertFalse( bars[0].equals( bars[1] ) );
     }    
     
     @Test
     public void testEquals_differentVolume() {
         BarData[] bars = getEqualBars();
-        bars[0].setVolume(0);
+        bars[0].setVolume(BigDecimal.ZERO);
         assertFalse( bars[0].equals( bars[1] ) );
     }   
     
@@ -260,11 +260,11 @@ public class BarTest {
     
     private BarData[] getEqualBars() {
         LocalDateTime cal = LocalDateTime.now();
-        double open = 1.0;
-        double high = 2.0;
-        double low = 3.0;
-        double close= 4.0;
-        long volume = 5;
+        BigDecimal open = new BigDecimal(1);
+        BigDecimal high = new BigDecimal(2);
+        BigDecimal low = new BigDecimal(3);
+        BigDecimal close = new BigDecimal(4);
+        BigDecimal volume = new BigDecimal(5);
         long openInterest =  6;
         
         BarData[] bars = new BarData[2];

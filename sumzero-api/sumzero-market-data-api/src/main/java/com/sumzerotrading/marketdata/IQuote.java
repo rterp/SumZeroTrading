@@ -21,9 +21,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.marketdata;
 
-import java.util.Date;
 import com.sumzerotrading.data.Ticker;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 
 /**
@@ -34,6 +35,7 @@ import java.time.ZonedDateTime;
  */
 public interface IQuote {
 	
+        
         /**
          * The ticker the quote is for.
          * 
@@ -42,13 +44,22 @@ public interface IQuote {
 	public Ticker getTicker();
 	
         
+
         /**
-         * The type of quote.  ie Bid, Ask, Last, etc.
+         * The type of quotes this IQuote object contains, ie BID, ASK, MIDPOINT, etc.
          * 
          * @return The type of quote
          */
-	public QuoteType getType();
-	
+	public QuoteType[] getTypes();
+        
+        
+        /**
+         * Returns true if the quote contains the specified quote type
+         * @param type The type of quote to check for
+         * @return true if the quote object contains the type of quote
+         */
+        public boolean containsType(QuoteType type);
+        
         
         /**
          * The time of the quote

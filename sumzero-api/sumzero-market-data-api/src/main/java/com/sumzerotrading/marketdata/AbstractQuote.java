@@ -20,7 +20,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.marketdata;
 
-import java.util.Date;
 import com.sumzerotrading.data.Ticker;
 import java.time.ZonedDateTime;
 
@@ -32,7 +31,7 @@ import java.time.ZonedDateTime;
 public abstract class AbstractQuote implements IQuote {
 
 	protected Ticker ticker;
-	protected QuoteType type;
+	
 	protected ZonedDateTime timeStamp;
         
 	
@@ -43,9 +42,8 @@ public abstract class AbstractQuote implements IQuote {
          * @param type The type of quote.
          * @param timeStamp The time of the quote.
          */
-	public AbstractQuote( Ticker ticker, QuoteType type, ZonedDateTime timeStamp ) {
+	public AbstractQuote( Ticker ticker, ZonedDateTime timeStamp ) {
 		this.ticker = ticker;
-		this.type = type;
 		this.timeStamp = timeStamp;
 	}
         
@@ -59,14 +57,6 @@ public abstract class AbstractQuote implements IQuote {
 		return ticker;
 	}
 
-        /**
-         * Gets the type of quote (bid,ask,etc)
-         * @return The type of quote.
-         */
-        @Override
-	public QuoteType getType() {
-		return type;
-	}
 	
         /**
          * Gets the time of this quote
@@ -83,7 +73,6 @@ public abstract class AbstractQuote implements IQuote {
 		int result = 1;
 		result = prime * result + ((ticker == null) ? 0 : ticker.hashCode());
 		result = prime * result + ((timeStamp == null) ? 0 : timeStamp.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -106,17 +95,8 @@ public abstract class AbstractQuote implements IQuote {
 				return false;
 		} else if (!timeStamp.equals(other.timeStamp))
 			return false;
-		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
-			return false;
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "AbstractQuote [ticker=" + ticker + ", timeStamp=" + timeStamp
-				+ ", type=" + type + "]";
-	}
+
 }

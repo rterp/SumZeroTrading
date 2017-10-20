@@ -22,8 +22,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.GregorianCalendar;
 import junit.framework.TestCase;
 
 public class MarketDataTest extends TestCase {
@@ -35,8 +35,8 @@ public class MarketDataTest extends TestCase {
                 LocalDateTime cal = LocalDateTime.now();
                 
 		
-		BarData bar1 = new BarData(cal, 1,1,1,1,1);
-		BarData bar2 = new BarData(cal, 2,2,2,2,2);
+		BarData bar1 = new BarData(cal, new BigDecimal(1), new BigDecimal(1),new BigDecimal(1),new BigDecimal(1),new BigDecimal(1));
+		BarData bar2 = new BarData(cal, new BigDecimal(2), new BigDecimal(2),new BigDecimal(2),new BigDecimal(2),new BigDecimal(2));
 		
 		data.appendBar( bar1 );
 		
@@ -56,8 +56,8 @@ public class MarketDataTest extends TestCase {
 	public void testInsertBar() {
 		MarketData data = new MarketData();
                 LocalDateTime cal = LocalDateTime.now();
-		BarData bar1 = new BarData(cal, 1,1,1,1,1);
-		BarData bar2 = new BarData(cal, 2,2,2,2,2);
+		BarData bar1 = new BarData(cal, new BigDecimal(1), new BigDecimal(1),new BigDecimal(1),new BigDecimal(1),new BigDecimal(1));
+		BarData bar2 = new BarData(cal, new BigDecimal(2), new BigDecimal(2),new BigDecimal(2),new BigDecimal(2),new BigDecimal(2));
 		
 		data.insertBar(bar1);
 		
@@ -77,10 +77,10 @@ public class MarketDataTest extends TestCase {
 	public void testFoo() {
 		MarketData data = new MarketData();
                 LocalDateTime cal = LocalDateTime.now();
-		BarData bar1 = new BarData(cal, 1,1,1,1,1);
-		BarData bar2 = new BarData(cal, 2,2,2,2,2);
-		BarData bar3 = new BarData(cal, 3,3,3,3,3);
-		BarData bar4 = new BarData(cal, 4,4,4,4,4);
+		BarData bar1 = new BarData(cal, new BigDecimal(1), new BigDecimal(1),new BigDecimal(1),new BigDecimal(1),new BigDecimal(1));
+		BarData bar2 = new BarData(cal, new BigDecimal(2), new BigDecimal(2),new BigDecimal(2),new BigDecimal(2),new BigDecimal(2));
+		BarData bar3 = new BarData(cal, new BigDecimal(3), new BigDecimal(3),new BigDecimal(3),new BigDecimal(3),new BigDecimal(3));
+		BarData bar4 = new BarData(cal, new BigDecimal(4), new BigDecimal(4),new BigDecimal(4),new BigDecimal(4),new BigDecimal(4));
 		
 		
 		data.appendBar(bar1);

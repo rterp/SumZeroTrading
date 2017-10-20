@@ -91,7 +91,9 @@ public class IBLevel1QuoteProcessor extends IBQuoteProcessor<Level1QuoteData> {
 
 
     protected void processQuote(Ticker ticker, QuoteType quoteType, BigDecimal formattedValue) {
-        Level1Quote quote = new Level1Quote(ticker, quoteType, getTime(), formattedValue);
+        Map<QuoteType, BigDecimal> quoteMap = new HashMap<>();
+        quoteMap.put(quoteType, formattedValue);
+        Level1Quote quote = new Level1Quote(ticker, getTime(), quoteMap);
 
         quoteEngine.fireLevel1Quote(quote);
     }

@@ -30,9 +30,11 @@ import java.math.BigDecimal;
 public interface ILevel1Quote extends IQuote {
     
     /**
-     * The value of this quote.
+     * The value of this quote, based on the quote type. The ILevel1Quote object
+     * can potentially contain the open/bid/ask/last/etc all in the same object.
      * 
      * @return The quote value.
      */
-    public BigDecimal getValue();
+    public BigDecimal getValue(QuoteType type);
+    
 }

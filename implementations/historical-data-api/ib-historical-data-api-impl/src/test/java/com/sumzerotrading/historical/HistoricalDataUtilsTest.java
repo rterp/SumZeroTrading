@@ -27,6 +27,7 @@ import com.sumzerotrading.ib.historical.InvalidBarSizeException;
 import com.sumzerotrading.data.BarData.LengthUnit;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider.ShowProperty;
 import com.sumzerotrading.ib.historical.HistoricalDataUtils;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.GregorianCalendar;
@@ -172,11 +173,11 @@ public class HistoricalDataUtilsTest {
             HistoricalData data = new HistoricalData(requestId, cal, open, high, low, close, volume, count, wap, hasGaps );
             BarData bar = HistoricalDataUtils.buildBarData(data);
             
-            assertEquals( close, bar.getClose(), 0 );
-            assertEquals( open, bar.getOpen(), 0 );
-            assertEquals( high, bar.getHigh(), 0 );
-            assertEquals( low, bar.getLow(), 0 );
-            assertEquals( volume, bar.getVolume() );
+            assertEquals( new BigDecimal(close), bar.getClose());
+            assertEquals( new BigDecimal(open), bar.getOpen() );
+            assertEquals( new BigDecimal(high), bar.getHigh());
+            assertEquals( new BigDecimal(low), bar.getLow() );
+            assertEquals( new BigDecimal(volume), bar.getVolume() );
             assertEquals( date, bar.getDateTime() );
         }
         

@@ -64,5 +64,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <version>2.5.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>apache-log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+    </dependency>
   </dependencies>
 </project>

@@ -33,6 +33,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
+    <distributionManagement>
+        <repository>
+            <id>bintray-rterp-maven</id>
+            <name>rterp-maven</name>
+            <url>https://api.bintray.com/maven/rterp/maven/SumZeroTrading/;publish=1</url>
+        </repository>
+    </distributionManagement>
     
     <build>
         <plugins>
@@ -46,6 +53,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         <exclude>**/*IT.java</exclude>
                     </excludes>
                 </configuration>
+                <version>2.20</version>
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
@@ -97,6 +105,22 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     </execution>
                 </executions>
             </plugin>
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>    
+            -->        
         </plugins>
         
         

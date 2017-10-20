@@ -22,6 +22,7 @@ package com.sumzerotrading.ib.historical;
 
 import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider.ShowProperty;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -97,12 +98,12 @@ public class HistoricalDataUtils {
     
     public static BarData buildBarData( HistoricalData data ) {
         BarData bar = new BarData();
-        bar.setClose( data.getClose() );
-        bar.setHigh( data.getHigh() );
-        bar.setLow( data.getLow() );
-        bar.setClose( data.getClose() );
-        bar.setOpen( data.getOpen() );
-        bar.setVolume( data.getVolume() );
+        bar.setClose( new BigDecimal(data.getClose()) );
+        bar.setHigh( new BigDecimal(data.getHigh()) );
+        bar.setLow( new BigDecimal(data.getLow()) );
+        bar.setClose( new BigDecimal(data.getClose()) );
+        bar.setOpen( new BigDecimal(data.getOpen()) );
+        bar.setVolume( new BigDecimal(data.getVolume()) );
         bar.setDateTime( LocalDateTime.ofInstant(data.getDate().getTime().toInstant(), ZoneId.systemDefault()));
         
         return bar;
