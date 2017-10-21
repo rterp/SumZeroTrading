@@ -28,12 +28,11 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <parent>
     <groupId>com.sumzerotrading</groupId>
     <artifactId>SumZeroParent</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <relativePath>../SumZeroParent</relativePath>
   </parent>
 
   <artifactId>sumzero-api</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
   <name>sumzero-api</name>
   <description>sumzero APIs</description>
   <packaging>pom</packaging>
