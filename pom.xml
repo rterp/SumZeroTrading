@@ -48,6 +48,16 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     </scm>    
     <build>
         <plugins>
+        <plugin>
+            <groupId>com.github.danielflower.mavenplugins</groupId>
+            <artifactId>multi-module-maven-release-plugin</artifactId>
+            <version>2.1.4</version>
+            <configuration>
+                <releaseGoals>
+                    <releaseGoal>deploy</releaseGoal>
+                </releaseGoals>
+            </configuration>
+        </plugin>            
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
