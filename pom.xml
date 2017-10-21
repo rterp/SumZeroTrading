@@ -39,6 +39,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <url>https://api.bintray.com/maven/rterp/maven/SumZeroTrading/;publish=1</url>
         </repository>
     </distributionManagement>    
+   <scm>
+        <connection>scm:git:git@github.com:rterp/SumZeroTrading.git</connection>
+        <developerConnection>scm:git:git@github.com:rterp/SumZeroTrading.git</developerConnection>
+        <url>git@github.com:rterp/SumZeroTrading.git</url>
+        <!--<tag>2.0.2-23</tag>-->
+        <!--<tag>GMapsFX-2.12.0</tag>-->
+    </scm>    
     <build>
         <plugins>
             <plugin>
