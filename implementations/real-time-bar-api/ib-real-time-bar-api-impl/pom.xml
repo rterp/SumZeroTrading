@@ -43,7 +43,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <dependency>
             <groupId>com.sumzerotrading</groupId>
             <artifactId>sumzero-real-time-bar-api</artifactId>
-            <version>${project.version</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sumzerotrading</groupId>
