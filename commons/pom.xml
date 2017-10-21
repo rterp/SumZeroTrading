@@ -27,12 +27,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <parent>
     <groupId>com.sumzerotrading</groupId>
     <artifactId>SumZeroParent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <relativePath>../SumZeroParent</relativePath>
   </parent>
 
   <groupId>com.sumzerotrading</groupId>
   <artifactId>sumzero-commons</artifactId>
+  <version>1.0.1-SNAPSHOT</version>
   <name>sumzero-commons</name>
   <description>Classes that are used by all projects</description>
   <packaging>pom</packaging>
