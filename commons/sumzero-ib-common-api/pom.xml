@@ -25,13 +25,13 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <parent>
         <groupId>com.sumzerotrading</groupId>
         <artifactId>sumzero-commons</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.2-SNAPSHOT</version>
     </parent>
   
     
   <groupId>com.sumzerotrading</groupId>
   <artifactId>sumzero-ib-common-api</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>sumzero-ib-common-api</name>
