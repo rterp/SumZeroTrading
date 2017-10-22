@@ -20,7 +20,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     <groupId>com.sumzerotrading</groupId>
     <artifactId>SumZeroTrading</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SumZeroTrading</name>
 
@@ -39,26 +39,23 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <url>https://api.bintray.com/maven/rterp/maven/SumZeroTrading/;publish=1</url>
         </repository>
     </distributionManagement>    
-   <scm>
+    <scm>
         <connection>scm:git:git@github.com:rterp/SumZeroTrading.git</connection>
         <developerConnection>scm:git:git@github.com:rterp/SumZeroTrading.git</developerConnection>
         <url>git@github.com:rterp/SumZeroTrading.git</url>
         <!--<tag>2.0.2-23</tag>-->
         <!--<tag>GMapsFX-2.12.0</tag>-->
+        <tag>HEAD</tag>
     </scm>    
     <build>
-        <plugins>
-        <plugin>
-            <groupId>com.github.danielflower.mavenplugins</groupId>
-            <artifactId>multi-module-maven-release-plugin</artifactId>
-            <version>2.1.4</version>
-            <configuration>
-                <releaseGoals>
-                    <releaseGoal>deploy</releaseGoal>
-                </releaseGoals>
-            </configuration>
-        </plugin>            
+        <plugins>           
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                </plugin>
             <plugin>
+                
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
                 <executions>
