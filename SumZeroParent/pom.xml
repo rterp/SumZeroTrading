@@ -57,6 +57,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 </configuration>
                 <version>2.20</version>
             </plugin>
+            <!--
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
@@ -65,16 +66,16 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         <id>bundle-sources</id>
                         <phase>package</phase>
                         <goals>
-                            <!-- produce source artifact for main project sources -->
+                             produce source artifact for main project sources
                             <goal>jar-no-fork</goal>
               
-                            <!-- produce source artifact for project test sources -->
+                             produce source artifact for project test sources
                             <goal>test-jar-no-fork</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
