@@ -27,12 +27,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <parent>
         <groupId>com.sumzerotrading</groupId>
         <artifactId>market-data-api</artifactId>
-        <version>0.1.5</version>
+        <version>0.1.6-SNAPSHOT</version>
     </parent>
 
     <groupId>com.sumzerotrading</groupId>
     <artifactId>ib-market-data-api-impl</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>ib-market-data-api-impl</name>
@@ -100,7 +100,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <dependency>
             <groupId>com.ib</groupId>
             <artifactId>interactive-brokers-api</artifactId>
-            <version>9.73</version>
+            <version>9.74-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

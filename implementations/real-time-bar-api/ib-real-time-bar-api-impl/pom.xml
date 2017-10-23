@@ -24,12 +24,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <parent>
         <groupId>com.sumzerotrading</groupId>
         <artifactId>real-time-bar-api</artifactId>
-        <version>0.1.5</version>
+        <version>0.1.6-SNAPSHOT</version>
     </parent>
 
     <groupId>com.sumzerotrading</groupId>
     <artifactId>ib-real-time-bar-api-impl</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>ib-real-time-bar-api-impl</name>
@@ -87,7 +87,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <groupId>com.ib</groupId>
             <artifactId>interactive-brokers-api</artifactId>
             <type>jar</type>
-            <version>9.73</version>
+            <version>9.74-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>sumzero-commons-api</artifactId>
