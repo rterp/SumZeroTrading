@@ -25,12 +25,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <parent>
         <groupId>com.sumzerotrading</groupId>
         <artifactId>broker-api</artifactId>
-        <version>0.1.4</version>
+        <version>0.1.5-SNAPSHOT</version>
     </parent>
 
   <groupId>com.sumzerotrading</groupId>
   <artifactId>collective2-broker-api-impl</artifactId>
-  <version>0.1.4</version>
+  <version>0.1.5-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>collective2-broker-api-impl</name>
