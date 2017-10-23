@@ -20,7 +20,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
     <groupId>com.sumzerotrading</groupId>
     <artifactId>SumZeroTrading</artifactId>
-    <version>0.1.6-SNAPSHOT</version>
+    <version>0.1.6</version>
     <packaging>pom</packaging>
     <name>SumZeroTrading</name>
 
@@ -45,7 +45,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <url>git@github.com:rterp/SumZeroTrading.git</url>
         <!--<tag>2.0.2-23</tag>-->
         <!--<tag>GMapsFX-2.12.0</tag>-->
-        <tag>HEAD</tag>
+        <tag>SumZeroTrading-0.1.6</tag>
     </scm>    
     <build>
         <plugins>           
