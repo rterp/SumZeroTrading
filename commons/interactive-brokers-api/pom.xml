@@ -24,12 +24,12 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <parent>
         <groupId>com.sumzerotrading</groupId>
         <artifactId>sumzero-commons</artifactId>
-        <version>0.1.6</version>
+        <version>0.1.7-SNAPSHOT</version>
     </parent>
 
     <groupId>com.ib</groupId> 
     <artifactId>interactive-brokers-api</artifactId>
-    <version>9.73-1</version>
+    <version>9.73-2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>interactive-brokers-api</name>
