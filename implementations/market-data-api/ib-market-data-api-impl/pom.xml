@@ -100,7 +100,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         <dependency>
             <groupId>com.ib</groupId>
             <artifactId>interactive-brokers-api</artifactId>
-            <version>9.74-SNAPSHOT</version>
+            <version>9.73</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
