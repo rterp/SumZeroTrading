@@ -270,7 +270,7 @@ public class QuoteEngineTest {
     
     
     @Test
-    public void testFireMarketDepthQuote() {
+    public void testFireMarketDepthQuote() throws Exception {
         QuoteEngine quoteEngine = createNewQuoteEngine();
         final ILevel2Quote mockQuote = mockery.mock( ILevel2Quote.class );
         final Map mockLevel2ListenerMap = mockery.mock( Map.class );
@@ -297,44 +297,14 @@ public class QuoteEngineTest {
         } catch( Exception ex ) {
             fail();
         }
+        
+        Thread.sleep(1000);
         mockery.assertIsSatisfied();
         
     }         
     
     
-    @Test
-    public void testFireMarketDepthQuote_ThrowsException() {
-        QuoteEngine quoteEngine = createNewQuoteEngine();
-        final ILevel2Quote mockQuote = mockery.mock( ILevel2Quote.class );
-        final Map mockLevel2ListenerMap = mockery.mock( Map.class );
-        final Ticker ticker = new StockTicker( "ABC" );
-        final Level2QuoteListener mockListener = mockery.mock( Level2QuoteListener.class );
-        final List<Level2QuoteListener> mockListenerList = new ArrayList<Level2QuoteListener>();
-        mockListenerList.add( mockListener );
-        quoteEngine.level2ListenerMap = mockLevel2ListenerMap;
-        
-        
-        mockery.checking( new Expectations() {{
-            one(mockQuote).getTicker();
-            will(returnValue(ticker));
-            
-            one(mockLevel2ListenerMap).get(ticker);
-            will(returnValue(mockListenerList));
-            
-            one(mockListener).level2QuoteReceived(mockQuote);
-            will(throwException( new Exception("bogus") ) );
-            
-        }});
-        
-        try {
-            quoteEngine.fireMarketDepthQuote(mockQuote);
-        } catch( Exception ex ) {
-            fail();
-        }
-        mockery.assertIsSatisfied();
-        
-    }            
-    
+
     
     @Test
     public void testFireLevelMarketDepthQuote_NoListeners() {
