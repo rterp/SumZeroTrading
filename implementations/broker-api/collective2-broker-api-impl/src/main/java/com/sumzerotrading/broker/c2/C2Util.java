@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sumzerotrading.broker.ib;
+package com.sumzerotrading.broker.c2;
 
 import com.sumzerotrading.broker.order.TradeDirection;
 import com.sumzerotrading.broker.order.TradeOrder;
@@ -30,6 +30,7 @@ public class C2Util {
     public static final String ROOT_SYMBOL_SP500 = "@ES";
     public static final String ROOT_SYMBOL_CORN = "@C";
 
+    
     public static String getFuturesSymbol(FuturesTicker ticker) {
         String c2Symbol = C2Util.getC2RootSymbol(ticker.getSymbol());
         String symbol = FuturesUtil.getFullFuturesSymbolWithOneDigitYear(c2Symbol, ticker.getExpiryMonth(), ticker.getExpiryYear());

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sumzerotrading.broker.ib;
+package com.sumzerotrading.broker.c2;
 
 import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.FuturesTicker;
@@ -35,8 +35,24 @@ public class TradeSignalBuilder {
         signalInfo.setSymbolType(C2Util.getSymbolType(order));
         signalInfo.setOrderType(C2Util.getOrderType(order));
         signalInfo.setQuantity(order.getSize());
-        
+        signalInfo.setDuration( getDuration(order.getDuration() ));
+        if( order.getType() == TradeOrder.Type.STOP ) {
+            signalInfo.setStopPrice(order.getStopPrice());
+        } else if( order.getType() == TradeOrder.Type.LIMIT ) { 
+            signalInfo.setLimitPrice(order.getLimitPrice() );
+        }
         SubmitSignalRequest request = new SubmitSignalRequest(systemId, signalInfo);
         return request;
+    }
+    
+    
+    protected SignalInfo.Duration getDuration( TradeOrder.Duration tradeDuration ) {
+        if( tradeDuration == TradeOrder.Duration.DAY ) {
+            return SignalInfo.Duration.DAY;
+        } else if( tradeDuration == TradeOrder.Duration.GOOD_UNTIL_CANCELED ) {
+            return SignalInfo.Duration.GTC;
+        } else {
+            throw new IllegalStateException("Unknown duration: " + tradeDuration );
+        }
     }
 }

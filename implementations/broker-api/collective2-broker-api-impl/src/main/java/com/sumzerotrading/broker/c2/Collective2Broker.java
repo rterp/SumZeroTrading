@@ -17,7 +17,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.sumzerotrading.broker.ib;
+package com.sumzerotrading.broker.c2;
 
 
 import com.sumzerotrading.broker.BrokerErrorListener;
@@ -28,6 +28,9 @@ import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.ComboTicker;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.j4c2.Collective2Client;
+import com.sumzerotrading.j4c2.signal.CancelSignalRequest;
+import com.sumzerotrading.j4c2.signal.SubmitSignalRequest;
+import com.sumzerotrading.j4c2.signal.SubmitSignalResponse;
 import com.sumzerotrading.time.TimeUpdatedListener;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -46,6 +49,11 @@ public class Collective2Broker implements IBroker {
     protected Logger logger = Logger.getLogger(Collective2Broker.class);
     
     
+    //For unit tests
+    protected Collective2Broker() {
+        
+    }
+    
     public Collective2Broker(String apiKey, String systemid ) {
         this.apiKey = apiKey;
         this.systemid = systemid;
@@ -55,19 +63,34 @@ public class Collective2Broker implements IBroker {
 
     @Override
     public void cancelOrder(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        logger.info("Canceling signal: " + id );
+        CancelSignalRequest request = new CancelSignalRequest(systemid, id);
+        c2Client.submitCancelSignal(request);
+        
     }
 
     @Override
     public void cancelOrder(TradeOrder order) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        cancelOrder(order.getOrderId());
     }
 
     @Override
     public void placeOrder(TradeOrder order) {
         logger.info("Submitting order to C2 Broker: " + order);
-        c2Client.submitTradeSignal(signalBuilder.buildSignalRequest(systemid, order));
+        SubmitSignalResponse submitTradeSignalResponse = c2Client.submitTradeSignal(signalBuilder.buildSignalRequest(systemid, order));
+        logger.info("C2 parent response: " + submitTradeSignalResponse.toString() );
+        order.setOrderId(submitTradeSignalResponse.getSignalid());
+        for( TradeOrder child : order.getChildOrders() ) {
+            logger.info("Submitting child order");
+            SubmitSignalRequest buildSignalRequest = signalBuilder.buildSignalRequest(systemid, child);
+            logger.info("C2 Child Signal: " + buildSignalRequest );
+            submitTradeSignalResponse = c2Client.submitTradeSignal(buildSignalRequest);
+            logger.info("C2 child response: " + submitTradeSignalResponse.toString() );
+            child.setOrderId(submitTradeSignalResponse.getSignalid());
+        }
     }
+    
+    
 
     /**
      * Always returns an empty string.  Collective2 automatically assigns an order id when 
