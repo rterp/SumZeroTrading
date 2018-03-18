@@ -72,21 +72,34 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.GLOBEX, c.getExchange());
-        assertEquals(new BigDecimal(0.20), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.25"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(20), c.getContractMultiplier());
     }
 
     @Test
-    public void testRussellIndex() {
+    public void testRussellNyBotIndex() {
         Commodity c = Commodity.RUSSELL_2000_INDEX_MINI_NYBOT;
 
         assertEquals("TF", c.getExchangeSymbol());
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYBOT, c.getExchange());
-        assertEquals(new BigDecimal(0.10), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.10"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(50), c.getContractMultiplier());
     }
+    
+    @Test
+    public void testRussellGlobexIndex() {
+        Commodity c = Commodity.RUSSELL_2000_INDEX_MINI_GLOBEX;
+
+        assertEquals("RTY", c.getExchangeSymbol());
+        assertEquals("USD", c.getCurrency());
+        assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
+        assertEquals(Exchange.GLOBEX, c.getExchange());
+        assertEquals(new BigDecimal("0.10"), c.getMinimumTickSize());
+        assertEquals(new BigDecimal(50), c.getContractMultiplier());
+    }    
+    
 
     @Test
     public void testDowIndex() {
@@ -132,8 +145,8 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.FOUR_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.GLOBEX, c.getExchange());
-        assertEquals(new BigDecimal(0.0001), c.getMinimumTickSize());
-        assertEquals(new BigDecimal(125000), c.getContractMultiplier());
+        assertEquals(new BigDecimal("0.0001"), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("125000"), c.getContractMultiplier());
     }
 
     @Test
@@ -144,7 +157,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.FOUR_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.GLOBEX, c.getExchange());
-        assertEquals(new BigDecimal(0.0001), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.0001"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(62500), c.getContractMultiplier());
     }
 
@@ -156,8 +169,8 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.SIX_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.GLOBEX, c.getExchange());
-        assertEquals(new BigDecimal(0.000001), c.getMinimumTickSize());
-        assertEquals(new BigDecimal(12500000), c.getContractMultiplier());
+        assertEquals(new BigDecimal("0.000001"), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("12500000"), c.getContractMultiplier());
     }
 
     @Test
@@ -168,8 +181,8 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.SIX_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.GLOBEX, c.getExchange());
-        assertEquals(new BigDecimal(0.000001), c.getMinimumTickSize());
-        assertEquals(new BigDecimal(6250000), c.getContractMultiplier());
+        assertEquals(new BigDecimal("0.000001"), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("6250000"), c.getContractMultiplier());
     }
 
     @Test
@@ -180,7 +193,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.FOUR_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.GLOBEX, c.getExchange());
-        assertEquals(new BigDecimal(0.0001), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.0001"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(100000), c.getContractMultiplier());
     }
 
@@ -192,8 +205,8 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.FOUR_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.GLOBEX, c.getExchange());
-        assertEquals(new BigDecimal(0.0001), c.getMinimumTickSize());
-        assertEquals(new BigDecimal(125000), c.getContractMultiplier());
+        assertEquals(new BigDecimal("0.0001"), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("125000"), c.getContractMultiplier());
     }
     
     @Test
@@ -204,7 +217,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.10), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.10"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(100), c.getContractMultiplier());
     }    
     
@@ -216,8 +229,8 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYSE_LIFFE, c.getExchange());
-        assertEquals(new BigDecimal(0.10), c.getMinimumTickSize());
-        assertEquals(new BigDecimal(32.15), c.getContractMultiplier());
+        assertEquals(new BigDecimal("0.10"), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("32.15"), c.getContractMultiplier());
     }        
     
     @Test
@@ -228,7 +241,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.THREE_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.005), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.005"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(5000), c.getContractMultiplier());
     }            
     
@@ -240,7 +253,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.THREE_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYSE_LIFFE, c.getExchange());
-        assertEquals(new BigDecimal(0.005), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.005"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(1000), c.getContractMultiplier());
     }       
     
@@ -252,7 +265,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.THREE_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.0005), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.0005"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(25000), c.getContractMultiplier());
     }        
     
@@ -264,7 +277,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.01), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.01"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(1000), c.getContractMultiplier());
     }       
     
@@ -276,7 +289,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.THREE_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.025), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.025"), c.getMinimumTickSize());
         assertEquals(new BigDecimal(500), c.getContractMultiplier());
     }            
 
@@ -289,7 +302,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.THREE_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.001), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.001"), c.getMinimumTickSize());
     }
     
     @Test
@@ -301,7 +314,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.THREE_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.005), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.005"), c.getMinimumTickSize());
     }    
     
     @Test
@@ -313,7 +326,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.FOUR_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.NYMEX, c.getExchange());
-        assertEquals(new BigDecimal(0.0001), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.0001"), c.getMinimumTickSize());
     }        
     
     
@@ -326,7 +339,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.ECBOT, c.getExchange());
-        assertEquals(new BigDecimal(0.25), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.25"), c.getMinimumTickSize());
     }    
     
   @Test
@@ -338,7 +351,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.ECBOT, c.getExchange());
-        assertEquals(new BigDecimal(0.25), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.25"), c.getMinimumTickSize());
     }      
     
   @Test
@@ -350,7 +363,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.ECBOT, c.getExchange());
-        assertEquals(new BigDecimal(0.25), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.25"), c.getMinimumTickSize());
     }          
     
     
@@ -363,7 +376,7 @@ public class CommodityTest {
         assertEquals("USD", c.getCurrency());
         assertEquals(Commodity.TWO_DECIMALS, c.getDecimalFormat());
         assertEquals(Exchange.CFE, c.getExchange());
-        assertEquals(new BigDecimal(0.10), c.getMinimumTickSize());
+        assertEquals(new BigDecimal("0.10"), c.getMinimumTickSize());
     }
 
     

@@ -23,6 +23,7 @@ package com.sumzerotrading.data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
@@ -43,39 +44,40 @@ public class Commodity implements Serializable {
     public static final DecimalFormat SIX_DECIMALS = new DecimalFormat("####0.000000");
             
     
-    public static final Commodity SP500_INDEX_MINI_GLOBEX = new Commodity( "ES", Exchange.GLOBEX, TWO_DECIMALS, new BigDecimal(0.25), new BigDecimal(50));
-    public static final Commodity NASDAQ100_INDEX_MINI_GLOBEX = new Commodity( "NQ", Exchange.GLOBEX, TWO_DECIMALS, new BigDecimal(0.20), new BigDecimal(20));
-    public static final Commodity RUSSELL_2000_INDEX_MINI_NYBOT = new Commodity( "TF", Exchange.NYBOT, TWO_DECIMALS, new BigDecimal(0.10), new BigDecimal(50));
-    public static final Commodity DOW_INDEX_MINI_ECBOT = new Commodity( "YM", Exchange.ECBOT, NO_DECIMALS, new BigDecimal(1), new BigDecimal(5));
-    public static final Commodity VIX_FUTURES_CFE = new Commodity( "VX", Exchange.CFE,TWO_DECIMALS, new BigDecimal(0.10), new BigDecimal(1000));
-    public static final Commodity BOND_30_YEAR_ECBOT = new Commodity( "ZB", Exchange.ECBOT, FIVE_DECIMALS, new BigDecimal(0.03125), new BigDecimal(1000));
-    public static final Commodity BOND_10_YEAR_ECBOT = new Commodity( "ZN", Exchange.ECBOT, FIVE_DECIMALS, new BigDecimal(0.03125), new BigDecimal(1000));
-    public static final Commodity EURO_GLOBEX = new Commodity( "6E", Exchange.GLOBEX, FOUR_DECIMALS, new BigDecimal(0.0001), new BigDecimal(125000));
-    public static final Commodity EURO_MINI_GLOBEX = new Commodity( "E7", Exchange.GLOBEX, FOUR_DECIMALS, new BigDecimal(0.0001), new BigDecimal(62500));
-    public static final Commodity SWISS_FRANC_GLOBEX = new Commodity( "6S", Exchange.GLOBEX, FOUR_DECIMALS, new BigDecimal(0.0001), new BigDecimal(125000));
-    public static final Commodity JAPANESE_YEN_GLOBEX = new Commodity( "6J", Exchange.GLOBEX, SIX_DECIMALS, new BigDecimal(0.000001), new BigDecimal(12500000));
-    public static final Commodity JAPANESE_YEN_MINI_GLOBEX = new Commodity( "J7", Exchange.GLOBEX, SIX_DECIMALS, new BigDecimal(0.000001), new BigDecimal(6250000));
-    public static final Commodity CANADIAN_DOLLAR_GLOBEX = new Commodity( "6C", Exchange.GLOBEX, FOUR_DECIMALS, new BigDecimal(0.0001), new BigDecimal(100000));
-    public static final Commodity GOLD_NYMEX = new Commodity( "GC", Exchange.NYMEX, TWO_DECIMALS, new BigDecimal(0.10), new BigDecimal(100));
-    public static final Commodity GOLD_MINI_NYSE_LIFFE = new Commodity( "YG", Exchange.NYSE_LIFFE, TWO_DECIMALS, new BigDecimal(0.10), new BigDecimal(32.15));
-    public static final Commodity SILVER_NYMEX = new Commodity( "SI", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.005), new BigDecimal(5000));
-    public static final Commodity SILVER_MINI_NYSE_LIFFE = new Commodity( "YI", Exchange.NYSE_LIFFE, THREE_DECIMALS, new BigDecimal(0.005), new BigDecimal(1000));
-    public static final Commodity COPPER_NYMEX = new Commodity( "HG", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.0005), new BigDecimal(25000));
+    public static final Commodity SP500_INDEX_MINI_GLOBEX = new Commodity( "ES", Exchange.GLOBEX, TWO_DECIMALS, createBd(0.25, 2), new BigDecimal(50));
+    public static final Commodity NASDAQ100_INDEX_MINI_GLOBEX = new Commodity( "NQ", Exchange.GLOBEX, TWO_DECIMALS, createBd(0.25,2), new BigDecimal(20));
+    public static final Commodity RUSSELL_2000_INDEX_MINI_NYBOT = new Commodity( "TF", Exchange.NYBOT, TWO_DECIMALS, createBd(0.10,2), new BigDecimal(50));
+    public static final Commodity RUSSELL_2000_INDEX_MINI_GLOBEX = new Commodity( "RTY", Exchange.GLOBEX, TWO_DECIMALS, createBd(0.10,2), new BigDecimal(50));
+    public static final Commodity DOW_INDEX_MINI_ECBOT = new Commodity( "YM", Exchange.ECBOT, NO_DECIMALS, createBd(1,0), new BigDecimal(5));
+    public static final Commodity VIX_FUTURES_CFE = new Commodity( "VX", Exchange.CFE,TWO_DECIMALS, createBd(0.10,2), new BigDecimal(1000));
+    public static final Commodity BOND_30_YEAR_ECBOT = new Commodity( "ZB", Exchange.ECBOT, FIVE_DECIMALS, createBd(0.03125,5), new BigDecimal(1000));
+    public static final Commodity BOND_10_YEAR_ECBOT = new Commodity( "ZN", Exchange.ECBOT, FIVE_DECIMALS, createBd(0.03125,5), new BigDecimal(1000));
+    public static final Commodity EURO_GLOBEX = new Commodity( "6E", Exchange.GLOBEX, FOUR_DECIMALS, createBd(0.0001,4), new BigDecimal(125000));
+    public static final Commodity EURO_MINI_GLOBEX = new Commodity( "E7", Exchange.GLOBEX, FOUR_DECIMALS, createBd(0.0001,4), new BigDecimal(62500));
+    public static final Commodity SWISS_FRANC_GLOBEX = new Commodity( "6S", Exchange.GLOBEX, FOUR_DECIMALS, createBd(0.0001,4), new BigDecimal(125000));
+    public static final Commodity JAPANESE_YEN_GLOBEX = new Commodity( "6J", Exchange.GLOBEX, SIX_DECIMALS, createBd(0.000001,6), new BigDecimal(12500000));
+    public static final Commodity JAPANESE_YEN_MINI_GLOBEX = new Commodity( "J7", Exchange.GLOBEX, SIX_DECIMALS, createBd(0.000001,6), new BigDecimal(6250000));
+    public static final Commodity CANADIAN_DOLLAR_GLOBEX = new Commodity( "6C", Exchange.GLOBEX, FOUR_DECIMALS, createBd(0.0001,4), new BigDecimal(100000));
+    public static final Commodity GOLD_NYMEX = new Commodity( "GC", Exchange.NYMEX, TWO_DECIMALS, createBd(0.10,2), new BigDecimal(100));
+    public static final Commodity GOLD_MINI_NYSE_LIFFE = new Commodity( "YG", Exchange.NYSE_LIFFE, TWO_DECIMALS, createBd(0.10,2), createBd(32.15,2));
+    public static final Commodity SILVER_NYMEX = new Commodity( "SI", Exchange.NYMEX, THREE_DECIMALS, createBd(0.005,3), new BigDecimal(5000));
+    public static final Commodity SILVER_MINI_NYSE_LIFFE = new Commodity( "YI", Exchange.NYSE_LIFFE, THREE_DECIMALS, createBd(0.005,3), new BigDecimal(1000));
+    public static final Commodity COPPER_NYMEX = new Commodity( "HG", Exchange.NYMEX, THREE_DECIMALS, createBd(0.0005,4), new BigDecimal(25000));
     
-    public static final Commodity CRUDE_OIL_NYMEX = new Commodity("CL", Exchange.NYMEX, TWO_DECIMALS, new BigDecimal(0.01), new BigDecimal(1000));
-    public static final Commodity CRUDE_OIL_MINI_NYMEX = new Commodity("QM", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.025), new BigDecimal(500));
-    public static final Commodity NATURAL_GAS_NYMEX = new Commodity("NG", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.001), new BigDecimal(10000));
-    public static final Commodity NATURAL_GAS_MINI_NYMEX = new Commodity("QG", Exchange.NYMEX, THREE_DECIMALS, new BigDecimal(0.005), new BigDecimal(2500));
-    public static final Commodity HEATING_OIL_NYMEX = new Commodity("HO", Exchange.NYMEX, FOUR_DECIMALS, new BigDecimal(0.0001), new BigDecimal(42000));
+    public static final Commodity CRUDE_OIL_NYMEX = new Commodity("CL", Exchange.NYMEX, TWO_DECIMALS, createBd(0.01,2), new BigDecimal(1000));
+    public static final Commodity CRUDE_OIL_MINI_NYMEX = new Commodity("QM", Exchange.NYMEX, THREE_DECIMALS, createBd(0.025,3), new BigDecimal(500));
+    public static final Commodity NATURAL_GAS_NYMEX = new Commodity("NG", Exchange.NYMEX, THREE_DECIMALS, createBd(0.001,3), new BigDecimal(10000));
+    public static final Commodity NATURAL_GAS_MINI_NYMEX = new Commodity("QG", Exchange.NYMEX, THREE_DECIMALS, createBd(0.005,3), new BigDecimal(2500));
+    public static final Commodity HEATING_OIL_NYMEX = new Commodity("HO", Exchange.NYMEX, FOUR_DECIMALS, createBd(0.0001,4), new BigDecimal(42000));
     
-    public static final Commodity CORN_ECBOT = new Commodity("ZC", Exchange.ECBOT, TWO_DECIMALS, new BigDecimal(0.25), new BigDecimal(50));
-    public static final Commodity SOYBEANS_ECBOT = new Commodity("ZS", Exchange.ECBOT, TWO_DECIMALS, new BigDecimal(0.25), new BigDecimal(50));
-    public static final Commodity WHEAT_ECBOT = new Commodity("ZW", Exchange.ECBOT, TWO_DECIMALS, new BigDecimal(0.25), new BigDecimal(50));
+    public static final Commodity CORN_ECBOT = new Commodity("ZC", Exchange.ECBOT, TWO_DECIMALS, createBd(0.25,2), new BigDecimal(50));
+    public static final Commodity SOYBEANS_ECBOT = new Commodity("ZS", Exchange.ECBOT, TWO_DECIMALS, createBd(0.25,2), new BigDecimal(50));
+    public static final Commodity WHEAT_ECBOT = new Commodity("ZW", Exchange.ECBOT, TWO_DECIMALS, createBd(0.25,2), new BigDecimal(50));
     
     public static final Commodity HANG_SENG_INDEX = new Commodity("HSI", Exchange.HKFE, NO_DECIMALS, BigDecimal.ONE, new BigDecimal(50), "HKD");
     public static final Commodity HANG_SENG_MINI_INDEX = new Commodity("MHI", Exchange.HKFE, NO_DECIMALS, BigDecimal.ONE, new BigDecimal(10), "HKD");
     
-    public static final Commodity[] ALL = { SP500_INDEX_MINI_GLOBEX, NASDAQ100_INDEX_MINI_GLOBEX, RUSSELL_2000_INDEX_MINI_NYBOT, DOW_INDEX_MINI_ECBOT,
+    public static final Commodity[] ALL = { SP500_INDEX_MINI_GLOBEX, NASDAQ100_INDEX_MINI_GLOBEX, RUSSELL_2000_INDEX_MINI_NYBOT, RUSSELL_2000_INDEX_MINI_GLOBEX, DOW_INDEX_MINI_ECBOT,
         BOND_10_YEAR_ECBOT, BOND_30_YEAR_ECBOT, EURO_GLOBEX, EURO_MINI_GLOBEX, CANADIAN_DOLLAR_GLOBEX, SWISS_FRANC_GLOBEX, JAPANESE_YEN_GLOBEX, JAPANESE_YEN_MINI_GLOBEX,
         GOLD_NYMEX, GOLD_MINI_NYSE_LIFFE, SILVER_NYMEX, SILVER_MINI_NYSE_LIFFE, COPPER_NYMEX, CRUDE_OIL_NYMEX, CRUDE_OIL_MINI_NYMEX, NATURAL_GAS_NYMEX,
         NATURAL_GAS_MINI_NYMEX, HEATING_OIL_NYMEX, CORN_ECBOT, SOYBEANS_ECBOT, WHEAT_ECBOT, HANG_SENG_INDEX, HANG_SENG_MINI_INDEX };
@@ -180,6 +182,10 @@ public class Commodity implements Serializable {
         throw new IllegalStateException( "No Commodity found for symbol: " + symbol );
     }
     
+    
+    public static BigDecimal createBd(double value, int decimals) {
+        return new BigDecimal(value).setScale(decimals, RoundingMode.HALF_UP);
+    }
     
     
     

@@ -67,7 +67,7 @@ public class FuturesTickerTest {
         expected.setContractMultiplier( new BigDecimal(100000));
         expected.setDecimalFormat( Commodity.FOUR_DECIMALS );
         expected.setExchange(Exchange.GLOBEX);
-        expected.setMinimumTickSize( new BigDecimal(0.0001));
+        expected.setMinimumTickSize( new BigDecimal("0.0001"));
         expected.setSymbol("6C");
         expected.setCommodity(CANADIAN_DOLLAR_GLOBEX);
         
