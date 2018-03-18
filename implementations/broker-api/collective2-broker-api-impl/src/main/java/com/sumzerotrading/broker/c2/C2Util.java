@@ -24,7 +24,8 @@ import com.sumzerotrading.util.FuturesUtil;
 public class C2Util {
 
     
-    public static final String ROOT_SYMBOL_RUSSEL2K = "@TFS";
+    public static final String ROOT_SYMBOL_RUSSEL2K_NYBOT = "@TFS";
+    public static final String ROOT_SYMBOL_RUSSEL2K_GLOBEX = "@RTY";
     public static final String ROOT_SYMBOL_NASDAQ_100 = "@NQ";
     public static final String ROOT_SYMBOL_MINI_DOW = "@YM";
     public static final String ROOT_SYMBOL_SP500 = "@ES";
@@ -85,7 +86,9 @@ public class C2Util {
             case "ES":
                 return ROOT_SYMBOL_SP500;
             case "TF":
-                return ROOT_SYMBOL_RUSSEL2K;
+                return ROOT_SYMBOL_RUSSEL2K_NYBOT;
+            case "RTY":
+                return ROOT_SYMBOL_RUSSEL2K_GLOBEX;
             case "YM":
                 return ROOT_SYMBOL_MINI_DOW;
             case "C":

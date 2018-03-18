@@ -56,10 +56,12 @@ public class C2UtilTest {
         
         assertEquals( C2Util.ROOT_SYMBOL_NASDAQ_100, C2Util.getC2RootSymbol("NQ"));
         assertEquals( C2Util.ROOT_SYMBOL_MINI_DOW, C2Util.getC2RootSymbol("YM"));
-        assertEquals( C2Util.ROOT_SYMBOL_RUSSEL2K, C2Util.getC2RootSymbol("TF"));
+        assertEquals(C2Util.ROOT_SYMBOL_RUSSEL2K_NYBOT, C2Util.getC2RootSymbol("TF"));
+        assertEquals(C2Util.ROOT_SYMBOL_RUSSEL2K_GLOBEX, C2Util.getC2RootSymbol("RTY"));
         assertEquals( C2Util.ROOT_SYMBOL_SP500, C2Util.getC2RootSymbol("ES"));
         assertEquals( C2Util.ROOT_SYMBOL_CORN, C2Util.getC2RootSymbol("ZC"));
         assertEquals( C2Util.ROOT_SYMBOL_CORN, C2Util.getC2RootSymbol("C"));
+        
         
         try {
             C2Util.getC2RootSymbol("QQQ");
