@@ -67,4 +67,12 @@ public class TradeRoundTrip implements IRoundTrip {
         return correlationId;
     }
 
+    public TradeOrder getEntryOrder() {
+        return entry;
+    }
+    
+    public TradeOrder getExitOrder() {
+        return exit;
+    }
+    
 }
