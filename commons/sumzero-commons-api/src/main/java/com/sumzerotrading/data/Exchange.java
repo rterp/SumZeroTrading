@@ -45,13 +45,14 @@ public class Exchange implements Serializable {
     public static final Exchange NASDAQ = new Exchange("NASDAQ");
     public static final Exchange TSEJ = new Exchange("TSEJ");
     public static final Exchange SEHKNTL = new Exchange("SEHKNTL");
+    public static final Exchange SEHK = new Exchange("SEHK");
     public static final Exchange HKFE = new Exchange("HKFE");
     public static final Exchange OSE = new Exchange("OSE.JPN");
     public static final Exchange SGX = new Exchange("SGX");
     public static final Exchange BOX = new Exchange("BOX");
     
     public static final Exchange[] ALL_EXCHANGES = { ARCA, GLOBEX, NYMEX, CBOE, ECBOT, NYBOT, CFE,
-        NYSE_LIFFE, IDEALPRO, PSE, INTERACTIVE_BROKERS_SMART, NASDAQ, TSEJ, SEHKNTL, HKFE, OSE, SGX, BOX };
+        NYSE_LIFFE, IDEALPRO, PSE, INTERACTIVE_BROKERS_SMART, NASDAQ, TSEJ, SEHKNTL, SEHK, HKFE, OSE, SGX, BOX };
     
     
     protected String exchangeName;
