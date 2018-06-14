@@ -14,6 +14,8 @@ import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.data.SumZeroException;
 import com.sumzerotrading.j4c2.signal.SignalInfo;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -85,6 +87,9 @@ public class C2UtilTest {
         order.setType(TradeOrder.Type.MARKET);
         assertEquals(SignalInfo.OrderType.MARKET, C2Util.getOrderType(order));      
         
+        order.setType(TradeOrder.Type.MARKET_ON_OPEN);
+        assertEquals(SignalInfo.OrderType.MARKET, C2Util.getOrderType(order));          
+        
         try {
             order.setType(TradeOrder.Type.MARKET_ON_CLOSE);
             C2Util.getOrderType(order);
@@ -155,5 +160,12 @@ public class C2UtilTest {
     public void testGetFuturesSymbol() {
         FuturesTicker ticker = FuturesTicker.getInstance(Commodity.NASDAQ100_INDEX_MINI_GLOBEX, 3, 2018);
         assertEquals("@NQH8", C2Util.getFuturesSymbol(ticker));
+    }
+    
+    
+    @Test
+    public void testGetTime() {
+        ZonedDateTime time = ZonedDateTime.of(2018, 4, 11, 6, 40, 0, 0, ZoneId.of("America/Los_Angeles"));
+        assertEquals("201804110940", C2Util.getTime(time));
     }
 }

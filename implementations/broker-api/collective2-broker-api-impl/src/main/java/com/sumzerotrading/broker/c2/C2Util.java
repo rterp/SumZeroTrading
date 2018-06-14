@@ -16,6 +16,9 @@ import com.sumzerotrading.j4c2.signal.SignalInfo.Action;
 import com.sumzerotrading.j4c2.signal.SignalInfo.OrderType;
 import com.sumzerotrading.j4c2.signal.SignalInfo.SymbolType;
 import com.sumzerotrading.util.FuturesUtil;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -23,7 +26,7 @@ import com.sumzerotrading.util.FuturesUtil;
  */
 public class C2Util {
 
-    
+    protected static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddkkmm");
     public static final String ROOT_SYMBOL_RUSSEL2K_NYBOT = "@TFS";
     public static final String ROOT_SYMBOL_RUSSEL2K_GLOBEX = "@RTY";
     public static final String ROOT_SYMBOL_NASDAQ_100 = "@NQ";
@@ -67,7 +70,7 @@ public class C2Util {
     }
     
     public static OrderType getOrderType( TradeOrder order ) {
-        if( order.getType() == TradeOrder.Type.MARKET ) {
+        if( order.getType() == TradeOrder.Type.MARKET || order.getType() == TradeOrder.Type.MARKET_ON_OPEN ) {
             return OrderType.MARKET;
         } else if( order.getType() == TradeOrder.Type.LIMIT ) {
             return OrderType.LIMIT;
@@ -99,6 +102,11 @@ public class C2Util {
         }
     }
     
+    
+    public static String getTime( ZonedDateTime zonedTime ) {
+        ZonedDateTime newYorkTime = zonedTime.withZoneSameInstant(ZoneId.of("America/New_York"));
+        return formatter.format(newYorkTime);
+    }
     
     
     

@@ -31,16 +31,21 @@ public class TradeSignalBuilder {
         SignalInfo signalInfo = new SignalInfo();
         signalInfo.setTicker(symbol);
         signalInfo.setAction(C2Util.getTradeAction(order));
-        signalInfo.setIsMarketOrder( order.getType() == TradeOrder.Type.MARKET );
+        signalInfo.setIsMarketOrder( (order.getType() == TradeOrder.Type.MARKET || order.getType() == TradeOrder.Type.MARKET_ON_OPEN ));
         signalInfo.setSymbolType(C2Util.getSymbolType(order));
         signalInfo.setOrderType(C2Util.getOrderType(order));
         signalInfo.setQuantity(order.getSize());
         signalInfo.setDuration( getDuration(order.getDuration() ));
+        if( order.getGoodAfterTime() != null ) {
+            signalInfo.setParkUntil(C2Util.getTime(order.getGoodAfterTime()));
+        }
+        
         if( order.getType() == TradeOrder.Type.STOP ) {
             signalInfo.setStopPrice(order.getStopPrice());
         } else if( order.getType() == TradeOrder.Type.LIMIT ) { 
             signalInfo.setLimitPrice(order.getLimitPrice() );
         }
+        
         SubmitSignalRequest request = new SubmitSignalRequest(systemId, signalInfo);
         return request;
     }

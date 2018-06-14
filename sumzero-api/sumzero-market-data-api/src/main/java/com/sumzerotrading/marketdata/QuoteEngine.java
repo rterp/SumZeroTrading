@@ -22,7 +22,7 @@ package com.sumzerotrading.marketdata;
 import java.util.*;
 
 import com.sumzerotrading.data.Ticker;
-//import org.apache.log4j.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rob Terpilowski
@@ -35,7 +35,7 @@ public abstract class QuoteEngine implements IQuoteEngine {
     protected List<ErrorListener> errorListeners;
     protected Map<Ticker, List<Level1QuoteListener>> level1ListenerMap = Collections.synchronizedMap(new HashMap<Ticker, List<Level1QuoteListener>>());
     protected Map<Ticker, List<Level2QuoteListener>> level2ListenerMap = Collections.synchronizedMap(new HashMap<Ticker, List<Level2QuoteListener>>());
-    //  protected Logger logger = Logger.getLogger( QuoteEngine.class );
+    protected Logger logger = Logger.getLogger( QuoteEngine.class );
 
     public QuoteEngine() {
         errorListeners = new ArrayList<ErrorListener>();

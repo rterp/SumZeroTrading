@@ -13,6 +13,8 @@ import com.sumzerotrading.data.FuturesTicker;
 import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.j4c2.signal.SignalInfo;
 import com.sumzerotrading.j4c2.signal.SubmitSignalRequest;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -74,6 +76,65 @@ public class TradeSignalBuilderTest {
         assertEquals(expectedRequest,submitSignalRequest );  
         
     }
+    
+    @Test
+    public void testBuildSignalRequest_MarketOnOpen() {
+        String systemId = "123";
+        StockTicker ticker = new StockTicker("QQQ");
+        
+        TradeOrder order = new TradeOrder("", ticker, 100, TradeDirection.BUY);
+        order.setType(TradeOrder.Type.MARKET_ON_OPEN);
+        order.setDuration(TradeOrder.Duration.GOOD_UNTIL_CANCELED);
+        
+        SignalInfo expectedSignalInfo = new SignalInfo();
+        SubmitSignalRequest expectedRequest = new SubmitSignalRequest(systemId, expectedSignalInfo);
+        expectedSignalInfo.setTicker("QQQ");
+        expectedSignalInfo.setAction(SignalInfo.Action.BTO);
+        expectedSignalInfo.setIsMarketOrder(true);
+        expectedSignalInfo.setSymbolType(SignalInfo.SymbolType.stock);
+        expectedSignalInfo.setOrderType(SignalInfo.OrderType.MARKET);
+        expectedSignalInfo.setQuantity(100);
+        expectedSignalInfo.setDuration(SignalInfo.Duration.GTC);
+        
+        
+        SubmitSignalRequest submitSignalRequest = testBuilder.buildSignalRequest(systemId, order);
+        
+        assertEquals( expectedSignalInfo, submitSignalRequest.getSignal() );
+        assertEquals(expectedRequest,submitSignalRequest );  
+        
+    }    
+    
+    
+    @Test
+    public void testBuildSignalRequest_GoodAfterTime() {
+        String systemId = "123";
+        StockTicker ticker = new StockTicker("QQQ");
+        ZonedDateTime zoneTime = ZonedDateTime.of(2018, 4, 11, 6, 30, 0, 0, ZoneId.of("America/Los_Angeles"));        
+        
+        TradeOrder order = new TradeOrder("", ticker, 100, TradeDirection.BUY);
+        order.setDuration(TradeOrder.Duration.GOOD_UNTIL_CANCELED);
+        order.setGoodAfterTime(zoneTime);
+        
+        SignalInfo expectedSignalInfo = new SignalInfo();
+        SubmitSignalRequest expectedRequest = new SubmitSignalRequest(systemId, expectedSignalInfo);
+        expectedSignalInfo.setTicker("QQQ");
+        expectedSignalInfo.setAction(SignalInfo.Action.BTO);
+        expectedSignalInfo.setIsMarketOrder(true);
+        expectedSignalInfo.setSymbolType(SignalInfo.SymbolType.stock);
+        expectedSignalInfo.setOrderType(SignalInfo.OrderType.MARKET);
+        expectedSignalInfo.setQuantity(100);
+        expectedSignalInfo.setDuration(SignalInfo.Duration.GTC);
+        expectedSignalInfo.setParkUntil("201804110930");
+        
+        
+        
+        
+        SubmitSignalRequest submitSignalRequest = testBuilder.buildSignalRequest(systemId, order);
+        
+        assertEquals( expectedSignalInfo, submitSignalRequest.getSignal() );
+        assertEquals(expectedRequest,submitSignalRequest );  
+        
+    }    
     
     @Test
     public void testBuildSignalRequest_Futures() {
