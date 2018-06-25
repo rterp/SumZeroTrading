@@ -6,6 +6,7 @@
 package com.sumzerotrading.bitmex.historical;
 
 import com.sumzerotrading.bitmex.client.BitmexRestClient;
+import com.sumzerotrading.bitmex.client.IBitmexClient;
 import com.sumzerotrading.bitmex.entity.BitmexChartData;
 import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.data.GenericTicker;
@@ -47,7 +48,7 @@ public class BitmexHistoricalDataProviderTest {
     protected BitmexHistoricalDataProvider testProvider;
 
     @Mock
-    protected BitmexRestClient mockRestClient;
+    protected IBitmexClient mockClient;
 
     public BitmexHistoricalDataProviderTest() {
     }
@@ -78,7 +79,7 @@ public class BitmexHistoricalDataProviderTest {
     @Test
     public void testConnect() {
         testProvider.connect();
-        assertNotNull(testProvider.restClient);
+        assertNotNull(testProvider.client);
         assertTrue(testProvider.isConnected());
     }
 
@@ -109,7 +110,7 @@ public class BitmexHistoricalDataProviderTest {
         int duration = 100;
         int barSize = 1;
         BarData.LengthUnit lengthUnit = BarData.LengthUnit.MINUTE;
-        testProvider.restClient = mockRestClient;
+        testProvider.client = mockClient;
         List<BitmexChartData> dataList = new ArrayList<>();
 
         BitmexChartData data = new BitmexChartData();
@@ -117,8 +118,10 @@ public class BitmexHistoricalDataProviderTest {
         dataList.add(data);
         
         List<BarData> barDataList = new ArrayList<>();
+        BarData barData = new BarData(LocalDateTime.MIN, BigDecimal.ONE, BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
+        barDataList.add(barData);
         
-        when(mockRestClient.getChartData(ticker, duration, BitmexRestClient.ChartDataBinSize.ONE_MINUTE)).thenReturn(dataList);
+        when(mockClient.getChartData(ticker, duration, BitmexRestClient.ChartDataBinSize.ONE_MINUTE, "", true)).thenReturn(dataList);
         doReturn(barDataList).when(testProvider).convertToBarData(ticker, barSize, lengthUnit, dataList);
                 
         assertEquals( barDataList, testProvider.requestHistoricalData(ticker, duration, lengthUnit, barSize, lengthUnit, IHistoricalDataProvider.ShowProperty.TRADES, true));

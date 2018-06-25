@@ -20,6 +20,7 @@
 package com.sumzerotrading.bitmex.historical;
 
 import com.sumzerotrading.bitmex.client.BitmexRestClient;
+import com.sumzerotrading.bitmex.client.IBitmexClient;
 import com.sumzerotrading.bitmex.common.api.BitmexClientRegistry;
 import com.sumzerotrading.bitmex.entity.BitmexChartData;
 import com.sumzerotrading.data.BarData;
@@ -37,7 +38,7 @@ public class BitmexHistoricalDataProvider implements IHistoricalDataProvider {
 
     protected Logger logger = Logger.getLogger(BitmexHistoricalDataProvider.class);
     protected boolean connected = false;
-    protected BitmexRestClient restClient = null;
+    protected IBitmexClient client = null;
 
     @Override
     public boolean isConnected() {
@@ -46,7 +47,7 @@ public class BitmexHistoricalDataProvider implements IHistoricalDataProvider {
 
     @Override
     public void connect() {
-        restClient = BitmexClientRegistry.getInstance().getRestClient();
+        client = BitmexClientRegistry.getInstance().getBitmexClient();
         connected = true;
     }
 
@@ -60,7 +61,7 @@ public class BitmexHistoricalDataProvider implements IHistoricalDataProvider {
         if (whatToShow != ShowProperty.TRADES) {
             throw new SumZeroException("Only historical trades are supported");
         }
-        List<BitmexChartData> bitmexData = restClient.getChartData(ticker, duration, HistoricalDataUtils.getBinSize(barSize, barSizeUnit));
+        List<BitmexChartData> bitmexData = client.getChartData(ticker, duration, HistoricalDataUtils.getBinSize(barSize, barSizeUnit), "", true);
         return convertToBarData(ticker, barSize, barSizeUnit, bitmexData);
     }
 
