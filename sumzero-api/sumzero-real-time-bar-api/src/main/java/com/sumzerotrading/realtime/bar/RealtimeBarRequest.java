@@ -22,6 +22,9 @@ package com.sumzerotrading.realtime.bar;
 
 import com.sumzerotrading.data.BarData.LengthUnit;
 import com.sumzerotrading.data.Ticker;
+import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
+import com.sumzerotrading.historicaldata.IHistoricalDataProvider.ShowProperty;
+import java.util.Objects;
 
 /**
  *
@@ -31,15 +34,21 @@ public class RealtimeBarRequest {
     
     protected int requestId;
     protected Ticker ticker;
-    protected int timeInteval;
+    protected int timeInterval;
     protected LengthUnit timeUnit;
+    protected IHistoricalDataProvider.ShowProperty showProperty = IHistoricalDataProvider.ShowProperty.TRADES;
 
     
     public RealtimeBarRequest(int requestId, Ticker ticker, int timeInteval, LengthUnit timeUnit) {
         this.requestId = requestId;
         this.ticker = ticker;
-        this.timeInteval = timeInteval;
+        this.timeInterval = timeInteval;
         this.timeUnit = timeUnit;
+    }
+    
+    public RealtimeBarRequest(int requestId, Ticker ticker, int timeInterval, LengthUnit timeUnit, ShowProperty showProperty ) {
+        this(requestId, ticker, timeInterval, timeUnit);
+        this.showProperty = this.showProperty;
     }
 
     public int getRequestId() {
@@ -50,20 +59,38 @@ public class RealtimeBarRequest {
         return ticker;
     }
 
-    public int getTimeInteval() {
-        return timeInteval;
+    public int getTimeInterval() {
+        return timeInterval;
     }
 
     public LengthUnit getTimeUnit() {
         return timeUnit;
     }
 
-    
-    
-    
-    
+    public ShowProperty getShowProperty() {
+        return showProperty;
+    }
+
+    public void setShowProperty(ShowProperty showProperty) {
+        this.showProperty = showProperty;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + this.requestId;
+        hash = 79 * hash + Objects.hashCode(this.ticker);
+        hash = 79 * hash + this.timeInterval;
+        hash = 79 * hash + Objects.hashCode(this.timeUnit);
+        hash = 79 * hash + Objects.hashCode(this.showProperty);
+        return hash;
+    }
+
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
@@ -71,28 +98,27 @@ public class RealtimeBarRequest {
             return false;
         }
         final RealtimeBarRequest other = (RealtimeBarRequest) obj;
-        if (this.ticker != other.ticker && (this.ticker == null || !this.ticker.equals(other.ticker))) {
+        if (this.requestId != other.requestId) {
             return false;
         }
-        if (this.timeInteval != other.timeInteval) {
+        if (this.timeInterval != other.timeInterval) {
+            return false;
+        }
+        if (!Objects.equals(this.ticker, other.ticker)) {
             return false;
         }
         if (this.timeUnit != other.timeUnit) {
+            return false;
+        }
+        if (this.showProperty != other.showProperty) {
             return false;
         }
         return true;
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 61 * hash + (this.ticker != null ? this.ticker.hashCode() : 0);
-        hash = 61 * hash + this.timeInteval;
-        hash = 61 * hash + (this.timeUnit != null ? this.timeUnit.hashCode() : 0);
-        return hash;
+    public String toString() {
+        return "RealtimeBarRequest{" + "requestId=" + requestId + ", ticker=" + ticker + ", timeInteval=" + timeInterval + ", timeUnit=" + timeUnit + ", showProperty=" + showProperty + '}';
     }
-    
-    
-    
     
 }

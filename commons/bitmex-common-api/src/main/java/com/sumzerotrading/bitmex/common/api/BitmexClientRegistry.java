@@ -5,9 +5,10 @@
  */
 package com.sumzerotrading.bitmex.common.api;
 
+import com.sumzerotrading.bitmex.client.BitmexClient;
 import com.sumzerotrading.bitmex.client.BitmexRestClient;
 import com.sumzerotrading.bitmex.client.BitmexWebsocketClient;
-import java.util.Properties;
+import com.sumzerotrading.bitmex.client.IBitmexClient;
 
 /**
  *
@@ -19,6 +20,7 @@ public class BitmexClientRegistry {
     protected static BitmexClientRegistry registry = null;
     protected BitmexRestClient restClient;
     protected BitmexWebsocketClient websocketClient;
+    protected IBitmexClient bitmexClient;
     protected boolean useProduction = false;
     protected String apiKeyName = "";
     protected String apiKeyValue = "";
@@ -46,6 +48,13 @@ public class BitmexClientRegistry {
         apiKeyValue = properties.getApiKeyValue();
     }
     
+    
+    public IBitmexClient getBitmexClient() {
+        if( bitmexClient == null ) {
+            bitmexClient = new BitmexClient(useProduction, apiKeyName, apiKeyValue);
+        }
+        return bitmexClient;
+    }
     
     public BitmexRestClient getRestClient() {
         if( restClient == null ) {

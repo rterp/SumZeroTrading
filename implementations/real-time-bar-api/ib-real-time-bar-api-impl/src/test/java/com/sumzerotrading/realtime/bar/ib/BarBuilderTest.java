@@ -22,19 +22,23 @@ package com.sumzerotrading.realtime.bar.ib;
 
 import com.sumzerotrading.data.BarData;
 import com.sumzerotrading.data.BarData.LengthUnit;
+import com.sumzerotrading.data.GenericTicker;
 import com.sumzerotrading.data.StockTicker;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.historicaldata.IHistoricalDataProvider;
 import com.sumzerotrading.marketdata.ILevel1Quote;
+import com.sumzerotrading.marketdata.Level1Quote;
 import com.sumzerotrading.marketdata.QuoteType;
 import com.sumzerotrading.realtime.bar.RealtimeBarListener;
 import com.sumzerotrading.realtime.bar.RealtimeBarRequest;
 import com.sumzerotrading.realtime.bar.ib.util.RealtimeBarUtil;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import junit.framework.TestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -43,6 +47,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -53,9 +60,13 @@ import org.quartz.Trigger;
  *
  * @author Rob Terpilowski
  */
+@RunWith(MockitoJUnitRunner.class)
 public class BarBuilderTest extends TestCase {
 
     protected Mockery mockery;
+    
+    @Spy
+    protected BarBuilder testBarBuilder;
 
     public BarBuilderTest() {
     }
@@ -86,7 +97,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         BigDecimal barOpen = new BigDecimal(1);
         BigDecimal barHigh = new BigDecimal(2);
@@ -103,7 +114,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -131,7 +142,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
 
@@ -141,7 +152,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -175,7 +186,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(throwException(new SchedulerException()));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 2, request.getTimeUnit(), request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 2, request.getTimeUnit(), request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
             }
         });
@@ -199,7 +210,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
 
@@ -209,7 +220,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -219,6 +230,9 @@ public class BarBuilderTest extends TestCase {
                 
                 one(mockQuote).containsType(QuoteType.VOLUME);
                 will(returnValue(false));
+                
+                one(mockQuote).containsType(QuoteType.LAST_SIZE);
+                will(returnValue(false));                
 
                 one(mockQuote).containsType(QuoteType.LAST);
                 will(returnValue(true));
@@ -246,7 +260,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
 
@@ -256,7 +270,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -292,7 +306,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
 
@@ -302,7 +316,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).isStarted();
@@ -335,7 +349,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
 
@@ -345,7 +359,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -379,7 +393,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(200.0), new BigDecimal(2), new BigDecimal(10)));
 
@@ -389,7 +403,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -423,7 +437,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
 
@@ -433,7 +447,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -466,7 +480,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
 
@@ -476,7 +490,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -507,7 +521,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
 
@@ -517,7 +531,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -548,7 +562,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
         BigDecimal open = new BigDecimal(1.0);
@@ -563,7 +577,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -618,7 +632,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final RealtimeBarListener mockListener = mockery.mock(RealtimeBarListener.class);
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
@@ -642,7 +656,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -671,7 +685,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final RealtimeBarListener mockListener = mockery.mock(RealtimeBarListener.class);
         final List<BarData> barList = new ArrayList<BarData>();
         barList.add(new BarData(LocalDateTime.now(), new BigDecimal(2), new BigDecimal(3), new BigDecimal(2), new BigDecimal(2), new BigDecimal(10)));
@@ -682,7 +696,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -709,7 +723,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final JobDetail job = RealtimeBarUtil.buildJob(jobName, null);
         final RealtimeBarListener mockListener = mockery.mock(RealtimeBarListener.class);
         final List<BarData> barList = new ArrayList<BarData>();
@@ -721,7 +735,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -749,7 +763,7 @@ public class BarBuilderTest extends TestCase {
         Ticker ticker = new StockTicker("qqq");
         final RealtimeBarRequest request = new RealtimeBarRequest(1, ticker, 1, LengthUnit.MINUTE);
         String jobName = RealtimeBarUtil.getJobName(request);
-        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInteval(), request.getTimeUnit());
+        final Trigger trigger = RealtimeBarUtil.getTrigger(jobName, request.getTimeInterval(), request.getTimeUnit());
         final JobDetail job = RealtimeBarUtil.buildJob(jobName, null);
         final RealtimeBarListener mockListener = mockery.mock(RealtimeBarListener.class);
         final List<BarData> barList = new ArrayList<BarData>();
@@ -761,7 +775,7 @@ public class BarBuilderTest extends TestCase {
                 one(mockFactory).getScheduler();
                 will(returnValue(mockScheduler));
 
-                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
+                one(mockHistoricalDataProvider).requestHistoricalData(request.getTicker(), 1, LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), IHistoricalDataProvider.ShowProperty.TRADES, false);
                 will(returnValue(barList));
 
                 one(mockScheduler).scheduleJob(with(any(JobDetail.class)), with(any(Trigger.class)));
@@ -783,6 +797,100 @@ public class BarBuilderTest extends TestCase {
         }
 
         mockery.assertIsSatisfied();
+    }
+    
+    @Test
+    public void testGetValue_Currency() {
+        testBarBuilder.isCurrency = true;
+        Ticker ticker = new GenericTicker("XYZ");
+        ZonedDateTime now = ZonedDateTime.now();
+        Map<QuoteType,BigDecimal> quoteValues = new HashMap<>();
+        
+        Level1Quote quote = new Level1Quote(ticker, now, quoteValues);
+        
+        assertEquals(BigDecimal.ZERO, testBarBuilder.getValue(quote));
+        
+        quoteValues.put(QuoteType.BID, BigDecimal.ONE);
+        quote = new Level1Quote(ticker, now, quoteValues);
+        assertEquals(BigDecimal.ZERO, testBarBuilder.getValue(quote));
+        
+        quoteValues.clear();
+        testBarBuilder.lastBid = BigDecimal.ZERO;
+        testBarBuilder.lastAsk = BigDecimal.ZERO;
+        quoteValues.put(QuoteType.ASK, BigDecimal.TEN);
+        quote = new Level1Quote(ticker, now, quoteValues);
+        assertEquals(BigDecimal.ZERO, testBarBuilder.getValue(quote));
+        
+        testBarBuilder.lastBid = BigDecimal.ZERO;
+        testBarBuilder.lastAsk = BigDecimal.ZERO;
+        quoteValues.put(QuoteType.BID, BigDecimal.ONE);
+        quote = new Level1Quote(ticker, now, quoteValues);
+        assertEquals(new BigDecimal(5.5), testBarBuilder.getValue(quote));
+    }
+    
+    @Test
+    public void testGetValue_NotCurrency_Midpoint() {    
+        testBarBuilder.isCurrency = false;
+        testBarBuilder.showProperty = IHistoricalDataProvider.ShowProperty.MIDPOINT;
+        Ticker ticker = new GenericTicker("XYZ");
+        ZonedDateTime now = ZonedDateTime.now();
+        Map<QuoteType,BigDecimal> quoteValues = new HashMap<>();        
+        
+        Level1Quote quote = new Level1Quote(ticker, now, quoteValues);
+        assertEquals(BigDecimal.ZERO, testBarBuilder.getValue(quote));
+        
+        quoteValues.put(QuoteType.MIDPOINT, BigDecimal.ONE);
+        
+        assertEquals(BigDecimal.ONE, testBarBuilder.getValue(quote));
+    }
+    
+    
+    @Test
+    public void testGetValue_NotCurrency_NotMidpoint() {
+        testBarBuilder.isCurrency = false;
+        testBarBuilder.showProperty = IHistoricalDataProvider.ShowProperty.TRADES;
+        Ticker ticker = new GenericTicker("XYZ");
+        ZonedDateTime now = ZonedDateTime.now();
+        Map<QuoteType,BigDecimal> quoteValues = new HashMap<>();        
+        quoteValues.put(QuoteType.LAST, BigDecimal.ONE);
+                
+        Level1Quote quote = new Level1Quote(ticker, now, quoteValues);  
+        
+        assertEquals(BigDecimal.ONE, testBarBuilder.getValue(quote));
+        
+    }
+    
+    
+    @Test
+    public void testValidQuote() {
+        Map<QuoteType,BigDecimal> quoteValues = new HashMap<>();
+        testBarBuilder.isCurrency = true;
+        Level1Quote quote = new Level1Quote(null, null, quoteValues);
+        
+        assertFalse( testBarBuilder.validQuote(quote));
+        
+        quoteValues.put(QuoteType.BID, BigDecimal.ONE);
+        assertTrue( testBarBuilder.validQuote(quote));
+        
+        quoteValues.clear();
+        quoteValues.put(QuoteType.ASK, BigDecimal.ONE);
+        quote = new Level1Quote(null, null, quoteValues);
+        assertTrue( testBarBuilder.validQuote(quote));
+        
+        testBarBuilder.showProperty = IHistoricalDataProvider.ShowProperty.MIDPOINT;
+        testBarBuilder.isCurrency = false;
+        quoteValues.clear();
+        quoteValues.put(QuoteType.MIDPOINT, BigDecimal.ONE);
+        quote = new Level1Quote(null, null, quoteValues);
+        assertTrue( testBarBuilder.validQuote(quote) );
+        
+        testBarBuilder.showProperty = IHistoricalDataProvider.ShowProperty.TRADES;
+        testBarBuilder.isCurrency = false;
+        quoteValues.clear();
+        quoteValues.put(QuoteType.LAST, BigDecimal.ONE);
+        quote = new Level1Quote(null, null, quoteValues);
+        assertTrue( testBarBuilder.validQuote(quote));
+        
     }
 
     private static class MockFireEventBarBuilder extends BarBuilder {

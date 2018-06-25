@@ -50,5 +50,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <artifactId>sumzero-commons-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sumzero-historical-data-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -48,14 +48,14 @@ public class IBRealTimeBarEngine implements IRealtimeBarEngine {
     public void subscribeRealtimeBars(RealtimeBarRequest request, RealtimeBarListener listener) {
         if( request.getTimeUnit() != BarData.LengthUnit.MINUTE ) {
             if( request.getTimeUnit() == BarData.LengthUnit.HOUR ) {
-                if( request.getTimeInteval() != 1 ) {
+                if( request.getTimeInterval() != 1 ) {
                     throw new IllegalStateException( "Only 1 hour and 1-60 minute bars are supported by IB realtime bar engine" );
                 }
             } else {
                 throw new IllegalStateException( "Only 1 hour and 1-60 minute bars are supported by IB realtime bar engine" );
             }
         } else {
-            if( request.getTimeInteval() > 60 || request.getTimeInteval() < 1 ) {
+            if( request.getTimeInterval() > 60 || request.getTimeInterval() < 1 ) {
                 throw new IllegalStateException( "Only 1 hour and 1-60 minute bars are supported by IB realtime bar engine" );
             }
         }

@@ -41,14 +41,19 @@ public class BarBuilder implements IBarBuilder {
     protected boolean openInitialized = false;
     protected boolean highInitialized = false;
     protected boolean lowInitialized = false;
-    protected BigDecimal lastBid;
-    protected BigDecimal lastAsk;
+    protected BigDecimal lastBid = BigDecimal.ZERO;
+    protected BigDecimal lastAsk = BigDecimal.ZERO;
     protected boolean isCurrency = false;
     protected int timeInterval = 0;
+    protected IHistoricalDataProvider.ShowProperty showProperty;
 
+    
+    //For unit tests
+    protected BarBuilder() {}
+    
     public BarBuilder(SchedulerFactory schedulerFactory, RealtimeBarRequest request, IHistoricalDataProvider historicalDataProvider) {
         try {
-            timeInterval = request.getTimeInteval();
+            timeInterval = request.getTimeInterval();
             BarData.LengthUnit lengthUnit = request.getTimeUnit();
             
             if( lengthUnit == lengthUnit.HOUR ) {
@@ -66,7 +71,8 @@ public class BarBuilder implements IBarBuilder {
             String jobName = RealtimeBarUtil.getJobName(request);
             scheduler = schedulerFactory.getScheduler();
             job = RealtimeBarUtil.buildJob(jobName, this);
-            List<BarData> bars = historicalDataProvider.requestHistoricalData(request.getTicker(), 1, BarData.LengthUnit.DAY, request.getTimeInteval(), request.getTimeUnit(), showProperty, false);
+            showProperty = request.getShowProperty();
+            List<BarData> bars = historicalDataProvider.requestHistoricalData(request.getTicker(), 1, BarData.LengthUnit.DAY, request.getTimeInterval(), request.getTimeUnit(), showProperty, false);
             BarData firstBar = bars.get( bars.size()-1);
             setOpen(firstBar.getOpen());
             setHigh(firstBar.getHigh());
@@ -87,6 +93,8 @@ public class BarBuilder implements IBarBuilder {
     public void quoteRecieved(ILevel1Quote quote) {
         if( quote.containsType(QuoteType.VOLUME) ) {
             setVolume(quote.getValue(QuoteType.VOLUME));
+        } else if( quote.containsType(QuoteType.LAST_SIZE ) ) {
+            setVolume(quote.getValue(QuoteType.LAST_SIZE));
         }
 
         if( validQuote( quote ) ) {
@@ -103,7 +111,8 @@ public class BarBuilder implements IBarBuilder {
         if( isCurrency ) {
             if( quote.containsType(QuoteType.BID) ) {
                 lastBid = quote.getValue(QuoteType.BID);
-            } else if( quote.containsType(QuoteType.ASK ) ) {
+            }
+            if( quote.containsType(QuoteType.ASK ) ) {
                 lastAsk = quote.getValue(QuoteType.ASK);
             }
             if( lastBid.doubleValue() > 0 && lastAsk.doubleValue() > 0 ) {
@@ -112,7 +121,16 @@ public class BarBuilder implements IBarBuilder {
                 return BigDecimal.ZERO;
             }
         } else {
-            return quote.getValue(QuoteType.LAST);
+            if( showProperty == IHistoricalDataProvider.ShowProperty.MIDPOINT ) {
+                if( quote.containsType(QuoteType.MIDPOINT)  ) {
+                    return quote.getValue(QuoteType.MIDPOINT );
+                } else {
+                    return BigDecimal.ZERO;
+                }
+            } else { 
+                return quote.getValue(QuoteType.LAST);   
+            }
+            
         }
     }
     
@@ -120,6 +138,8 @@ public class BarBuilder implements IBarBuilder {
         if( isCurrency ) {
             return quote.containsType(QuoteType.BID) ||
                     quote.containsType(QuoteType.ASK);
+        } else if( showProperty == IHistoricalDataProvider.ShowProperty.MIDPOINT ) {
+            return quote.containsType(QuoteType.MIDPOINT);
         } else {
             return quote.containsType(QuoteType.LAST);
         }

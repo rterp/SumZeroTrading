@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<!--
-MIT License
+/**
+ * MIT License
 
 Copyright (c) 2015  Rob Terpilowski
 
@@ -17,27 +16,45 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 
--->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+package com.sumzerotrading.broker.ib;
 
-  <modelVersion>4.0.0</modelVersion>
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-  <parent>
-    <groupId>com.sumzerotrading</groupId>
-    <artifactId>sumzero-implementations</artifactId>
-    <version>0.1.7-SNAPSHOT</version>
-  </parent>
+/**
+ *
+ * @author Rob Terpilowski
+ */
+public class OrderManagementUtilTest {
+    
+    public OrderManagementUtilTest() {
+    }
 
-  <groupId>com.sumzerotrading</groupId>
-  <artifactId>broker-api</artifactId>
-  <name>broker-api</name>
-  <description>API for connecting to a broker</description>
-  <packaging>pom</packaging>
-    <modules>
-        <module>ib-broker-api-impl</module>
-        <module>collective2-broker-api-impl</module>
-        <module>bitmex-broker-api-impl</module>
-    </modules>
-</project>
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
+
+
+    @Test
+    public void testCreateOrderEvent() {
+       // fail();
+    }
+}
