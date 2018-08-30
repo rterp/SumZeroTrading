@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 /**
  *
@@ -86,7 +87,7 @@ public class BitmexLevel1QuoteEngine extends QuoteEngine implements IQuoteListen
         quoteMap.put(QuoteType.BID_SIZE, new BigDecimal(quoteData.getBidSize()));
         quoteMap.put(QuoteType.ASK_SIZE, new BigDecimal(quoteData.getAskSize()));
         quoteMap.put(QuoteType.MIDPOINT, new BigDecimal((quoteData.getAskPrice() + quoteData.getBidPrice()) / 2.0));
-        ZonedDateTime timestamp = getTimestamp();
+        ZonedDateTime timestamp = getTimestamp(quoteData.getTimestamp());
         
         Level1Quote quote = new Level1Quote(ticker, timestamp, quoteMap);
         fireLevel1Quote(quote);
@@ -100,15 +101,18 @@ public class BitmexLevel1QuoteEngine extends QuoteEngine implements IQuoteListen
         Map<QuoteType, BigDecimal> quoteMap = new HashMap<>();
         quoteMap.put(QuoteType.LAST, new BigDecimal(trade.getPrice()));
         quoteMap.put(QuoteType.LAST_SIZE, new BigDecimal(trade.getSize()));
-        ZonedDateTime timestamp = getTimestamp();
+        ZonedDateTime timestamp = getTimestamp(trade.getTimestamp());
         
         Level1Quote quote = new Level1Quote(ticker, timestamp, quoteMap);
         fireLevel1Quote(quote);
     }
     
+    public int getMessageProcessorQueueSize() {
+        return websocketClient.getMessageProcessorCount();
+    }
     
-    protected ZonedDateTime getTimestamp() {
-        return ZonedDateTime.now();
+    protected ZonedDateTime getTimestamp(String timestamp) {
+        return ZonedDateTime.parse(timestamp);
     }
     
 }

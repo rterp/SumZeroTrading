@@ -15,6 +15,7 @@ import com.sumzerotrading.marketdata.ILevel1Quote;
 import com.sumzerotrading.marketdata.Level1Quote;
 import com.sumzerotrading.marketdata.QuoteType;
 import java.math.BigDecimal;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,8 +111,9 @@ public class BitmexLevel1QuoteEngineTest {
     public void testQuoteUpdated() {
         Ticker ticker = new GenericTicker("ABC");
         testQuoteEngine.tickerMap.put("ABC", ticker);
-        ZonedDateTime timestamp = ZonedDateTime.now();
-        doReturn(timestamp).when(testQuoteEngine).getTimestamp();
+        String timestampString = "2018-07-24T16:45:32.739Z";
+        ZonedDateTime timestamp = ZonedDateTime.of(2018, 7, 24, 16, 45, 32, 739, ZoneId.of("GMT"));
+        //doReturn(timestamp).when(testQuoteEngine).getTimestamp();
         doNothing().when(testQuoteEngine).fireLevel1Quote(any(Level1Quote.class));
         
         double bid = 1.53;
@@ -139,10 +141,13 @@ public class BitmexLevel1QuoteEngineTest {
         data.setAskSize(askSize);
         data.setBidPrice(bid);
         data.setBidSize(bidSize);
+        data.setTimestamp(timestampString);
         
         testQuoteEngine.quoteUpdated(data);
         
         verify(testQuoteEngine, times(1)).fireLevel1Quote(expectedQuote);
+        
+        System.out.println("Quote is: " + expectedQuote );
     }
     
     
@@ -150,8 +155,8 @@ public class BitmexLevel1QuoteEngineTest {
     public void testTradeUpdate() {
         Ticker ticker = new GenericTicker("ABC");
         testQuoteEngine.tickerMap.put("ABC", ticker);
-        ZonedDateTime timestamp = ZonedDateTime.now();
-        doReturn(timestamp).when(testQuoteEngine).getTimestamp();
+        String timestampString = "2018-07-24T16:45:32.739Z";
+        ZonedDateTime timestamp = ZonedDateTime.of(2018, 7, 24, 16, 45, 32, 739, ZoneId.of("GMT"));
         doNothing().when(testQuoteEngine).fireLevel1Quote(any(Level1Quote.class));
 
         double last = 123.44;
@@ -171,9 +176,11 @@ public class BitmexLevel1QuoteEngineTest {
         trade.setSize(lastSize);
         trade.setSymbol("ABC");
         trade.setSide("Buy");
+        trade.setTimestamp(timestampString);
         
         testQuoteEngine.tradeUpdated(trade);
         verify( testQuoteEngine, times(1)).fireLevel1Quote(expectedQuote);
+        System.out.println("Quote is: " + expectedQuote );
         
     }
     

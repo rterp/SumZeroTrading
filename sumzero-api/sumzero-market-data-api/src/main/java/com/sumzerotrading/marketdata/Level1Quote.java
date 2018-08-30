@@ -98,7 +98,7 @@ public class Level1Quote extends AbstractQuote implements ILevel1Quote {
 
     @Override
     public String toString() {
-        return "Level1Quote{" + "quoteMap=" + quoteMap + '}';
+        return "Level1Quote{" + "quoteMap=" + quoteMap + ", timestamp=" + getTimeStamp() +  "}";
     }
 
     
