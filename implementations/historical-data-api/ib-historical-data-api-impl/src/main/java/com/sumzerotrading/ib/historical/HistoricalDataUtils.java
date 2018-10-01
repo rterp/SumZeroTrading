@@ -62,11 +62,7 @@ public class HistoricalDataUtils {
             if( size != 1 && size != 5 && size != 15 && size != 30 ) {
                 throw new InvalidBarSizeException( "Valid values for seconds are 1, 5, 15 or 30" );
             } else {
-                if( size == 1 ) {
-                    return "1 sec";
-                } else {
-                    return size + " secs";
-                }
+                return size + " secs";
             }
         } else if( sizeUnit == BarData.LengthUnit.MINUTE ) {
             if( size != 1 && size != 2 && size != 5 && size != 15 && size != 30 ) {
