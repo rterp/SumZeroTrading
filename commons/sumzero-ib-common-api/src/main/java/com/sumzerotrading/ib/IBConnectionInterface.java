@@ -19,13 +19,14 @@
  */
 package com.sumzerotrading.ib;
 
+import com.ib.client.EReaderSignal;
 import com.ib.client.EWrapper;
 
 /**
  *
  * @author Rob Terpilowski
  */
-public interface IBConnectionInterface extends EWrapper {
+public interface IBConnectionInterface extends EWrapper, EReaderSignal {
     
     
     public void setClientId( int clientId );
@@ -40,8 +41,10 @@ public interface IBConnectionInterface extends EWrapper {
     
     public int getPort();
 
-    public void addIbConnectionDelegate(EWrapper delegate);
+    public void addIbConnectionDelegate(IBConnectionInterface delegate);
 
-    public void removeIbConnectionDelegate(EWrapper delegate);
+    public void removeIbConnectionDelegate(IBConnectionInterface delegate);
+
+
 
 }

@@ -70,11 +70,11 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.10.19</version>
+      <version>4.11.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>apache-log4j</groupId>
+      <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.14</version>
     </dependency>

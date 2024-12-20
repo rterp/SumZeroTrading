@@ -20,6 +20,8 @@ public class TradeSignalBuilder {
 
 
     public SubmitSignalRequest buildSignalRequest( String systemId, TradeOrder order ) {
+        if(true) throw new UnsupportedOperationException("Need to fix api");
+        /**
         Ticker ticker = order.getTicker();
         String symbol;
         if( ticker instanceof FuturesTicker ) {
@@ -48,6 +50,9 @@ public class TradeSignalBuilder {
         
         SubmitSignalRequest request = new SubmitSignalRequest(systemId, signalInfo);
         return request;
+        */
+        return null;
+        
     }
     
     

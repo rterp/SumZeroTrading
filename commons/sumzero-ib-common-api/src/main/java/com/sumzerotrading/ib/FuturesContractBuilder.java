@@ -36,19 +36,20 @@ public class FuturesContractBuilder implements IContractBuilder<FuturesTicker> {
 
     public Contract buildContract(FuturesTicker ticker) {
         Contract contract = new Contract();
-        contract.m_currency = ticker.getCurrency();
-        contract.m_exchange = ticker.getExchange().getExchangeName();
-        contract.m_secType = IbUtils.getSecurityType(ticker.getInstrumentType());
-        contract.m_symbol = IbUtils.translateToIbFuturesSymbol( ticker.getSymbol() );
-        contract.m_expiry = IbUtils.getExpiryString(ticker.getExpiryMonth(), ticker.getExpiryYear());
+        contract.currency(ticker.getCurrency());
+        contract.exchange(ticker.getExchange().getExchangeName());
+        contract.secType(IbUtils.getSecurityType(ticker.getInstrumentType()));
+        contract.symbol(IbUtils.translateToIbFuturesSymbol( ticker.getSymbol() ));
+        contract.lastTradeDateOrContractMonth(IbUtils.getExpiryString(ticker.getExpiryMonth(), ticker.getExpiryYear()));
+        
         
         ILocalSymbolBuilder localSymbolBuilder = LocalSymbolBuilderFactory.getLocalSymbolBuilder(ticker.getExchange());
         
-        contract.m_localSymbol = localSymbolBuilder.buildLocalSymbol(ticker.getSymbol(), ticker.getExpiryMonth(), ticker.getExpiryYear());
+        contract.localSymbol(localSymbolBuilder.buildLocalSymbol(ticker.getSymbol(), ticker.getExpiryMonth(), ticker.getExpiryYear()));
         
         BigDecimal multiplier = IbUtils.getIbMultiplier(ticker);
         if (multiplier != null) {
-            contract.m_multiplier = multiplier.toString();
+            contract.multiplier(multiplier.toString());
         }
 
         return contract;

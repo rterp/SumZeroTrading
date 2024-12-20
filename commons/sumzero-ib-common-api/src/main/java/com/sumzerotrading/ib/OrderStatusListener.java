@@ -21,7 +21,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package com.sumzerotrading.ib;
 
-import com.ib.client.CommissionReport;
+
 import com.ib.client.Contract;
 import com.ib.client.Order;
 import com.ib.client.OrderState;

@@ -48,11 +48,11 @@ public class CFDContractBuilderTest {
         CFDContractBuilder builder = new CFDContractBuilder();
         Contract contract = builder.buildContract(ticker);
 
-        assertEquals( ticker.getCurrency(), contract.m_currency );
-        assertEquals( ticker.getExchange().getExchangeName(), contract.m_exchange );
-        assertEquals( ticker.getSymbol(), contract.m_symbol );
+        assertEquals( ticker.getCurrency(), contract.currency() );
+        assertEquals( ticker.getExchange().getExchangeName(), contract.exchange() );
+        assertEquals( ticker.getSymbol(), contract.symbol() );
         assertEquals( InstrumentType.CFD,  ticker.getInstrumentType());
-        assertNull( contract.m_primaryExch );
+        assertNull( contract.primaryExch() );
     }
     
     @Test
@@ -62,11 +62,11 @@ public class CFDContractBuilderTest {
         CFDContractBuilder builder = new CFDContractBuilder();
         Contract contract = builder.buildContract(ticker);
 
-        assertEquals( ticker.getCurrency(), contract.m_currency );
-        assertEquals( ticker.getExchange().getExchangeName(), contract.m_exchange );
-        assertEquals( ticker.getSymbol(), contract.m_symbol );
+        assertEquals( ticker.getCurrency(), contract.currency() );
+        assertEquals( ticker.getExchange().getExchangeName(), contract.exchange() );
+        assertEquals( ticker.getSymbol(), contract.symbol() );
         assertEquals( InstrumentType.CFD,  ticker.getInstrumentType());
-        assertEquals( ticker.getPrimaryExchange().getExchangeName(), contract.m_primaryExch );
+        assertEquals( ticker.getPrimaryExchange().getExchangeName(), contract.primaryExch() );
     }
     
     

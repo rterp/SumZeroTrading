@@ -70,12 +70,12 @@ public class FuturesContractBuilderTest {
         ticker.setExpiryYear(2015);
 
         Contract expected = new Contract();
-        expected.m_currency = "USD";
-        expected.m_exchange = Exchange.GLOBEX.getExchangeName();
-        expected.m_secType = "FUT";
-        expected.m_symbol = "HG";
-        expected.m_expiry = "201506";
-        expected.m_localSymbol = "HGM5";
+        expected.currency("USD");
+        expected.exchange(Exchange.GLOBEX.getExchangeName());
+        expected.secType("FUT");
+        expected.symbol( "HG");
+        expected.lastTradeDateOrContractMonth("201506"); 
+        expected.localSymbol( "HGM5");
         
         assertEquals(expected, builder.buildContract(ticker) );
     }
@@ -91,13 +91,13 @@ public class FuturesContractBuilderTest {
         ticker.setExpiryYear(2015);
 
         Contract expected = new Contract();
-        expected.m_currency = "USD";
-        expected.m_exchange = Exchange.ECBOT.getExchangeName();
-        expected.m_secType = "FUT";
-        expected.m_symbol = "ZW";
-        expected.m_expiry = "201506";
-        expected.m_multiplier = "5000";
-        expected.m_localSymbol = "ZW   JUN 15";
+        expected.currency("USD");
+        expected.exchange(Exchange.ECBOT.getExchangeName());
+        expected.secType("FUT");
+        expected.symbol( "ZW");
+        expected.lastTradeDateOrContractMonth("201506");
+        expected.multiplier("5000");
+        expected.localSymbol("ZW   JUN 15");
         
         assertEquals(expected, builder.buildContract(ticker) );
     }
@@ -114,14 +114,16 @@ public class FuturesContractBuilderTest {
         ticker.setContractMultiplier(new BigDecimal(50));
 
         Contract expected = new Contract();
-        expected.m_currency = "USD";
-        expected.m_exchange = Exchange.ECBOT.getExchangeName();
-        expected.m_secType = "FUT";
-        expected.m_symbol = "ZW";
-        expected.m_expiry = "201506";
-        expected.m_multiplier = "5000";
-        expected.m_localSymbol = "ZW   JUN 15";
-        
+        expected.currency("USD");
+        expected.exchange(Exchange.ECBOT.getExchangeName());
+        expected.secType("FUT");
+        expected.symbol( "ZW");
+        expected.lastTradeDateOrContractMonth("201506");
+        expected.multiplier("5000");
+        expected.localSymbol("ZW   JUN 15");
+
+
+                
         assertEquals(expected, builder.buildContract(ticker) );
     }
     

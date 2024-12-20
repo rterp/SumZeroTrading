@@ -44,30 +44,29 @@ public class ComboContractBuilder implements IContractBuilder<ComboTicker> {
         }
 
         ComboLeg leg1 = new ComboLeg();
-        leg1.m_conId = ticker.getContractId1();
-        leg1.m_ratio = ticker.getFirstTickerRatio();
-        leg1.m_action = "BUY";
-        leg1.m_exchange = ticker.getFirstTicker().getExchange().getExchangeName();
+        leg1.conid(ticker.getContractId1()); 
+        leg1.ratio(ticker.getFirstTickerRatio());
+        leg1.action("BUY");
+        leg1.exchange(ticker.getFirstTicker().getExchange().getExchangeName());
         
         
         
         ComboLeg leg2 = new ComboLeg();
-        leg2.m_conId = ticker.getContractId2();
-        leg2.m_conId = ticker.getContractId2();
-        leg2.m_ratio = ticker.getSecondTickerRatio();
-        leg2.m_action = "SELL";
-        leg2.m_exchange = ticker.getSecondTicker().getExchange().getExchangeName();
+        leg2.conid(ticker.getContractId2());
+        leg2.ratio(ticker.getSecondTickerRatio());
+        leg2.action("SELL");
+        leg2.exchange(ticker.getSecondTicker().getExchange().getExchangeName());
 
         Contract contract = new Contract();
         Vector comboLegs = new Vector();
         comboLegs.add(leg1);
         comboLegs.add(leg2);
 
-        contract.m_symbol = "USD";
-        contract.m_secType = "BAG";
-        contract.m_currency = "USD";
-        contract.m_comboLegs = comboLegs;
-        contract.m_exchange = contract1.m_exchange;
+        contract.symbol( "USD");
+        contract.secType("BAG");
+        contract.currency("USD");
+        contract.comboLegs(comboLegs);
+        contract.exchange(contract1.exchange());
 
         return contract;
 

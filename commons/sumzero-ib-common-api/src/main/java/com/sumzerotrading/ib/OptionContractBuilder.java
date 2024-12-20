@@ -32,15 +32,15 @@ public class OptionContractBuilder implements IContractBuilder<OptionTicker> {
 
     public Contract buildContract(OptionTicker ticker) {
         Contract contract = new Contract();
-        contract.m_currency = ticker.getCurrency();
-        contract.m_exchange = ticker.getExchange().getExchangeName();
-        contract.m_secType = IbUtils.getSecurityType(ticker.getInstrumentType());
-        contract.m_symbol = ticker.getSymbol();
+        contract.currency( ticker.getCurrency());
+        contract.exchange(ticker.getExchange().getExchangeName());
+        contract.secType(IbUtils.getSecurityType(ticker.getInstrumentType()));
+        contract.symbol(ticker.getSymbol());
         
-        contract.m_expiry = IbUtils.getExpiryString(ticker.getExpiryDay(), ticker.getExpiryMonth(), ticker.getExpiryYear());
-        contract.m_multiplier = ticker.getContractMultiplier().toString();
-        contract.m_right = IbUtils.getOptionRight(ticker.getRight());
-        contract.m_strike = ticker.getStrike().doubleValue();
+        contract.lastTradeDateOrContractMonth( IbUtils.getExpiryString(ticker.getExpiryDay(), ticker.getExpiryMonth(), ticker.getExpiryYear()));
+        contract.multiplier(ticker.getContractMultiplier().toString());
+        contract.right( IbUtils.getOptionRight(ticker.getRight()));
+        contract.strike(ticker.getStrike().doubleValue());
 
         return contract;
 

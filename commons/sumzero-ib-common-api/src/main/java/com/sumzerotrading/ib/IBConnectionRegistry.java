@@ -43,7 +43,7 @@ public class IBConnectionRegistry {
                 connection.setHost(info.getHost());
                 connection.setPort(info.getPort());
 
-                EClientSocket clientSocket = new EClientSocket(connection);
+                EClientSocket clientSocket = new EClientSocket(connection, connection);
 
                 savedSocket = new IBSocket(connection, clientSocket);
 

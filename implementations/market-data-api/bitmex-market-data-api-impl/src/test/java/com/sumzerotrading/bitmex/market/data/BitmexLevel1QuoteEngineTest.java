@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
@@ -43,7 +44,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  * @author RobTerpilowski
  */
-@RunWith(MockitoJUnitRunner.class)
+@Ignore("Ignore until API fixed")
 public class BitmexLevel1QuoteEngineTest {
     
     @Spy

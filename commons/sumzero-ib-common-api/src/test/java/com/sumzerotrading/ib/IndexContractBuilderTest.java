@@ -64,10 +64,10 @@ public class IndexContractBuilderTest {
         ticker.setExchange(Exchange.CBOE);
         
         Contract expected = new Contract();
-        expected.m_currency = "USD";
-        expected.m_exchange = "CBOE";
-        expected.m_secType = "IND";
-        expected.m_symbol = "SPX";
+        expected.currency("USD") ;
+        expected.exchange("CBOE") ;
+        expected.secType("IND");
+        expected.symbol("SPX");
         
         
         assertEquals( expected, builder.buildContract(ticker));

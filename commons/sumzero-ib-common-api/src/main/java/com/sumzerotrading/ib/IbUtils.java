@@ -45,6 +45,13 @@ import javax.imageio.ImageIO;
  */
 public class IbUtils {
 
+
+    public static void throwUnsupportedException() {
+        if( true ) {
+            throw new UnsupportedOperationException("IB Changed implementation, this needs to be fixed");
+        }
+    }
+
     public static String translateToIbFuturesSymbol(String symbol) {
         switch (symbol) {
             case "6C":

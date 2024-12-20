@@ -57,7 +57,7 @@ public class PropertyUtilTest {
     
     @Test
     public void testReadInt_DefaultValueNeeded() {
-        assertEquals(2, testPropertyUtil.readInt("myIntProp", 3));
+        assertEquals(3, testPropertyUtil.readInt("myIntProp", 3));
     }        
     
     

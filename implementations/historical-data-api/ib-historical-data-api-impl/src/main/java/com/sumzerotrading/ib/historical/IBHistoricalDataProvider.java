@@ -103,7 +103,8 @@ public class IBHistoricalDataProvider extends BaseIBConnectionDelegate  implemen
         String endDate = dateFormatter.format(endDateTime);
 
         //ibConnection.reqHistoricalData(id, contract, new Date(), null, null, null, barSize, duration);
-        ibConnection.reqHistoricalData(id, contract, endDate, durationString, barSizeString, whatToShowString, rth, 1, IbUtils.getDefaultTagVector());
+       // ibConnection.reqHistoricalData(id, contract, endDate, durationString, barSizeString, whatToShowString, rth, 1, IbUtils.getDefaultTagVector());
+       IbUtils.throwUnsupportedException();
         List<BarData> bars = processor.getHistoricalData();
         historicalProcessorMap.remove(id);
         return bars;

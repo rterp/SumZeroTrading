@@ -19,8 +19,7 @@
  */
 package com.sumzerotrading.broker.bitmex;
 
-import com.ib.client.ContractDetails;
-import com.ib.client.EClientSocket;
+
 import com.sumzerotrading.bitmex.client.IBitmexClient;
 import com.sumzerotrading.bitmex.common.api.BitmexClientRegistry;
 import com.sumzerotrading.bitmex.entity.BitmexOrder;
@@ -34,8 +33,7 @@ import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.ComboTicker;
 import com.sumzerotrading.data.SumZeroException;
 import com.sumzerotrading.data.Ticker;
-import com.sumzerotrading.ib.IBConnectionInterface;
-import com.sumzerotrading.ib.IBSocket;
+
 import com.sumzerotrading.time.TimeUpdatedListener;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -60,15 +58,15 @@ public class BitmexBroker implements IBroker {
     protected static int contractRequestId = 1;
     protected static int executionRequestId = 1;
     protected static Logger logger = Logger.getLogger(BitmexBroker.class);
-    protected EClientSocket ibConnection;
-    protected IBSocket ibSocket;
-    protected IBConnectionInterface callbackInterface;
+    // protected EClientSocket ibConnection;
+    // protected IBSocket ibSocket;
+    // protected IBConnectionInterface callbackInterface;
     protected Set<TradeOrder> currencyOrderList = new HashSet<>();
     protected BlockingQueue<Integer> nextIdQueue = new LinkedBlockingQueue<>();
     protected BlockingQueue<ZonedDateTime> brokerTimeQueue = new LinkedBlockingQueue<>();
     protected BlockingQueue<BrokerError> brokerErrorQueue = new LinkedBlockingQueue<>();
     protected BlockingQueue<OrderEvent> orderEventQueue = new LinkedBlockingQueue<>();
-    protected BlockingQueue<ContractDetails> contractDetailsQueue = new LinkedBlockingDeque<>();
+   // protected BlockingQueue<ContractDetails> contractDetailsQueue = new LinkedBlockingDeque<>();
     protected int nextOrderId = -1;
     protected SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
     protected DateTimeFormatter zonedDateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm:ss");

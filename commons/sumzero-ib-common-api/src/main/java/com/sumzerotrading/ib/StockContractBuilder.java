@@ -33,12 +33,12 @@ public class StockContractBuilder implements IContractBuilder<StockTicker> {
     public Contract buildContract(StockTicker ticker) {
         
         Contract contract = new Contract();
-        contract.m_currency = ticker.getCurrency();
-        contract.m_exchange = ticker.getExchange().getExchangeName();
-        contract.m_secType = IbUtils.getSecurityType( ticker.getInstrumentType() );
-        contract.m_symbol = ticker.getSymbol();
+        contract.currency(ticker.getCurrency()) ;
+        contract.exchange( ticker.getExchange().getExchangeName());
+        contract.secType(IbUtils.getSecurityType( ticker.getInstrumentType() )) ;
+        contract.symbol(ticker.getSymbol()); 
         if( ticker.getPrimaryExchange() != null ) {
-            contract.m_primaryExch = ticker.getPrimaryExchange().getExchangeName();
+            contract.primaryExch(ticker.getPrimaryExchange().getExchangeName()); 
         }
 
         return contract;

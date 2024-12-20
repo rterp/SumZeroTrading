@@ -10,10 +10,16 @@
     <version>0.1.7-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
-        <dependency>
+        <dependency>  
             <groupId>${project.groupId}</groupId>
             <artifactId>bitmex-client</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>  
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sumzero-commons-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

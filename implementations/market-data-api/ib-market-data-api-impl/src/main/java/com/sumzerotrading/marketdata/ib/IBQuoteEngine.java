@@ -72,6 +72,7 @@ public class IBQuoteEngine extends AbstractIBQuoteEngine {
     protected String name = "";
 
     public IBQuoteEngine(IBSocket ibSocket) {
+        if(true) throw new UnsupportedOperationException("IB CHanged implemenation need to fix this");
         this.ibSocket = ibSocket;
 
         callbackInterface = ibSocket.getConnection();
@@ -160,7 +161,8 @@ public class IBQuoteEngine extends AbstractIBQuoteEngine {
             Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
             Vector<TagValue> v = new Vector<>();
             v.add(new TagValue("XYZ", "XYZ"));
-            ibConnection.reqMktDepth(quoteId, contract, 100, v);
+           // ibConnection.reqMktDepth(quoteId, contract, 100, v);
+           if(true) throw new UnsupportedOperationException("IB changed implementation");
 
         }
     }
@@ -174,7 +176,8 @@ public class IBQuoteEngine extends AbstractIBQuoteEngine {
             Integer requestId = level2TickerMap.remove(ticker);
             level2IdToTickerMap.remove(requestId);
             if (requestId != null) {
-                ibConnection.cancelMktDepth(requestId);
+                //ibConnection.cancelMktDepth(requestId);
+                if(true) throw new UnsupportedOperationException("IB changed implementation");
             }
         }
     }
@@ -190,7 +193,8 @@ public class IBQuoteEngine extends AbstractIBQuoteEngine {
             Contract contract = ContractBuilderFactory.getContractBuilder(ticker).buildContract(ticker);
             List<TagValue> list = new ArrayList<>();
             list.add(new TagValue("XYZ","XYZ"));
-            ibConnection.reqMktData(nextQuoteId, contract, "", false, list);
+            //ibConnection.reqMktData(nextQuoteId, contract, "", false, list);
+            if(true) throw new UnsupportedOperationException("IB changed implementation");
         }
 
         if (closeQuoteMap.get(ticker) != null) {

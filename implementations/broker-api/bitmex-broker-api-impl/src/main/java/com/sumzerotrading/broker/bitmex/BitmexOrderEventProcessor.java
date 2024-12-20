@@ -56,7 +56,8 @@ public class BitmexOrderEventProcessor implements Runnable  {
     public void run() {
         while( shouldRun ) {
             try {
-                broker.fireOrderEvent( orderEventQueue.take() );
+                throw new UnsupportedOperationException("This functionality needs to be checked an fixeD");
+                //broker.fireOrderEvent( orderEventQueue.take() );
             } catch( Exception ex ) {
                 ex.printStackTrace();
              //   logger.error(ex, ex);

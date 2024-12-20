@@ -33,10 +33,10 @@ public class CurrencyContractBuilder implements IContractBuilder<CurrencyTicker>
     public Contract buildContract(CurrencyTicker ticker) {
         
         Contract contract = new Contract();
-        contract.m_currency = ticker.getCurrency();
-        contract.m_exchange = ticker.getExchange().getExchangeName();
-        contract.m_secType = IbUtils.getSecurityType( ticker.getInstrumentType() );
-        contract.m_symbol = ticker.getSymbol();
+        contract.currency(ticker.getCurrency());
+        contract.exchange(ticker.getExchange().getExchangeName());
+        contract.secType(IbUtils.getSecurityType( ticker.getInstrumentType() ));
+        contract.symbol(ticker.getSymbol());
 
         return contract;
     }

@@ -28,7 +28,7 @@ import com.sumzerotrading.broker.order.TradeOrder;
 import com.sumzerotrading.data.ComboTicker;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.j4c2.Collective2Client;
-import com.sumzerotrading.j4c2.signal.CancelSignalRequest;
+//import com.sumzerotrading.j4c2.signal.CancelSignalRequest;
 import com.sumzerotrading.j4c2.signal.SubmitSignalRequest;
 import com.sumzerotrading.j4c2.signal.SubmitSignalResponse;
 import com.sumzerotrading.time.TimeUpdatedListener;
@@ -64,8 +64,9 @@ public class Collective2Broker implements IBroker {
     @Override
     public void cancelOrder(String id) {
         logger.info("Canceling signal: " + id );
-        CancelSignalRequest request = new CancelSignalRequest(systemid, id);
-        c2Client.submitCancelSignal(request);
+        if(true) throw new UnsupportedOperationException("Need to fix api");
+      //  CancelSignalRequest request = new CancelSignalRequest(systemid, id);
+        //c2Client.submitCancelSignal(request);
         
     }
 
@@ -76,6 +77,8 @@ public class Collective2Broker implements IBroker {
 
     @Override
     public void placeOrder(TradeOrder order) {
+        if(true) throw new UnsupportedOperationException("Need to fix api");
+        /** 
         logger.info("Submitting order to C2 Broker: " + order);
         SubmitSignalResponse submitTradeSignalResponse = c2Client.submitTradeSignal(signalBuilder.buildSignalRequest(systemid, order));
         logger.info("C2 parent response: " + submitTradeSignalResponse.toString() );
@@ -88,6 +91,7 @@ public class Collective2Broker implements IBroker {
             logger.info("C2 child response: " + submitTradeSignalResponse.toString() );
             child.setOrderId(submitTradeSignalResponse.getSignalid());
         }
+            **/
     }
     
     

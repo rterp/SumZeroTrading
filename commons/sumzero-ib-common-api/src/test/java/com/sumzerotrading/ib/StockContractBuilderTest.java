@@ -64,10 +64,10 @@ public class StockContractBuilderTest {
         StockContractBuilder builder = new StockContractBuilder();
         Contract contract = builder.buildContract(ticker);
 
-        assertEquals( ticker.getCurrency(), contract.m_currency );
-        assertEquals( ticker.getExchange().getExchangeName(), contract.m_exchange );
-        assertEquals( ticker.getSymbol(), contract.m_symbol );
-        assertNull( contract.m_primaryExch );
+        assertEquals( ticker.getCurrency(), contract.currency() );
+        assertEquals( ticker.getExchange().getExchangeName(), contract.exchange() );
+        assertEquals( ticker.getSymbol(), contract.symbol() );
+        assertNull( contract.primaryExch() );
     }
     
     @Test
@@ -77,10 +77,10 @@ public class StockContractBuilderTest {
         StockContractBuilder builder = new StockContractBuilder();
         Contract contract = builder.buildContract(ticker);
 
-        assertEquals( ticker.getCurrency(), contract.m_currency );
-        assertEquals( ticker.getExchange().getExchangeName(), contract.m_exchange );
-        assertEquals( ticker.getSymbol(), contract.m_symbol );
-        assertEquals( ticker.getPrimaryExchange().getExchangeName(), contract.m_primaryExch );
+        assertEquals( ticker.getCurrency(), contract.currency() );
+        assertEquals( ticker.getExchange().getExchangeName(), contract.exchange() );
+        assertEquals( ticker.getSymbol(), contract.symbol() );
+        assertEquals( ticker.getPrimaryExchange().getExchangeName(), contract.primaryExch() );
     }
     
     
