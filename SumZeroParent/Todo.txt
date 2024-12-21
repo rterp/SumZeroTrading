@@ -1,0 +1,28 @@
+- Implement hyperliquid Bid/Ask/Funding w/ REST
+- Create client application to replicate current Python client
+ - Needs to utilize an existing CSV file if there's already one there
+- Install on AWS server as some sort of service
+
+######
+Trading API
+dYdX
+- How to connect wallet
+- How to authenticate
+- How to get current open positions
+- How to get executed trades
+
+hyperLiquid
+- How to connect wallet
+- How to authenticate
+- How to get current open positions
+- How to get executed trades
+
+Trading Logic
+- Monitor moving average of spreads
+- place entry orders when spread diverages
+    - record fill price as well as signal price
+- place exit orders when spread converges
+ - record fill price as well as signal price
+-Report round trip trade results to CSV file
+
+

@@ -93,14 +93,14 @@ public class IbUtilsTest {
             IbUtils.getAction(null);
             fail();
         } catch (IllegalStateException ex) {
-            //this should happen
+            // this should happen
         }
     }
 
     @Test
     public void testGetOrderType() {
 
-        //First make sure we have a mapping for all types.
+        // First make sure we have a mapping for all types.
         TradeOrder.Type[] values = TradeOrder.Type.values();
         for (TradeOrder.Type value : values) {
             assertNotNull(IbUtils.getOrderType(value));
@@ -116,7 +116,7 @@ public class IbUtilsTest {
             IbUtils.getOrderType(null);
             fail();
         } catch (IllegalStateException ex) {
-            //this should happen
+            // this should happen
         }
     }
 
@@ -124,9 +124,9 @@ public class IbUtilsTest {
     public void testGetSecurityType() {
         InstrumentType[] values = InstrumentType.values();
         for (InstrumentType value : values) {
-            if( value != InstrumentType.BITCOIN ) {
-               // assertNotNull(IbUtils.getSecurityType(value));
-               //TODO: FIX THIS
+            if (value != InstrumentType.CRYPTO) {
+                // assertNotNull(IbUtils.getSecurityType(value));
+                // TODO: FIX THIS
             }
         }
 
@@ -160,23 +160,23 @@ public class IbUtilsTest {
         assertEquals(OrderStatus.Status.CANCELED, IbUtils.getOrderStatus("Inactive"));
         assertEquals(OrderStatus.Status.UNKNOWN, IbUtils.getOrderStatus("foo"));
     }
-    
+
     @Test
     public void testGetExpiryString_MonthYear() {
-        assertEquals( "201709", IbUtils.getExpiryString(9, 2017));
-        assertEquals( "201710", IbUtils.getExpiryString(10, 2017));
+        assertEquals("201709", IbUtils.getExpiryString(9, 2017));
+        assertEquals("201710", IbUtils.getExpiryString(10, 2017));
     }
-    
+
     @Test
     public void testGetExpiryString_DayMonthYear() {
-        assertEquals( "20170908", IbUtils.getExpiryString(8, 9, 2017));
-        assertEquals( "20171110", IbUtils.getExpiryString(10, 11, 2017));
-    }    
-    
+        assertEquals("20170908", IbUtils.getExpiryString(8, 9, 2017));
+        assertEquals("20171110", IbUtils.getExpiryString(10, 11, 2017));
+    }
+
     @Test
     public void testGetOptionRight() {
-        assertEquals( "C", IbUtils.getOptionRight(OptionTicker.Right.Call));
-        assertEquals( "P", IbUtils.getOptionRight(OptionTicker.Right.Put));
+        assertEquals("C", IbUtils.getOptionRight(OptionTicker.Right.Call));
+        assertEquals("P", IbUtils.getOptionRight(OptionTicker.Right.Put));
     }
 
     @Test
@@ -188,7 +188,7 @@ public class IbUtilsTest {
         assertEquals("GBP", IbUtils.translateToIbFuturesSymbol("6B"));
         assertEquals("VIX", IbUtils.translateToIbFuturesSymbol("VX"));
         assertEquals("GBP", IbUtils.translateToIbFuturesSymbol("GBP"));
-        
+
     }
 
     @Test

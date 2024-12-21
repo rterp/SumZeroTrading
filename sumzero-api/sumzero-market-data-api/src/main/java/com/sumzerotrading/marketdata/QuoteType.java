@@ -35,5 +35,6 @@ public enum QuoteType {
 	MARKET_DEPTH_BID,
 	MARKET_DEPTH_ASK,
         EXTENDED,
+		FUNDING_RATE,
         UNKNOWN;
 }

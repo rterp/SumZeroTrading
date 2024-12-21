@@ -41,10 +41,10 @@ public class Level1Quote extends AbstractQuote implements ILevel1Quote {
     /**
      * Builds a new Level1Quote
      *
-     * @param ticker The ticker this quote is for
-     * @param type The type of quote (bid/ask/last/open/etc)
+     * @param ticker    The ticker this quote is for
+     * @param type      The type of quote (bid/ask/last/open/etc)
      * @param timeStamp The time of the quote
-     * @param value The price (or volume) of this quote
+     * @param value     The price (or volume) of this quote
      */
     public Level1Quote(Ticker ticker, ZonedDateTime timestamp, Map<QuoteType, BigDecimal> quoteValues) {
         super(ticker, timestamp);
@@ -53,7 +53,7 @@ public class Level1Quote extends AbstractQuote implements ILevel1Quote {
 
     @Override
     public QuoteType[] getTypes() {
-        return quoteMap.keySet().toArray(new QuoteType[]{});
+        return quoteMap.keySet().toArray(new QuoteType[] {});
     }
 
     @Override
@@ -63,12 +63,12 @@ public class Level1Quote extends AbstractQuote implements ILevel1Quote {
 
     @Override
     public BigDecimal getValue(QuoteType type) {
-        if( containsType(type) ) {
+        if (containsType(type)) {
             return quoteMap.get(type);
         } else {
-            throw new SumZeroException("Quote does not contain type: " + type );
+            throw new SumZeroException("Quote does not contain type: " + type);
         }
-    
+
     }
 
     @Override
@@ -98,8 +98,7 @@ public class Level1Quote extends AbstractQuote implements ILevel1Quote {
 
     @Override
     public String toString() {
-        return "Level1Quote{" + "quoteMap=" + quoteMap + ", timestamp=" + getTimeStamp() +  "}";
+        return "Level1Quote [ticker=" + ticker + ", timeStamp=" + timeStamp + ", quoteMap=" + quoteMap + "]";
     }
 
-    
 }

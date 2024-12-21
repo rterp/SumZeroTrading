@@ -79,10 +79,10 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.13.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>15</source>
+                    <target>15</target>
 
                 </configuration>
             </plugin> 
