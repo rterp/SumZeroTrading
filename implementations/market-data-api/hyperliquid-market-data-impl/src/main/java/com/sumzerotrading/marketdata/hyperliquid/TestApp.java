@@ -9,10 +9,10 @@ public class TestApp implements Level1QuoteListener {
 
     public void startApp() {
         QuoteEngine quoteEngine = new HyperliquidQuoteEngine();
-        CryptoTicker ticker = new CryptoTicker("BTC-USD");
-        CryptoTicker eth = new CryptoTicker("ETH-USD");
-        CryptoTicker xrp = new CryptoTicker("XRP-USD");
-        CryptoTicker sol = new CryptoTicker("SOL-USD");
+        CryptoTicker ticker = new CryptoTicker("BTC");
+        CryptoTicker eth = new CryptoTicker("ETH");
+        CryptoTicker xrp = new CryptoTicker("XRP");
+        CryptoTicker sol = new CryptoTicker("SOL");
 
         quoteEngine.startEngine();
         quoteEngine.subscribeLevel1(ticker, this);

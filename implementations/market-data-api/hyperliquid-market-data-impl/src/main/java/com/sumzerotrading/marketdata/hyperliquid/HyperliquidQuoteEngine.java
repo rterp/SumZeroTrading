@@ -1,14 +1,19 @@
 package com.sumzerotrading.marketdata.hyperliquid;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sumzerotrading.data.Ticker;
 import com.sumzerotrading.marketdata.Level1Quote;
@@ -16,8 +21,10 @@ import com.sumzerotrading.marketdata.Level1QuoteListener;
 import com.sumzerotrading.marketdata.QuoteEngine;
 import com.sumzerotrading.marketdata.QuoteType;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
@@ -26,53 +33,54 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
     protected volatile boolean started = false;
     protected boolean threadCompleted = false;
     protected Thread thread = new Thread(this);
-    private static final String BASE_URL = "https://indexer.dydx.trade/v4/";
-    private static final String ORDER_BOOK_URL = BASE_URL + "orderbooks/perpetualMarket/";
-    private static final String FUNDING_URL = BASE_URL + "perpetualMarkets/";
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
+
     protected int sleepTimeInSeconds = 10;
     protected ArrayList<String> urlStrings = new ArrayList<>();
     private OrderBookResponse orderBook;
-    protected MarketsResponse allFundingRates;
+    protected Map<String, FundingData> allFundingRates;
+    private static final String BASE_URL = "https://api.hyperliquid.xyz/info";
 
     public HyperliquidQuoteEngine() {
         this.httpClient = new OkHttpClient();
         this.objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     }
 
-    public OrderBookResponse getOrderBook(String market) {
-        String url = ORDER_BOOK_URL + market;
+    public OrderBookResponse getOrderBook(String coin) {
+        // Create the JSON body for the request
+        String jsonRequest = String.format("{\"type\":\"l2Book\", \"coin\":\"%s\"}", coin);
+
+        RequestBody requestBody = RequestBody.create(jsonRequest, MediaType.parse("application/json"));
         Request request = new Request.Builder()
-                .url(url)
-                .get()
+                .url(BASE_URL)
+                .post(requestBody)
+                .addHeader("Content-Type", "application/json")
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new RuntimeException("Unexpected response code: " + response.code());
             }
+
+            // Parse the JSON response
             String jsonResponse = response.body().string();
             return objectMapper.readValue(jsonResponse, OrderBookResponse.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Error fetching order book for market: " + market, e);
+        } catch (IOException e) {
+            throw new RuntimeException("Error fetching l2Book for coin: " + coin, e);
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         HyperliquidQuoteEngine client = new HyperliquidQuoteEngine();
-        System.out.println(client.getAllFundingRates());
+        Map<String, FundingData> fundingRates = client.getAllFundingRates();
 
-        // // Fetch order book data for BTC-USD market
-        // String market = "BTC-USD";
-        // OrderBookResponse orderBook = client.getOrderBook(market);
+        // Print funding rates
+        fundingRates.forEach(
+                (name, rate) -> System.out.println("Asset: " + name + ", Funding Rate: " + rate.funding + "%"));
 
-        // // Print the order book data
-        // System.out.println("Order Book for Market: " + market);
-        // // System.out.println("Bids: " + Arrays.toString(orderBook.getBids()));
-        // // System.out.println("Asks: " + Arrays.toString(orderBook.getAsks()));
-        // System.out.println("Best Bid: " + orderBook.getBids()[0]);
-        // System.out.println("Best Ask: " + orderBook.getAsks()[0]);
     }
 
     @Override
@@ -117,7 +125,7 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
 
     @Override
     public void useDelayedData(boolean useDelayed) {
-        System.out.println("Not supported for dYdX market data");
+        System.out.println("Not supported for hyperliquid market data");
     }
 
     @Override
@@ -157,13 +165,25 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
                 if (!level1ListenerMap.get(ticker).isEmpty()) {
                     // System.out.println("Getting ticker: " + ticker);
                     orderBook = getOrderBook(ticker.getSymbol());
+                    List<Map<String, String>> bids = orderBook.getLevels().get(0);
+                    List<Map<String, String>> asks = orderBook.getLevels().size() > 1 ? orderBook.getLevels().get(1)
+                            : List.of();
+
+                    String bidPriceString = bids.get(0).get("px");
+                    String bidSizeString = bids.get(0).get("sz");
+
+                    String askPriceString = asks.get(0).get("px");
+                    String askSizeString = asks.get(0).get("sz");
+
+                    String fundingString = allFundingRates.get(ticker.getSymbol()).funding;
+                    Double annualFunding = Double.parseDouble(fundingString) * 24.0 * 365.0 * 100.0;
+
                     HashMap<QuoteType, BigDecimal> quoteMap = new HashMap<>();
-                    quoteMap.put(QuoteType.ASK, new BigDecimal(orderBook.asks[0].price));
-                    quoteMap.put(QuoteType.ASK_SIZE, new BigDecimal(orderBook.asks[0].size));
-                    quoteMap.put(QuoteType.BID, new BigDecimal(orderBook.bids[0].price));
-                    quoteMap.put(QuoteType.BID_SIZE, new BigDecimal(orderBook.bids[0].size));
-                    quoteMap.put(QuoteType.FUNDING_RATE,
-                            allFundingRates.getMarkets().get(ticker.getSymbol()).getAnnualizedFundingRate());
+                    quoteMap.put(QuoteType.ASK, new BigDecimal(askPriceString));
+                    quoteMap.put(QuoteType.ASK_SIZE, new BigDecimal(askSizeString));
+                    quoteMap.put(QuoteType.BID, new BigDecimal(bidPriceString));
+                    quoteMap.put(QuoteType.BID_SIZE, new BigDecimal(bidSizeString));
+                    quoteMap.put(QuoteType.FUNDING_RATE, new BigDecimal(annualFunding));
                     Level1Quote quote = new Level1Quote(ticker, ZonedDateTime.now(), quoteMap);
                     fireLevel1Quote(quote);
                 }
@@ -176,114 +196,120 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
 
     }
 
-    public MarketsResponse getAllFundingRates() {
+    public Map<String, FundingData> getAllFundingRates() throws Exception {
+        return parseResponse(fetchFundingRates());
+    }
+
+    public String fetchFundingRates() throws Exception {
+        OkHttpClient client = new OkHttpClient();
+
+        // Define the JSON request body
+        String jsonBody = "{ \"type\": \"metaAndAssetCtxs\" }";
+
+        // Build the HTTP request
         Request request = new Request.Builder()
-                .url(FUNDING_URL)
-                .get()
+                .url(BASE_URL)
+                .post(RequestBody.create(jsonBody, MediaType.get("application/json")))
                 .build();
 
-        try (Response response = httpClient.newCall(request).execute()) {
+        // Execute the request
+        try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                throw new RuntimeException("Unexpected response code: " + response.code());
+                throw new RuntimeException("Failed to fetch funding rates: " + response.code());
             }
-            String jsonResponse = response.body().string();
-            return objectMapper.readValue(jsonResponse, MarketsResponse.class); // Parse JSON
-        } catch (Exception e) {
-            throw new RuntimeException("Error fetching funding rates", e);
+            return response.body().string();
         }
     }
+
+    public Map<String, FundingData> parseResponse(String jsonResponse) throws Exception {
+        // Deserialize the response into two parts: Universe and FundingData
+        List<Object> response = objectMapper.readValue(jsonResponse, List.class);
+
+        UniverseData universeData = objectMapper.convertValue(response.get(0), UniverseData.class);
+        List<FundingData> fundingDataList = objectMapper.convertValue(response.get(1),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, FundingData.class));
+
+        // Map funding data by asset name
+        Map<String, FundingData> fundingRates = new HashMap<>();
+        for (int i = 0; i < fundingDataList.size(); i++) {
+            FundingData fundingData = fundingDataList.get(i);
+            fundingData.name = universeData.assets.get(i).name; // Assign name from universe data
+            fundingRates.put(fundingData.name, fundingData);
+        }
+
+        return fundingRates;
+    }
+
+    // public MarketsResponse getAllFundingRates() {
+    // Request request = new Request.Builder()
+    // .url(FUNDING_URL)
+    // .get()
+    // .build();
+
+    // try (Response response = httpClient.newCall(request).execute()) {
+    // if (!response.isSuccessful()) {
+    // throw new RuntimeException("Unexpected response code: " + response.code());
+    // }
+    // String jsonResponse = response.body().string();
+    // return objectMapper.readValue(jsonResponse, MarketsResponse.class); // Parse
+    // JSON
+    // } catch (Exception e) {
+    // throw new RuntimeException("Error fetching funding rates", e);
+    // }
+    // }
 
     // Classes for mapping JSON response
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class OrderBookResponse {
-        private Order[] bids;
-        private Order[] asks;
+        private List<List<Map<String, String>>> levels;
 
-        public Order[] getBids() {
-            return bids;
+        public List<List<Map<String, String>>> getLevels() {
+            return levels;
         }
 
-        public void setBids(Order[] bids) {
-            this.bids = bids;
-        }
-
-        public Order[] getAsks() {
-            return asks;
-        }
-
-        public void setAsks(Order[] asks) {
-            this.asks = asks;
+        public void setLevels(List<List<Map<String, String>>> levels) {
+            this.levels = levels;
         }
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Order {
-        private String price;
-        private String size;
-
-        public String getPrice() {
-            return price;
-        }
-
-        public void setPrice(String price) {
-            this.price = price;
-        }
-
-        public String getSize() {
-            return size;
-        }
-
-        public void setSize(String size) {
-            this.size = size;
-        }
-
-        @Override
-        public String toString() {
-            return "Price: " + price + ", Size: " + size;
-        }
+    // Define UniverseData and FundingData classes for JSON parsing
+    public static class UniverseData {
+        @JsonProperty("universe")
+        public List<Asset> assets;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class MarketsResponse {
-        private Map<String, Market> markets;
-
-        public Map<String, Market> getMarkets() {
-            return markets;
-        }
-
-        public void setMarkets(Map<String, Market> markets) {
-            this.markets = markets;
-        }
-
-        @Override
-        public String toString() {
-            return "MarketsResponse [markets=" + markets + "]";
-        }
-
+    public static class Asset {
+        @JsonProperty("szDecimals")
+        public int szDecimals;
+        @JsonProperty("name")
+        public String name;
+        @JsonProperty("maxLeverage")
+        public int maxLeverage;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Market {
-        private String nextFundingRate;
-        private BigDecimal annualizedFundingRate;
+    public static class FundingData {
+        @JsonProperty("funding")
+        public String funding;
+        @JsonProperty("openInterest")
+        public String openInterest;
+        @JsonProperty("prevDayPx")
+        public String prevDayPx;
+        @JsonProperty("dayNtlVlm")
+        public String dayNtlVlm;
+        @JsonProperty("premium")
+        public String premium;
+        @JsonProperty("oraclePx")
+        public String oraclePx;
+        @JsonProperty("markPx")
+        public String markPx;
+        @JsonProperty("midPx")
+        public String midPx;
+        @JsonProperty("impactPxs")
+        public List<String> impactPxs;
+        @JsonProperty("dayBaseVlm")
+        public String dayBaseVlm;
 
-        public String getNextFundingRate() {
-            return nextFundingRate;
-        }
-
-        public void setNextFundingRate(String nextFundingRate) {
-            this.nextFundingRate = nextFundingRate;
-            annualizedFundingRate = new BigDecimal(Double.parseDouble(nextFundingRate) * 24 * 365 * 100);
-        }
-
-        @Override
-        public String toString() {
-            return "Market [nextFundingRate=" + annualizedFundingRate + "]";
-        }
-
-        public BigDecimal getAnnualizedFundingRate() {
-            return annualizedFundingRate;
-        }
-
+        // Added to link funding data with asset name
+        public String name;
     }
 }
