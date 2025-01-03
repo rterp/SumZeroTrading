@@ -23,6 +23,7 @@ import okhttp3.Response;
 public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
 
     public static final String SLEEP_TIME_PROPERTY_KEY = "sleep.time.in.seconds";
+    public static final String INCLUDE_FUNDING_RATE_PROPERTY_KEY = "include.funding.rates";
     protected volatile boolean started = false;
     protected boolean threadCompleted = false;
     protected Thread thread = new Thread(this);
@@ -35,6 +36,7 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
     protected ArrayList<String> urlStrings = new ArrayList<>();
     private OrderBookResponse orderBook;
     protected MarketsResponse allFundingRates;
+    protected boolean includeFundingRate = false;
 
     public DyDxLevel1QuoteEngine() {
         this.httpClient = new OkHttpClient();
@@ -43,10 +45,7 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
 
     public OrderBookResponse getOrderBook(String market) {
         String url = ORDER_BOOK_URL + market;
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .build();
+        Request request = new Request.Builder().url(url).get().build();
 
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
@@ -102,6 +101,12 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
         if (sleepTimeString != null) {
             sleepTimeInSeconds = Integer.parseInt(sleepTimeString);
         }
+
+        String includeFundingRatesString = props.getProperty(INCLUDE_FUNDING_RATE_PROPERTY_KEY);
+        if (includeFundingRatesString != null) {
+            includeFundingRate = Boolean.parseBoolean(includeFundingRatesString);
+        }
+
         startEngine();
     }
 
@@ -147,10 +152,12 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
     }
 
     protected void getQuotes() {
-        try {
-            allFundingRates = getAllFundingRates();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (includeFundingRate) {
+            try {
+                allFundingRates = getAllFundingRates();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         for (Ticker ticker : level1ListenerMap.keySet()) {
             try {
@@ -162,8 +169,10 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
                     quoteMap.put(QuoteType.ASK_SIZE, new BigDecimal(orderBook.asks[0].size));
                     quoteMap.put(QuoteType.BID, new BigDecimal(orderBook.bids[0].price));
                     quoteMap.put(QuoteType.BID_SIZE, new BigDecimal(orderBook.bids[0].size));
-                    quoteMap.put(QuoteType.FUNDING_RATE,
-                            allFundingRates.getMarkets().get(ticker.getSymbol()).getAnnualizedFundingRate());
+                    if (includeFundingRate) {
+                        quoteMap.put(QuoteType.FUNDING_RATE,
+                                allFundingRates.getMarkets().get(ticker.getSymbol()).getAnnualizedFundingRate());
+                    }
                     Level1Quote quote = new Level1Quote(ticker, ZonedDateTime.now(), quoteMap);
                     fireLevel1Quote(quote);
                 }
@@ -177,10 +186,7 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
     }
 
     public MarketsResponse getAllFundingRates() {
-        Request request = new Request.Builder()
-                .url(FUNDING_URL)
-                .get()
-                .build();
+        Request request = new Request.Builder().url(FUNDING_URL).get().build();
 
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {

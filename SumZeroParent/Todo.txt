@@ -6,10 +6,15 @@
 ######
 Trading API
 dYdX
-- How to connect wallet
-- How to authenticate
-- How to get current open positions
-- How to get executed trades
+- How to connect wallet - Done
+- How to authenticate - Done
+- Get Open Orders
+- Get filled price
+- Move secrets to OS Environment
+- add files to github
+- finish implementing broker functionality
+- add BTC, SOL, and XRP Pairs to python script
+- test buy orders
 
 hyperLiquid
 - How to connect wallet

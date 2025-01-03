@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+      <parent>
+        <groupId>com.sumzerotrading</groupId>
+        <artifactId>broker-api</artifactId>
+        <version>0.1.7-SNAPSHOT</version>
+    </parent>
+
+  <groupId>com.sumzerotrading</groupId>
+  <artifactId>dydx-broker-api-impl</artifactId>
+  <version>0.1.7-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>dydx-broker-api-impl</name>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+                </properties>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>com.sumzerotrading</groupId>
+      <artifactId>sumzero-broker-api</artifactId>
+      <version>${project.version}</version>
+      <!-- https://mvnrepository.com/artifact/net.sf.py4j/py4j -->
+
+
+    </dependency>
+<!-- https://mvnrepository.com/artifact/org.zeromq/jeromq -->
+<dependency>
+    <groupId>org.zeromq</groupId>
+    <artifactId>jeromq</artifactId>
+    <version>0.6.0</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.json/json -->
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20240303</version>
+</dependency>
+<dependency>
+    <groupId>org.java-websocket</groupId>
+    <artifactId>Java-WebSocket</artifactId>
+    <version>1.5.3</version>
+</dependency>
+
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+     
+  
+
+
+    </build>
+
+</project>

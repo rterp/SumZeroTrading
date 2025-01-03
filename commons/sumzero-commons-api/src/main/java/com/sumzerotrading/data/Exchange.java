@@ -29,8 +29,7 @@ import java.io.Serializable;
 public class Exchange implements Serializable {
 
     public static final long serialVersionUID = 1L;
-    
-    
+
     public static final Exchange ARCA = new Exchange("ARCA");
     public static final Exchange GLOBEX = new Exchange("GLOBEX");
     public static final Exchange NYMEX = new Exchange("NYMEX");
@@ -40,7 +39,7 @@ public class Exchange implements Serializable {
     public static final Exchange CFE = new Exchange("CFE");
     public static final Exchange NYSE_LIFFE = new Exchange("NYSELIFFE");
     public static final Exchange IDEALPRO = new Exchange("IDEALPRO");
-    public static final Exchange PSE = new Exchange( "PSE" );
+    public static final Exchange PSE = new Exchange("PSE");
     public static final Exchange INTERACTIVE_BROKERS_SMART = new Exchange("SMART");
     public static final Exchange NASDAQ = new Exchange("NASDAQ");
     public static final Exchange TSEJ = new Exchange("TSEJ");
@@ -50,30 +49,30 @@ public class Exchange implements Serializable {
     public static final Exchange OSE = new Exchange("OSE.JPN");
     public static final Exchange SGX = new Exchange("SGX");
     public static final Exchange BOX = new Exchange("BOX");
-    
-    public static final Exchange[] ALL_EXCHANGES = { ARCA, GLOBEX, NYMEX, CBOE, ECBOT, NYBOT, CFE,
-        NYSE_LIFFE, IDEALPRO, PSE, INTERACTIVE_BROKERS_SMART, NASDAQ, TSEJ, SEHKNTL, SEHK, HKFE, OSE, SGX, BOX };
-    
-    
+    public static final Exchange DYDX = new Exchange("DYDX");
+    public static final Exchange HYPERLIQUID = new Exchange("HYPERLIQUID");
+
+    public static final Exchange[] ALL_EXCHANGES = { ARCA, GLOBEX, NYMEX, CBOE, ECBOT, NYBOT, CFE, NYSE_LIFFE, IDEALPRO,
+            PSE, INTERACTIVE_BROKERS_SMART, NASDAQ, TSEJ, SEHKNTL, SEHK, HKFE, OSE, SGX, BOX, DYDX, HYPERLIQUID };
+
     protected String exchangeName;
-    
-    
-    protected Exchange( String exchangeName ) {
+
+    protected Exchange(String exchangeName) {
         this.exchangeName = exchangeName;
     }
 
     public String getExchangeName() {
         return exchangeName;
     }
-    
+
     public static Exchange getExchangeFromString(String exchangeString) {
-        for( Exchange exchange : ALL_EXCHANGES ) {
-            if( exchangeString.equals(exchange.getExchangeName())) {
+        for (Exchange exchange : ALL_EXCHANGES) {
+            if (exchangeString.equals(exchange.getExchangeName())) {
                 return exchange;
             }
         }
-        
-        throw new SumZeroException("Unknown exchange " + exchangeString );
+
+        throw new SumZeroException("Unknown exchange " + exchangeString);
     }
 
     @Override
@@ -92,7 +91,8 @@ public class Exchange implements Serializable {
             return false;
         }
         final Exchange other = (Exchange) obj;
-        if ((this.exchangeName == null) ? (other.exchangeName != null) : !this.exchangeName.equals(other.exchangeName)) {
+        if ((this.exchangeName == null) ? (other.exchangeName != null)
+                : !this.exchangeName.equals(other.exchangeName)) {
             return false;
         }
         return true;
@@ -102,11 +102,5 @@ public class Exchange implements Serializable {
     public String toString() {
         return "Exchange{" + "exchangeName=" + exchangeName + '}';
     }
-            
-    
-    
-    
-            
-            
-            
+
 }

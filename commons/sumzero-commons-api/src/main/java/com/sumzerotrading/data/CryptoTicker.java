@@ -1,9 +1,11 @@
 package com.sumzerotrading.data;
 
-public class CryptoTicker extends GenericTicker{
+public class CryptoTicker extends GenericTicker {
 
-    public CryptoTicker(String symbol) {
+    public CryptoTicker(String symbol, Exchange exchange) {
         super(symbol);
+        this.exchange = exchange;
+        this.primaryExchange = exchange;
     }
 
     @Override
@@ -29,5 +31,4 @@ public class CryptoTicker extends GenericTicker{
         return super.hashCode();
     }
 
-    
 }
