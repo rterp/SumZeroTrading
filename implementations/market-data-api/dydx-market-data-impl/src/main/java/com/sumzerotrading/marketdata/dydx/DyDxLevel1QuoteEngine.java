@@ -199,6 +199,10 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
         }
     }
 
+    public void setSleepTimeInSeconds(int sleepTime) {
+        this.sleepTimeInSeconds = sleepTime;
+    }
+
     // Classes for mapping JSON response
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class OrderBookResponse {
