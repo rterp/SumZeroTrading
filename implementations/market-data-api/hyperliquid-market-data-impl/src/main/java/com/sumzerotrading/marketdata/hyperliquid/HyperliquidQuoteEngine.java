@@ -54,11 +54,8 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
         String jsonRequest = String.format("{\"type\":\"l2Book\", \"coin\":\"%s\"}", coin);
 
         RequestBody requestBody = RequestBody.create(jsonRequest, MediaType.parse("application/json"));
-        Request request = new Request.Builder()
-                .url(BASE_URL)
-                .post(requestBody)
-                .addHeader("Content-Type", "application/json")
-                .build();
+        Request request = new Request.Builder().url(BASE_URL).post(requestBody)
+                .addHeader("Content-Type", "application/json").build();
 
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
@@ -207,10 +204,8 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
         String jsonBody = "{ \"type\": \"metaAndAssetCtxs\" }";
 
         // Build the HTTP request
-        Request request = new Request.Builder()
-                .url(BASE_URL)
-                .post(RequestBody.create(jsonBody, MediaType.get("application/json")))
-                .build();
+        Request request = new Request.Builder().url(BASE_URL)
+                .post(RequestBody.create(jsonBody, MediaType.get("application/json"))).build();
 
         // Execute the request
         try (Response response = client.newCall(request).execute()) {
@@ -312,4 +307,13 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
         // Added to link funding data with asset name
         public String name;
     }
+
+    public void setSleepTimeInSeconds(int seconds) {
+        this.sleepTimeInSeconds = seconds;
+    }
+
+    public int getSleepTimeInSeconds() {
+        return sleepTimeInSeconds;
+    }
+
 }
