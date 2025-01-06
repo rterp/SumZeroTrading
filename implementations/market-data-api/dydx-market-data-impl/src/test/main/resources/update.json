@@ -1,0 +1,16 @@
+{
+    "type": "channel_data",
+    "connection_id": "1ed851f7-0f9d-419f-af00-c10ac2a3a6ed",
+    "message_id": 2,
+    "id": "XRP-USD",
+    "channel": "v4_orderbook",
+    "version": "1.0.0",
+    "contents": {
+        "asks": [
+            [
+                "2.5009",
+                "64680"
+            ]
+        ]
+    }
+}

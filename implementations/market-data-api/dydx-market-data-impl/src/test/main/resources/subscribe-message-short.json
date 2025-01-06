@@ -1,0 +1,45 @@
+{
+    "type": "subscribed",
+    "connection_id": "1ed851f7-0f9d-419f-af00-c10ac2a3a6ed",
+    "message_id": 1,
+    "channel": "v4_orderbook",
+    "id": "XRP-USD",
+    "contents": {
+        "bids": [
+            {
+                "price": "2.4003",
+                "size": "490"
+            },
+            {
+                "price": "2.4002",
+                "size": "320"
+            },
+            {
+                "price": "2.3999",
+                "size": "150"
+            },
+            {
+                "price": "2.366",
+                "size": "6670"
+            }
+        ],
+        "asks": [
+            {
+                "price": "2.4005",
+                "size": "420"
+            },
+            {
+                "price": "2.4006",
+                "size": "970"
+            },
+            {
+                "price": "2.4009",
+                "size": "2080"
+            },
+            {
+                "price": "2.4235",
+                "size": "3110"
+            }
+        ]
+    }
+}
