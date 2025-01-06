@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sumzerotrading.data.Ticker;
@@ -21,6 +24,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
+
+    protected Logger logger = LoggerFactory.getLogger(DyDxLevel1QuoteEngine.class);
 
     public static final String SLEEP_TIME_PROPERTY_KEY = "sleep.time.in.seconds";
     public static final String INCLUDE_FUNDING_RATE_PROPERTY_KEY = "include.funding.rates";
@@ -58,22 +63,6 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
         }
     }
 
-    public static void main(String[] args) {
-        DyDxLevel1QuoteEngine client = new DyDxLevel1QuoteEngine();
-        System.out.println(client.getAllFundingRates());
-
-        // // Fetch order book data for BTC-USD market
-        // String market = "BTC-USD";
-        // OrderBookResponse orderBook = client.getOrderBook(market);
-
-        // // Print the order book data
-        // System.out.println("Order Book for Market: " + market);
-        // // System.out.println("Bids: " + Arrays.toString(orderBook.getBids()));
-        // // System.out.println("Asks: " + Arrays.toString(orderBook.getAsks()));
-        // System.out.println("Best Bid: " + orderBook.getBids()[0]);
-        // System.out.println("Best Ask: " + orderBook.getAsks()[0]);
-    }
-
     @Override
     public Date getServerTime() {
         // TODO Auto-generated method stub
@@ -90,7 +79,7 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
         if (threadCompleted) {
             throw new IllegalStateException("Quote Engine was already stopped");
         }
-        System.out.println("starting engine with " + sleepTimeInSeconds + " second interval");
+        logger.info("starting engine with " + sleepTimeInSeconds + " second interval");
         started = true;
         thread.start();
     }
@@ -122,7 +111,7 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
 
     @Override
     public void useDelayedData(boolean useDelayed) {
-        System.out.println("Not supported for dYdX market data");
+        logger.error(" useDelayedData() Not supported for dYdX market data");
     }
 
     @Override
@@ -139,12 +128,11 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
     @Override
     public void run() {
         while (started) {
-            System.out.println("Reading quotes");
             getQuotes();
             try {
                 Thread.sleep(sleepTimeInSeconds * 1000);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex.getMessage(), ex);
             }
         }
 
@@ -156,13 +144,12 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
             try {
                 allFundingRates = getAllFundingRates();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex.getMessage(), ex);
             }
         }
         for (Ticker ticker : level1ListenerMap.keySet()) {
             try {
                 if (!level1ListenerMap.get(ticker).isEmpty()) {
-                    // System.out.println("Getting ticker: " + ticker);
                     orderBook = getOrderBook(ticker.getSymbol());
                     HashMap<QuoteType, BigDecimal> quoteMap = new HashMap<>();
                     quoteMap.put(QuoteType.ASK, new BigDecimal(orderBook.asks[0].price));
@@ -177,9 +164,8 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
                     fireLevel1Quote(quote);
                 }
             } catch (Exception ex) {
-                System.err
-                        .println("DyDxLevel1 Quote Engine Caught an exception, but will continue:  " + ex.getMessage());
-                ex.printStackTrace();
+                logger.error("DyDxLevel1 Quote Engine Caught an exception, but will continue:  " + ex.getMessage(), ex);
+
             }
         }
 

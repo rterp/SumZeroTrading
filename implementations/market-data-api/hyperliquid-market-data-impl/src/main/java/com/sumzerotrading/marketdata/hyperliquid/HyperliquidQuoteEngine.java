@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sumzerotrading.data.Ticker;
@@ -29,7 +31,10 @@ import okhttp3.Response;
 
 public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
 
+    protected static Logger logger = LoggerFactory.getLogger(HyperliquidQuoteEngine.class);
+
     public static final String SLEEP_TIME_PROPERTY_KEY = "sleep.time.in.seconds";
+    public static final String INCLUDE_FUNDING_RATE_PROPERTY_KEY = "include.funding.rates";
     protected volatile boolean started = false;
     protected boolean threadCompleted = false;
     protected Thread thread = new Thread(this);
@@ -41,6 +46,7 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
     private OrderBookResponse orderBook;
     protected Map<String, FundingData> allFundingRates;
     private static final String BASE_URL = "https://api.hyperliquid.xyz/info";
+    protected boolean includeFundingRate = false;
 
     public HyperliquidQuoteEngine() {
         this.httpClient = new OkHttpClient();
@@ -70,16 +76,6 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        HyperliquidQuoteEngine client = new HyperliquidQuoteEngine();
-        Map<String, FundingData> fundingRates = client.getAllFundingRates();
-
-        // Print funding rates
-        fundingRates.forEach(
-                (name, rate) -> System.out.println("Asset: " + name + ", Funding Rate: " + rate.funding + "%"));
-
-    }
-
     @Override
     public Date getServerTime() {
         // TODO Auto-generated method stub
@@ -96,7 +92,7 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
         if (threadCompleted) {
             throw new IllegalStateException("Quote Engine was already stopped");
         }
-        System.out.println("starting engine with " + sleepTimeInSeconds + " second interval");
+        logger.info("starting engine with " + sleepTimeInSeconds + " second interval");
         started = true;
         thread.start();
     }
@@ -106,6 +102,10 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
         String sleepTimeString = props.getProperty(SLEEP_TIME_PROPERTY_KEY);
         if (sleepTimeString != null) {
             sleepTimeInSeconds = Integer.parseInt(sleepTimeString);
+        }
+        String includeFundingRatesString = props.getProperty(INCLUDE_FUNDING_RATE_PROPERTY_KEY);
+        if (includeFundingRatesString != null) {
+            includeFundingRate = Boolean.parseBoolean(includeFundingRatesString);
         }
         startEngine();
     }
@@ -122,7 +122,7 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
 
     @Override
     public void useDelayedData(boolean useDelayed) {
-        System.out.println("Not supported for hyperliquid market data");
+        logger.error("useDelayedData() Not supported for hyperliquid market data");
     }
 
     @Override
@@ -139,12 +139,11 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
     @Override
     public void run() {
         while (started) {
-            System.out.println("Reading quotes");
             getQuotes();
             try {
                 Thread.sleep(sleepTimeInSeconds * 1000);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex.getMessage(), ex);
             }
         }
 
@@ -152,15 +151,16 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
     }
 
     protected void getQuotes() {
-        try {
-            allFundingRates = getAllFundingRates();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (includeFundingRate) {
+            try {
+                allFundingRates = getAllFundingRates();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         for (Ticker ticker : level1ListenerMap.keySet()) {
             try {
                 if (!level1ListenerMap.get(ticker).isEmpty()) {
-                    // System.out.println("Getting ticker: " + ticker);
                     orderBook = getOrderBook(ticker.getSymbol());
                     List<Map<String, String>> bids = orderBook.getLevels().get(0);
                     List<Map<String, String>> asks = orderBook.getLevels().size() > 1 ? orderBook.getLevels().get(1)
@@ -172,22 +172,22 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
                     String askPriceString = asks.get(0).get("px");
                     String askSizeString = asks.get(0).get("sz");
 
-                    String fundingString = allFundingRates.get(ticker.getSymbol()).funding;
-                    Double annualFunding = Double.parseDouble(fundingString) * 24.0 * 365.0 * 100.0;
-
                     HashMap<QuoteType, BigDecimal> quoteMap = new HashMap<>();
                     quoteMap.put(QuoteType.ASK, new BigDecimal(askPriceString));
                     quoteMap.put(QuoteType.ASK_SIZE, new BigDecimal(askSizeString));
                     quoteMap.put(QuoteType.BID, new BigDecimal(bidPriceString));
                     quoteMap.put(QuoteType.BID_SIZE, new BigDecimal(bidSizeString));
-                    quoteMap.put(QuoteType.FUNDING_RATE, new BigDecimal(annualFunding));
+                    if (includeFundingRate) {
+                        String fundingString = allFundingRates.get(ticker.getSymbol()).funding;
+                        Double annualFunding = Double.parseDouble(fundingString) * 24.0 * 365.0 * 100.0;
+                        quoteMap.put(QuoteType.FUNDING_RATE, new BigDecimal(annualFunding));
+                    }
                     Level1Quote quote = new Level1Quote(ticker, ZonedDateTime.now(), quoteMap);
                     fireLevel1Quote(quote);
                 }
             } catch (Exception ex) {
-                System.err
-                        .println("DyDxLevel1 Quote Engine Caught an exception, but will continue:  " + ex.getMessage());
-                ex.printStackTrace();
+                logger.error("Hyperliquid Quote Engine Caught an exception, but will continue:  " + ex.getMessage(),
+                        ex);
             }
         }
 
@@ -234,24 +234,6 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
 
         return fundingRates;
     }
-
-    // public MarketsResponse getAllFundingRates() {
-    // Request request = new Request.Builder()
-    // .url(FUNDING_URL)
-    // .get()
-    // .build();
-
-    // try (Response response = httpClient.newCall(request).execute()) {
-    // if (!response.isSuccessful()) {
-    // throw new RuntimeException("Unexpected response code: " + response.code());
-    // }
-    // String jsonResponse = response.body().string();
-    // return objectMapper.readValue(jsonResponse, MarketsResponse.class); // Parse
-    // JSON
-    // } catch (Exception e) {
-    // throw new RuntimeException("Error fetching funding rates", e);
-    // }
-    // }
 
     // Classes for mapping JSON response
     @JsonIgnoreProperties(ignoreUnknown = true)
