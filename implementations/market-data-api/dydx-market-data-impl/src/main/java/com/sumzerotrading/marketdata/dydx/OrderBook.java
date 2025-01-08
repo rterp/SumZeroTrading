@@ -1,3 +1,5 @@
+package com.sumzerotrading.marketdata.dydx;
+
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.TreeMap;

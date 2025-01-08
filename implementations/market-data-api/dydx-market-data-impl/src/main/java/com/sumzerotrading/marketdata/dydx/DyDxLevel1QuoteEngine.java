@@ -31,7 +31,9 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
     public static final String INCLUDE_FUNDING_RATE_PROPERTY_KEY = "include.funding.rates";
     protected volatile boolean started = false;
     protected boolean threadCompleted = false;
-    protected Thread thread = new Thread(this);
+    protected Thread mainThread = new Thread(this);
+    protected Thread fundingThread = new Thread(this);
+    protected Thread blockHeightThread = new Thread(this);
     private static final String BASE_URL = "https://indexer.dydx.trade/v4/";
     private static final String ORDER_BOOK_URL = BASE_URL + "orderbooks/perpetualMarket/";
     private static final String FUNDING_URL = BASE_URL + "perpetualMarkets/";
@@ -81,7 +83,7 @@ public class DyDxLevel1QuoteEngine extends QuoteEngine implements Runnable {
         }
         logger.info("starting engine with " + sleepTimeInSeconds + " second interval");
         started = true;
-        thread.start();
+        mainThread.start();
     }
 
     @Override
