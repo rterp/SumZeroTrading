@@ -139,8 +139,9 @@ public class HyperliquidQuoteEngine extends QuoteEngine implements Runnable {
     @Override
     public void run() {
         while (started) {
-            getQuotes();
+
             try {
+                getQuotes();
                 Thread.sleep(sleepTimeInSeconds * 1000);
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
